@@ -1,0 +1,19 @@
+# Godot 4+ local editor cache (import data, per-machine editor state).
+# Never commit this — it's regenerated automatically on first project open.
+.godot/
+
+# Export artifacts / secrets (no export presets exist yet, but keep these
+# ignored once exporting is set up). export_presets.cfg itself is NOT
+# ignored — that file just declares export targets and is normally safe,
+# and useful, to commit.
+export.cfg
+export_credentials.cfg
+
+# Auto-generated translation imports.
+*.translation
+
+# macOS
+.DS_Store
+
+# Misc editor/OS temp files
+*.tmp
