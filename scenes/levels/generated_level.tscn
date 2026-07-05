@@ -8,4 +8,6 @@ script = ExtResource("1_gen")
 [node name="Darkness" type="CanvasModulate" parent="."]
 color = Color(0.16, 0.16, 0.21, 1)
 
+[node name="Tiles" type="TileMapLayer" parent="."]
+
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]

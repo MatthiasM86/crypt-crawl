@@ -28,13 +28,23 @@ const WALL_EPS := 0.1             # px overlap between wall rects: exactly
                                   # convex partition fail; overlaps are fine
 const ENEMIES_PER_ROOM_MAX := 2   # 1..this per room (player's room stays empty)
 const RANGED_CHANCE := 0.35       # per spawned enemy
-const FLOOR_COLOR := Color(0.14, 0.13, 0.15, 1)
+# ------------------------------------------------------------------------------
+
+# --- Tile atlas (assets/sprites/tileset_placeholder.png, 32px grid) -----------
+# Swap the texture (same layout) once real pixel art exists; see
+# docs/asset-spec.md. Row 0 = floors (4 plain + 1 cracked), row 1 = walls.
+const TILESET_TEXTURE := preload("res://assets/sprites/tileset_placeholder.png")
+const FLOOR_PLAIN := Vector2i(0, 0)
+const FLOOR_VARIANTS: Array[Vector2i] = [Vector2i(1, 0), Vector2i(2, 0), Vector2i(3, 0)]
+const FLOOR_CRACKED := Vector2i(4, 0)
+const WALL_VARIANTS: Array[Vector2i] = [Vector2i(0, 1), Vector2i(1, 1), Vector2i(2, 1)]
 # ------------------------------------------------------------------------------
 
 var _rooms: Array[Rect2i] = []
 var _floor := {}  # Set: Vector2i -> true
 
 @onready var _region: NavigationRegion2D = $NavigationRegion2D
+@onready var _tiles: TileMapLayer = $Tiles
 
 
 func _ready() -> void:
@@ -47,6 +57,7 @@ func _ready() -> void:
 			break
 		if attempt == 2:
 			push_error("Level generation failed the reachability check 3x; using last layout")
+	_build_tiles()
 	_build_geometry()
 	_spawn_player_and_enemies()
 	_bake_navmesh()
@@ -114,11 +125,49 @@ func _all_rooms_reachable() -> bool:
 	return true
 
 
+func _build_tiles() -> void:
+	# TileSet built in code: zero hand-authored .tres risk, and swapping in
+	# real art later is just a texture/coord change. Visual only -- physics
+	# and navmesh still come from the collider rects in _build_geometry().
+	var atlas := TileSetAtlasSource.new()
+	atlas.texture = TILESET_TEXTURE
+	atlas.texture_region_size = Vector2i(CELL, CELL)
+	for coord in [FLOOR_PLAIN, FLOOR_CRACKED] + FLOOR_VARIANTS + WALL_VARIANTS:
+		atlas.create_tile(coord)
+	var tile_set := TileSet.new()
+	tile_set.tile_size = Vector2i(CELL, CELL)
+	tile_set.add_source(atlas, 0)
+	_tiles.tile_set = tile_set
+	for cell: Vector2i in _floor:
+		var roll := randf()
+		var coord := FLOOR_PLAIN
+		if roll < 0.06:
+			coord = FLOOR_CRACKED
+		elif roll < 0.3:
+			coord = FLOOR_VARIANTS[randi() % FLOOR_VARIANTS.size()]
+		_tiles.set_cell(cell, 0, coord)
+	# Wall tiles only where a wall borders floor (8-dir) -- deep void stays
+	# untiled and renders as the near-black clear color.
+	for y in MAP_H:
+		for x in MAP_W:
+			var cell := Vector2i(x, y)
+			if not _floor.has(cell) and _touches_floor(cell):
+				_tiles.set_cell(cell, 0, WALL_VARIANTS[randi() % WALL_VARIANTS.size()])
+
+
+func _touches_floor(cell: Vector2i) -> bool:
+	for dy in range(-1, 2):
+		for dx in range(-1, 2):
+			if (dx != 0 or dy != 0) and _floor.has(cell + Vector2i(dx, dy)):
+				return true
+	return false
+
+
 func _build_geometry() -> void:
 	# Walls: every non-floor cell, row-merged into runs, as colliders under
 	# the NavigationRegion2D so the bake carves them (parsed geometry =
-	# static colliders, mask 1). No wall visuals needed: the void already
-	# renders as the dark clear color, floors are the lit rectangles.
+	# static colliders, mask 1). Visuals are tiles (_build_tiles); this
+	# builds physics + light occluders only.
 	var walls := StaticBody2D.new()
 	walls.name = "Walls"
 	walls.collision_layer = 1
@@ -134,8 +183,12 @@ func _build_geometry() -> void:
 				(run.position.y + 0.5) * CELL)
 		walls.add_child(shape)
 		# Matching light occluder: walls cast shadows -> fog of war for free.
+		# CULL_CLOCKWISE: only edges facing away from the light cast shadow,
+		# so the torch still lights the brick face of the wall itself (flip
+		# to CULL_COUNTER_CLOCKWISE if wall tiles render unlit/black).
 		var occluder := LightOccluder2D.new()
 		var opoly := OccluderPolygon2D.new()
+		opoly.cull_mode = OccluderPolygon2D.CULL_CLOCKWISE
 		var hw := run.size.x * CELL / 2.0
 		var hh := CELL / 2.0
 		opoly.polygon = PackedVector2Array([
@@ -144,15 +197,6 @@ func _build_geometry() -> void:
 		occluder.occluder = opoly
 		occluder.position = shape.position
 		walls.add_child(occluder)
-	for run in _row_runs(true):
-		var floor_visual := Polygon2D.new()
-		floor_visual.color = FLOOR_COLOR
-		var origin := Vector2(run.position.x * CELL, run.position.y * CELL)
-		var size := Vector2(run.size.x * CELL, CELL)
-		floor_visual.polygon = PackedVector2Array([
-			origin, origin + Vector2(size.x, 0), origin + size, origin + Vector2(0, size.y),
-		])
-		add_child(floor_visual)
 
 
 func _row_runs(want_floor: bool) -> Array[Rect2i]:
