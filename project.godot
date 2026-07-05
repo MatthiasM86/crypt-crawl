@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Crypt Crawl"
-run/main_scene="res://scenes/levels/test_room.tscn"
+run/main_scene="res://scenes/levels/generated_level.tscn"
 config/features=PackedStringArray("4.3")
 
 [autoload]
