@@ -10,17 +10,23 @@ feel fun?"* — this is a feel-first prototype, not a full game. Placeholder gra
 (colored rectangles) are deliberate; pixel art, sound, meta-progression, bosses,
 items, and balancing are explicitly post-PoC.
 
-Implemented (all of Phase 4): Diablo-style click-to-move / attack-move, melee
-combat with hit feedback (shader hit-flash, knockback, trauma-based screenshake),
-enemy AI (Idle → Chase → Attack state machine with LOS detection and windup
-telegraphing), a ranged enemy with projectiles, player HP/i-frames, heal potion
-on hotkey 1/Q (one charge, refills per floor), torchlight fog-of-war
-(CanvasModulate darkness + shadowed PointLight2D + LightOccluder2D on every
-wall), stairs → next generated floor (HP carries over; GameManager tracks
-`floor_num`), death → full run reset, and a minimal HUD (HP squares, potion,
-floor number — custom `_draw()` on a Control with `mouse_filter = IGNORE`).
-Still open from the plan: dash (marked optional for the PoC); everything in the
-"Ausblick" section (meta-progression, art, bosses, items) is post-PoC.
+Implemented (all of Phase 4 + extras): Diablo-style click-to-move / attack-move,
+melee combat with hit feedback (shader hit-flash, knockback, trauma-based
+screenshake), enemy AI (Idle → Chase → Attack state machine with LOS detection
+and windup telegraphing), a ranged enemy with projectiles, player HP (10) with
+i-frames, dash on Space/Shift (i-frames, passes through enemies, cancels
+windups), AoE slam on right-click (2 dmg + amplified knockback in 90px, 3s CD),
+heal potion on hotkey 1/Q (heals 5, belt of 3; ~22% drop chance from slain
+enemies as glowing pickups), torchlight fog-of-war (CanvasModulate darkness +
+shadowed PointLight2D + LightOccluder2D on every wall), tile-based rendering
+(TileMapLayer, placeholder atlas — see docs/asset-spec.md for the swap-in art
+pipeline), stairs → next generated floor (HP + potion belt carry over;
+GameManager tracks `floor_num`), death → full run reset, and a minimal HUD
+(HP squares, potion belt, dash/skill cooldowns, floor number — custom `_draw()`
+on a Control with `mouse_filter = IGNORE`).
+Not yet: floor-based difficulty scaling (`floor_num` is cosmetic so far),
+character sprites (waiting on assets per docs/asset-spec.md), and everything in
+the plan's "Ausblick" (meta-progression, bosses, item system, sound).
 
 ## Running things
 
