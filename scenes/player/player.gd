@@ -322,11 +322,28 @@ func take_damage(amount: int, _source_position: Vector2) -> void:
 		_play_invuln_blink()
 
 
+func take_potion_pickup() -> bool:
+	## Called by potion pickups. Belt first; with a full belt an injured
+	## player drinks on the spot. Returns false only at full belt + full HP
+	## (the pickup then converts itself to souls) -- pickups never dead-end.
+	if add_potion():
+		return true
+	if hp < max_hp:
+		hp = mini(hp + POTION_HEAL, max_hp)
+		_heal_feedback()
+		return true
+	return false
+
+
 func _drink_potion() -> void:
 	if dead or potion_charges <= 0 or hp >= max_hp:
 		return
 	potion_charges -= 1
 	hp = mini(hp + POTION_HEAL, max_hp)
+	_heal_feedback()
+
+
+func _heal_feedback() -> void:
 	_visual.modulate = Color(0.55, 1.25, 0.6, _visual.modulate.a)
 	var t := create_tween()
 	t.tween_property(_visual, "modulate", Color(1, 1, 1, _visual.modulate.a), 0.4)

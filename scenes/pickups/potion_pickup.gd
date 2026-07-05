@@ -1,7 +1,10 @@
 extends Area2D
-## Health potion drop (from slain enemies). Walk over it to gain a belt
-## charge via the duck-typed add_potion() -> bool; stays on the ground if
-## the belt is full.
+## Health potion drop (from slain enemies). Never a dead pickup: goes into
+## the belt if there's room, heals on the spot if the belt is full but the
+## player is injured, and converts to souls at full belt + full HP.
+
+const FULL_CONVERT_SOULS := 5
+const SOUL_SCENE := preload("res://scenes/pickups/soul_wisp.tscn")
 
 
 func _ready() -> void:
@@ -19,5 +22,11 @@ func _start_bob() -> void:
 
 
 func _on_body_entered(body: Node2D) -> void:
-	if body.has_method("add_potion") and body.add_potion():
-		queue_free()
+	if not body.has_method("take_potion_pickup"):
+		return
+	if not body.take_potion_pickup():
+		var wisp := SOUL_SCENE.instantiate()
+		wisp.value = FULL_CONVERT_SOULS
+		wisp.position = global_position
+		get_parent().add_child.call_deferred(wisp)
+	queue_free()
