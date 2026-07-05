@@ -1,0 +1,32 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/enemies/enemy.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scenes/enemies/boss.gd" id="2_boss"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_boss_body"]
+radius = 24.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_boss_click"]
+radius = 42.0
+
+[node name="Boss" instance=ExtResource("1_base")]
+script = ExtResource("2_boss")
+max_hp = 25
+move_speed = 140.0
+detect_radius = 600.0
+attack_range = 420.0
+attack_windup = 0.7
+attack_recover = 0.4
+attack_cooldown = 1.8
+attack_damage = 2
+soul_value = 40
+
+[node name="Visual" parent="."]
+color = Color(0.62, 0.2, 0.45, 1)
+polygon = PackedVector2Array(-26, -26, 26, -26, 26, 26, -26, 26)
+
+[node name="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_boss_body")
+
+[node name="ClickShape" parent="ClickArea"]
+shape = SubResource("CircleShape2D_boss_click")

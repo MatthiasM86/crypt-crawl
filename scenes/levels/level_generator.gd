@@ -12,6 +12,10 @@ const PLAYER_SCENE := preload("res://scenes/player/player.tscn")
 const MELEE_SCENE := preload("res://scenes/enemies/melee_enemy.tscn")
 const RANGED_SCENE := preload("res://scenes/enemies/ranged_enemy.tscn")
 const STAIRS_SCENE := preload("res://scenes/levels/stairs.tscn")
+const BOSS_SCENE := preload("res://scenes/enemies/boss.tscn")
+const VICTORY_PORTAL_SCENE := preload("res://scenes/levels/victory_portal.tscn")
+
+const BOSS_EVERY := 5             # every Nth floor is a boss arena
 
 # --- Generation dials ---------------------------------------------------------
 const CELL := 32                  # px per grid cell
@@ -57,18 +61,59 @@ var _floor := {}  # Set: Vector2i -> true
 
 func _ready() -> void:
 	randomize()
-	for attempt in 3:
-		_rooms.clear()
-		_floor.clear()
-		_generate_layout()
-		if _all_rooms_reachable():
-			break
-		if attempt == 2:
-			push_error("Level generation failed the reachability check 3x; using last layout")
+	var boss_floor := GameManager.floor_num % BOSS_EVERY == 0
+	if boss_floor:
+		_generate_boss_arena()
+	else:
+		for attempt in 3:
+			_rooms.clear()
+			_floor.clear()
+			_generate_layout()
+			if _all_rooms_reachable():
+				break
+			if attempt == 2:
+				push_error("Level generation failed the reachability check 3x; using last layout")
 	_build_tiles()
 	_build_geometry()
-	_spawn_player_and_enemies()
+	if boss_floor:
+		_spawn_boss_encounter()
+	else:
+		_spawn_player_and_enemies()
 	_bake_navmesh()
+
+
+func _generate_boss_arena() -> void:
+	# One big room, no corridors, no stairs -- the victory portal spawns on
+	# the boss's death instead. Four 2x2 pillars give dodge cover (erased
+	# floor cells automatically become walls/occluders/tiles downstream).
+	var room := Rect2i((MAP_W - 30) / 2, (MAP_H - 18) / 2, 30, 18)
+	_carve_room(room)
+	_rooms.append(room)
+	for px in [room.position.x + 7, room.end.x - 9]:
+		for py in [room.position.y + 5, room.end.y - 7]:
+			for dx in 2:
+				for dy in 2:
+					_floor.erase(Vector2i(px + dx, py + dy))
+
+
+func _spawn_boss_encounter() -> void:
+	var room := _rooms[0]
+	var player := PLAYER_SCENE.instantiate()
+	player.position = _cell_center(Vector2i(room.position.x + 3, room.get_center().y))
+	add_child(player)
+	var boss := BOSS_SCENE.instantiate()
+	var tier := GameManager.floor_num / BOSS_EVERY
+	boss.max_hp += 15 * (tier - 1)   # floor 10, 15, ... bring him back stronger
+	boss.soul_value += 20 * (tier - 1)
+	boss.position = _cell_center(Vector2i(room.end.x - 4, room.get_center().y))
+	boss.defeated.connect(_on_boss_defeated)
+	add_child(boss)
+
+
+func _on_boss_defeated() -> void:
+	var portal := VICTORY_PORTAL_SCENE.instantiate()
+	portal.position = _cell_center(_rooms[0].get_center())
+	add_child(portal)
 
 
 func _generate_layout() -> void:

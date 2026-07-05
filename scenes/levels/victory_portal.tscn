@@ -1,0 +1,39 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/levels/victory_portal.gd" id="1_victory"]
+[ext_resource type="GradientTexture2D" path="res://assets/textures/radial_light.tres" id="2_light"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_trigger"]
+size = Vector2(36, 52)
+
+[node name="VictoryPortal" type="Area2D"]
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = ExtResource("1_victory")
+
+[node name="Frame" type="Polygon2D" parent="."]
+color = Color(0.5, 0.4, 0.15, 1)
+polygon = PackedVector2Array(-20, -30, 20, -30, 20, 30, -20, 30)
+
+[node name="Swirl" type="Polygon2D" parent="."]
+color = Color(1, 0.85, 0.4, 1)
+polygon = PackedVector2Array(-13, -23, 13, -23, 13, 23, -13, 23)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_trigger")
+
+[node name="Glow" type="PointLight2D" parent="."]
+color = Color(1, 0.85, 0.45, 1)
+energy = 1.4
+texture = ExtResource("2_light")
+texture_scale = 1.1
+
+[node name="Hint" type="Label" parent="."]
+offset_left = -70.0
+offset_top = -56.0
+offset_right = 70.0
+offset_bottom = -36.0
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 11
+text = "Sieg! Zur Basis"

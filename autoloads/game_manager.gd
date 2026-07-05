@@ -24,6 +24,7 @@ var floor_num := 1
 var carry_hp := -1
 var carry_potions := 1
 var souls := 0
+var wins := 0
 var upgrades := {"vitality": 0, "might": 0, "reflexes": 0, "belt": 0}
 
 
@@ -75,6 +76,15 @@ func next_floor(current_hp: int, current_potions: int) -> void:
 	get_tree().reload_current_scene.call_deferred()
 
 
+func run_won() -> void:
+	wins += 1
+	floor_num = 1
+	carry_hp = -1
+	carry_potions = 1
+	_save()
+	get_tree().change_scene_to_file.call_deferred(HUB_SCENE)
+
+
 func player_died() -> void:
 	floor_num = 1
 	carry_hp = -1
@@ -87,6 +97,7 @@ func player_died() -> void:
 func _save() -> void:
 	var cfg := ConfigFile.new()
 	cfg.set_value("meta", "souls", souls)
+	cfg.set_value("meta", "wins", wins)
 	cfg.set_value("meta", "upgrades", upgrades)
 	cfg.save(SAVE_PATH)
 
@@ -96,6 +107,7 @@ func _load() -> void:
 	if cfg.load(SAVE_PATH) != OK:
 		return
 	souls = cfg.get_value("meta", "souls", 0)
+	wins = cfg.get_value("meta", "wins", 0)
 	var saved: Dictionary = cfg.get_value("meta", "upgrades", {})
 	for key in upgrades:
 		upgrades[key] = int(saved.get(key, 0))

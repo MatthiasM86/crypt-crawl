@@ -32,6 +32,19 @@ func _draw() -> void:
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.8, 0.8, 0.85))
 	draw_string(ThemeDB.fallback_font, Vector2(10, 108), "Seelen: %d" % GameManager.souls,
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.55, 0.9, 1.0))
+	_draw_boss_bar()
+
+
+func _draw_boss_bar() -> void:
+	var boss: Node = get_tree().get_first_node_in_group("boss")
+	if boss == null or boss.get("dead"):
+		return
+	var w := 360.0
+	var x := (get_viewport_rect().size.x - w) / 2.0
+	draw_rect(Rect2(x, 16, w, 14), Color(0.12, 0.05, 0.08))
+	draw_rect(Rect2(x, 16, w * boss.hp / float(boss.max_hp), 14), Color(0.7, 0.15, 0.2))
+	draw_string(ThemeDB.fallback_font, Vector2(x, 48), "Kryptwächter",
+			HORIZONTAL_ALIGNMENT_LEFT, w, 14, Color(0.85, 0.7, 0.75))
 
 
 func _draw_cooldown_square(pos: Vector2, ready_color: Color, left: float, total: float) -> void:
