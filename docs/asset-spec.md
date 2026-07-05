@@ -34,6 +34,18 @@ Prompt-Baustein (englisch, für Bild-KI):
 
 ## 2. Charakter-Sprite-Sheets (brauchen danach einen Code-Milestone)
 
+> **Status Spieler (erledigt, abweichend von der Tabelle unten):** Der Spieler
+> wird nicht mehr als eine einzelne rechts-blickende Datei umgesetzt, sondern
+> über **PixelLab (MCP)** als **8-Richtungs-Charakter** generiert — 48×48 px
+> Frames (Figur ~14×33 px, sitzt ohne Skalierung auf den 32er-Tiles), Idle 4f /
+> Laufen 6f / Angriff 5f pro Richtung. Frames liegen unter
+> `assets/sprites/player/<state>/<richtung>/`, gebündelt in
+> `player_frames.tres` (SpriteFrames, 24 Clips `"<state>_<richtung>"`). Der
+> Player nutzt jetzt eine `AnimatedSprite2D` (Node „Visual"), gesteuert von
+> `state` + `_pivot.rotation` (siehe `_update_animation()` in `player.gd`); die
+> Polygon2D-Rechtecke und die WeaponVisual sind entfernt, Hit-Flash-Shader und
+> alle Effekte bleiben. Gegner folgen weiterhin dem Schema unten.
+
 Alle Charaktere: **32×32 px pro Frame**, horizontale Streifen (Frames
 nebeneinander), Blickrichtung **rechts** (das Spiel rotiert/spiegelt selbst),
 transparenter Hintergrund. Pro Datei eine Animation pro Zeile:

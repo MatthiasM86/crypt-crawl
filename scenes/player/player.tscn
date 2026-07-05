@@ -5,6 +5,7 @@
 [ext_resource type="Shader" path="res://assets/shaders/hit_flash.gdshader" id="3_flash"]
 [ext_resource type="GradientTexture2D" path="res://assets/textures/radial_light.tres" id="4_light"]
 [ext_resource type="Script" path="res://scenes/player/hud.gd" id="5_hud"]
+[ext_resource type="SpriteFrames" path="res://assets/sprites/player/player_frames.tres" id="6_frames"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_flash"]
 resource_local_to_scene = true
@@ -23,10 +24,12 @@ collision_layer = 2
 collision_mask = 5
 script = ExtResource("1_player")
 
-[node name="Visual" type="Polygon2D" parent="."]
+[node name="Visual" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
 material = SubResource("ShaderMaterial_flash")
-color = Color(0.4, 0.75, 0.95, 1)
-polygon = PackedVector2Array(-13, -13, 13, -13, 13, 13, -13, 13)
+sprite_frames = ExtResource("6_frames")
+animation = &"idle_south"
+offset = Vector2(0, -6)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_body")
@@ -45,12 +48,6 @@ monitorable = false
 [node name="HitboxShape" type="CollisionShape2D" parent="AttackPivot/Hitbox"]
 position = Vector2(34, 0)
 shape = SubResource("RectangleShape2D_hitbox")
-
-[node name="WeaponVisual" type="Polygon2D" parent="AttackPivot"]
-visible = false
-position = Vector2(16, 0)
-color = Color(0.9, 0.9, 0.95, 1)
-polygon = PackedVector2Array(0, -4, 24, -4, 24, 4, 0, 4)
 
 [node name="Torch" type="PointLight2D" parent="."]
 color = Color(1, 0.87, 0.7, 1)

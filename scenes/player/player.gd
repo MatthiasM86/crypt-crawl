@@ -36,6 +36,10 @@ const DEATH_TRAUMA := 0.6
 
 const CLICKABLE_MASK := 32  # physics layer 6 "clickable" (enemy ClickAreas)
 
+# 8-way sprite facing, indexed by round(pivot.rotation / 45deg). +Y is down, so
+# rotation 0 = east, PI/2 = south. Names match the SpriteFrames clip suffixes.
+const DIR8 := ["east", "south-east", "south", "south-west", "west", "north-west", "north", "north-east"]
+
 enum State { IDLE, MOVE, ATTACK, DASH, SLAM }
 
 var state := State.IDLE
@@ -68,9 +72,8 @@ var _blink_tween: Tween
 @onready var _nav: NavigationAgent2D = $NavigationAgent2D
 @onready var _pivot: Node2D = $AttackPivot
 @onready var _hitbox: Area2D = $AttackPivot/Hitbox
-@onready var _weapon: Polygon2D = $AttackPivot/WeaponVisual
 @onready var _camera: Camera2D = $Camera2D
-@onready var _visual: Polygon2D = $Visual
+@onready var _visual: AnimatedSprite2D = $Visual
 
 
 func _ready() -> void:
@@ -85,6 +88,8 @@ func _ready() -> void:
 	else:
 		hp = max_hp
 		potion_charges = 1
+	_pivot.rotation = PI / 2.0  # face south (toward the camera) on spawn
+	_visual.play("idle_south")
 
 
 func _apply_meta_upgrades() -> void:
@@ -143,6 +148,26 @@ func _physics_process(delta: float) -> void:
 		_tick_attack(delta)
 	else:
 		_tick_movement()
+	_update_animation()
+
+
+func _dir_name() -> String:
+	# Snap the attack-pivot facing to one of 8 sprite directions.
+	return DIR8[posmod(int(round(_pivot.rotation / (PI / 4.0))), 8)]
+
+
+func _update_animation() -> void:
+	# State + facing -> "<state>_<dir>" clip. idle/walk loop; attack plays once
+	# (non-looping in the SpriteFrames) and is left alone once it has started.
+	var base := "idle"
+	match state:
+		State.MOVE, State.DASH:
+			base = "walk"
+		State.ATTACK, State.SLAM:
+			base = "attack"
+	var want := base + "_" + _dir_name()
+	if _visual.animation != want:
+		_visual.play(want)
 
 
 func _try_dash() -> void:
@@ -159,7 +184,6 @@ func _try_dash() -> void:
 	dash_cooldown_left = dash_cooldown
 	_invuln_left = maxf(_invuln_left, DASH_TIME + 0.05)
 	collision_mask = 1
-	_weapon.visible = false
 	Sfx.play("dash")
 	_visual.modulate.a = 0.55
 	var t := create_tween()
@@ -184,7 +208,6 @@ func _try_slam() -> void:
 	_slam_time = 0.0
 	_slam_struck = false
 	velocity = Vector2.ZERO
-	_weapon.visible = false
 	var t := create_tween()
 	t.tween_property(_visual, "scale", Vector2(1.3, 1.3), SLAM_WINDUP)
 
@@ -286,11 +309,7 @@ func _begin_attack() -> void:
 	_struck = false
 	_cooldown_left = ATTACK_COOLDOWN
 	velocity = Vector2.ZERO
-	_weapon.visible = true
-	_weapon.position.x = 16.0
-	var t := create_tween()
-	t.tween_property(_weapon, "position:x", 34.0, ATTACK_WINDUP)
-	t.tween_property(_weapon, "position:x", 16.0, ATTACK_RECOVER)
+	# The swing is the "attack_<dir>" sprite clip, played by _update_animation().
 
 
 func _tick_attack(delta: float) -> void:
@@ -299,7 +318,6 @@ func _tick_attack(delta: float) -> void:
 		_struck = true
 		_strike()
 	if _attack_time >= ATTACK_WINDUP + ATTACK_RECOVER:
-		_weapon.visible = false
 		state = State.IDLE
 
 
@@ -386,7 +404,6 @@ func _die() -> void:
 	set_process_unhandled_input(false)
 	# Can't free/disable shapes mid-physics-callback.
 	$CollisionShape2D.set_deferred("disabled", true)
-	_weapon.visible = false
 	if _blink_tween:
 		_blink_tween.kill()
 	_camera.add_trauma(DEATH_TRAUMA)
