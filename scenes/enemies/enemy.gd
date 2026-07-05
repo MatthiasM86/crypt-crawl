@@ -14,6 +14,8 @@ const TELEGRAPH_COLOR := Color(1.0, 0.85, 0.3)  # windup ramps body to this
 const TELEGRAPH_SCALE := 1.15                    # ...and grows to this
 const LUNGE_SPEED := 240.0                       # melee forward pop on strike
 const WORLD_MASK := 1                            # LOS ray: walls/pillar only
+const POTION_DROP_CHANCE := 0.22
+const PICKUP_SCENE := preload("res://scenes/pickups/potion_pickup.tscn")
 # ------------------------------------------------------------------------------
 
 # --- Archetype dials (variants override these in their .tscn) -----------------
@@ -175,11 +177,11 @@ func _player_alive() -> bool:
 	return _player != null and is_instance_valid(_player) and not _player.get("dead")
 
 
-func take_damage(amount: int, source_position: Vector2) -> void:
+func take_damage(amount: int, source_position: Vector2, knockback_scale := 1.0) -> void:
 	if dead:
 		return
 	hp -= amount
-	_knockback = (global_position - source_position).normalized() * KNOCKBACK_SPEED
+	_knockback = (global_position - source_position).normalized() * KNOCKBACK_SPEED * knockback_scale
 	_play_flash()
 	if ai_enabled and state == State.IDLE and _player_alive():
 		state = State.CHASE  # hit from cover -> wake up
@@ -198,6 +200,10 @@ func _play_flash() -> void:
 func _die() -> void:
 	dead = true
 	_cancel_attack()
+	if randf() < POTION_DROP_CHANCE:
+		var drop := PICKUP_SCENE.instantiate()
+		drop.position = global_position  # before add_child: level sits at origin
+		get_parent().add_child(drop)
 	# Stop blocking movement/clicks immediately; can't free shapes mid-physics.
 	$CollisionShape2D.set_deferred("disabled", true)
 	$ClickArea/ClickShape.set_deferred("disabled", true)

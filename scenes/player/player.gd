@@ -14,8 +14,19 @@ const ATTACK_RECOVER := 0.15     # damage frame -> can act again
 const ATTACK_DAMAGE := 1
 const HIT_TRAUMA := 0.22
 const KILL_TRAUMA := 0.35
-const MAX_HP := 5
-const POTION_HEAL := 3           # one refill per floor (see GameManager)
+const MAX_HP := 10
+const POTION_HEAL := 5
+const POTION_MAX := 3            # belt size; drops beyond this stay lying
+const DASH_SPEED := 950.0        # toward cursor; ~140 px per dash
+const DASH_TIME := 0.15
+const DASH_COOLDOWN := 0.8
+const SLAM_WINDUP := 0.2         # right-click AoE: commit before the boom
+const SLAM_RECOVER := 0.25
+const SLAM_COOLDOWN := 3.0
+const SLAM_DAMAGE := 2
+const SLAM_RADIUS := 90.0
+const SLAM_KNOCKBACK := 2.2      # multiplier on the enemies' base knockback
+const SLAM_TRAUMA := 0.5
 const HURT_TRAUMA := 0.45        # taking a hit out-shakes dealing one
 const INVULN_TIME := 0.6         # i-frames: 3 converging melees can't stunlock
 const FLASH_TIME := 0.15
@@ -25,14 +36,22 @@ const DEATH_TRAUMA := 0.6
 
 const CLICKABLE_MASK := 32  # physics layer 6 "clickable" (enemy ClickAreas)
 
-enum State { IDLE, MOVE, ATTACK }
+enum State { IDLE, MOVE, ATTACK, DASH, SLAM }
 
 var state := State.IDLE
 var attack_target: Node2D = null
 var hp: int
 var potion_charges := 1
 var dead := false
+var dash_cooldown_left := 0.0    # public: HUD reads these
+var skill_cooldown_left := 0.0
 var _click_held := false
+var _dash_requested := false
+var _skill_requested := false
+var _dash_dir := Vector2.ZERO
+var _dash_time_left := 0.0
+var _slam_time := 0.0
+var _slam_struck := false
 var _cooldown_left := 0.0
 var _attack_time := 0.0
 var _struck := false
@@ -49,8 +68,20 @@ var _blink_tween: Tween
 
 
 func _ready() -> void:
-	# HP carries across floor transitions; -1 marks a fresh run.
-	hp = GameManager.carry_hp if GameManager.carry_hp > 0 else MAX_HP
+	# HP and potion belt carry across floor transitions; -1 marks a fresh run.
+	if GameManager.carry_hp > 0:
+		hp = GameManager.carry_hp
+		potion_charges = GameManager.carry_potions
+	else:
+		hp = MAX_HP
+		potion_charges = 1
+
+
+func add_potion() -> bool:
+	if potion_charges >= POTION_MAX:
+		return false
+	potion_charges += 1
+	return true
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -61,6 +92,10 @@ func _unhandled_input(event: InputEvent) -> void:
 		_click_held = false
 	elif event.is_action_pressed("potion"):
 		_drink_potion()
+	elif event.is_action_pressed("dash"):
+		_dash_requested = true
+	elif event.is_action_pressed("skill"):
+		_skill_requested = true
 
 
 func _physics_process(delta: float) -> void:
@@ -68,13 +103,108 @@ func _physics_process(delta: float) -> void:
 		return
 	_invuln_left = maxf(_invuln_left - delta, 0.0)
 	_cooldown_left = maxf(_cooldown_left - delta, 0.0)
+	dash_cooldown_left = maxf(dash_cooldown_left - delta, 0.0)
+	skill_cooldown_left = maxf(skill_cooldown_left - delta, 0.0)
 	_validate_target()
-	if _click_held and state != State.ATTACK:
+	if _dash_requested:
+		_dash_requested = false
+		_try_dash()
+	if _skill_requested:
+		_skill_requested = false
+		_try_slam()
+	if _click_held and state != State.ATTACK and state != State.SLAM:
 		_apply_click_intent()
-	if state == State.ATTACK:
+	if state == State.DASH:
+		_tick_dash(delta)
+	elif state == State.SLAM:
+		_tick_slam(delta)
+	elif state == State.ATTACK:
 		_tick_attack(delta)
 	else:
 		_tick_movement()
+
+
+func _try_dash() -> void:
+	# Dash cancels windups/slams (responsiveness is the point) and grants
+	# i-frames; collision mask drops to world-only so you dash THROUGH enemies.
+	if dead or dash_cooldown_left > 0.0 or state == State.DASH:
+		return
+	var dir := get_global_mouse_position() - global_position
+	if dir.length() < 4.0:
+		dir = Vector2.RIGHT.rotated(_pivot.rotation)
+	_dash_dir = dir.normalized()
+	state = State.DASH
+	_dash_time_left = DASH_TIME
+	dash_cooldown_left = DASH_COOLDOWN
+	_invuln_left = maxf(_invuln_left, DASH_TIME + 0.05)
+	collision_mask = 1
+	_weapon.visible = false
+	_visual.modulate.a = 0.55
+	var t := create_tween()
+	t.tween_property(_visual, "modulate:a", 1.0, DASH_TIME + 0.1)
+
+
+func _tick_dash(delta: float) -> void:
+	velocity = _dash_dir * DASH_SPEED
+	move_and_slide()
+	_dash_time_left -= delta
+	if _dash_time_left <= 0.0:
+		state = State.IDLE
+		velocity = Vector2.ZERO
+		collision_mask = 5
+
+
+func _try_slam() -> void:
+	if dead or skill_cooldown_left > 0.0 or state == State.DASH or state == State.SLAM:
+		return
+	skill_cooldown_left = SLAM_COOLDOWN
+	state = State.SLAM
+	_slam_time = 0.0
+	_slam_struck = false
+	velocity = Vector2.ZERO
+	_weapon.visible = false
+	var t := create_tween()
+	t.tween_property(_visual, "scale", Vector2(1.3, 1.3), SLAM_WINDUP)
+
+
+func _tick_slam(delta: float) -> void:
+	_slam_time += delta
+	if not _slam_struck and _slam_time >= SLAM_WINDUP:
+		_slam_struck = true
+		_do_slam()
+	if _slam_time >= SLAM_WINDUP + SLAM_RECOVER:
+		state = State.IDLE
+
+
+func _do_slam() -> void:
+	_visual.scale = Vector2.ONE
+	_camera.add_trauma(SLAM_TRAUMA)
+	_spawn_slam_ring()
+	var shape := CircleShape2D.new()
+	shape.radius = SLAM_RADIUS
+	var params := PhysicsShapeQueryParameters2D.new()
+	params.shape = shape
+	params.transform = Transform2D(0.0, global_position)
+	params.collision_mask = 4
+	for hit in get_world_2d().direct_space_state.intersect_shape(params, 16):
+		var body: Node = hit.collider
+		if body.has_method("take_damage") and not body.get("dead"):
+			body.take_damage(SLAM_DAMAGE, global_position, SLAM_KNOCKBACK)
+
+
+func _spawn_slam_ring() -> void:
+	var ring := Line2D.new()
+	ring.width = 6.0
+	ring.default_color = Color(1, 0.9, 0.6, 0.9)
+	var points := PackedVector2Array()
+	for i in 33:
+		points.append(Vector2.from_angle(TAU * i / 32.0) * SLAM_RADIUS)
+	ring.points = points
+	add_child(ring)
+	var t := ring.create_tween().set_parallel()
+	t.tween_property(ring, "scale", Vector2(1.25, 1.25), 0.25)
+	t.tween_property(ring, "modulate:a", 0.0, 0.25)
+	t.chain().tween_callback(ring.queue_free)
 
 
 func _validate_target() -> void:
