@@ -34,6 +34,7 @@ func _show_attack_tell() -> void:
 
 
 func _perform_attack() -> void:
+	Sfx.play("shoot")
 	var dir := global_position.direction_to(_player.global_position)
 	var projectile := PROJECTILE_SCENE.instantiate()
 	projectile.direction = dir

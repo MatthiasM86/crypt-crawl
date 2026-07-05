@@ -17,6 +17,7 @@ config/features=PackedStringArray("4.3")
 [autoload]
 
 GameManager="*res://autoloads/game_manager.gd"
+Sfx="*res://autoloads/sfx.gd"
 
 [display]
 

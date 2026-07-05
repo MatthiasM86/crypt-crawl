@@ -24,7 +24,9 @@ func _start_bob() -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if not body.has_method("take_potion_pickup"):
 		return
-	if not body.take_potion_pickup():
+	if body.take_potion_pickup():
+		Sfx.play("pickup")
+	else:
 		var wisp := SOUL_SCENE.instantiate()
 		wisp.value = FULL_CONVERT_SOULS
 		wisp.position = global_position

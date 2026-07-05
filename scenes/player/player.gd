@@ -160,6 +160,7 @@ func _try_dash() -> void:
 	_invuln_left = maxf(_invuln_left, DASH_TIME + 0.05)
 	collision_mask = 1
 	_weapon.visible = false
+	Sfx.play("dash")
 	_visual.modulate.a = 0.55
 	var t := create_tween()
 	t.tween_property(_visual, "modulate:a", 1.0, DASH_TIME + 0.1)
@@ -200,6 +201,7 @@ func _tick_slam(delta: float) -> void:
 func _do_slam() -> void:
 	_visual.scale = Vector2.ONE
 	_camera.add_trauma(SLAM_TRAUMA)
+	Sfx.play("slam")
 	_spawn_slam_ring()
 	var shape := CircleShape2D.new()
 	shape.radius = SLAM_RADIUS
@@ -314,6 +316,8 @@ func _strike() -> void:
 		_camera.add_trauma(KILL_TRAUMA)
 	elif landed:
 		_camera.add_trauma(HIT_TRAUMA)
+	if landed:
+		Sfx.play("hit")
 
 
 func take_damage(amount: int, _source_position: Vector2) -> void:
@@ -324,6 +328,7 @@ func take_damage(amount: int, _source_position: Vector2) -> void:
 	hp -= amount
 	_invuln_left = INVULN_TIME
 	_camera.add_trauma(HURT_TRAUMA)
+	Sfx.play("hurt")
 	_play_flash()
 	if hp <= 0:
 		_die()
@@ -353,6 +358,7 @@ func _drink_potion() -> void:
 
 
 func _heal_feedback() -> void:
+	Sfx.play("potion")
 	_visual.modulate = Color(0.55, 1.25, 0.6, _visual.modulate.a)
 	var t := create_tween()
 	t.tween_property(_visual, "modulate", Color(1, 1, 1, _visual.modulate.a), 0.4)
@@ -384,6 +390,7 @@ func _die() -> void:
 	if _blink_tween:
 		_blink_tween.kill()
 	_camera.add_trauma(DEATH_TRAUMA)
+	Sfx.play("death_player")
 	# Pop the Visual only -- scaling the root would scale the child Camera2D
 	# and zoom the whole viewport.
 	var t := create_tween().set_parallel()

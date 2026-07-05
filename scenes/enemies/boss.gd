@@ -55,6 +55,7 @@ func _perform_attack() -> void:
 
 
 func _do_aoe() -> void:
+	Sfx.play("slam", -2.0)
 	var flash_ring := _make_ring(AOE_RADIUS, Color(1, 0.45, 0.25, 0.9), 6.0)
 	var t := flash_ring.create_tween().set_parallel()
 	t.tween_property(flash_ring, "scale", Vector2(1.15, 1.15), 0.25)
@@ -66,6 +67,7 @@ func _do_aoe() -> void:
 
 
 func _do_ring() -> void:
+	Sfx.play("shoot")
 	for i in RING_PROJECTILES:
 		var dir := Vector2.from_angle(TAU * i / RING_PROJECTILES)
 		var projectile := BOSS_PROJECTILE.instantiate()

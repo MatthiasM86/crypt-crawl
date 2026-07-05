@@ -14,4 +14,5 @@ func _on_body_entered(body: Node2D) -> void:
 	if _used or body.get("dead"):
 		return
 	_used = true
+	Sfx.play("stairs")
 	GameManager.return_to_hub()

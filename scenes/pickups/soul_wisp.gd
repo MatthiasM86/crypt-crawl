@@ -40,4 +40,5 @@ func _process(delta: float) -> void:
 
 func _collect() -> void:
 	GameManager.add_souls(value)
+	Sfx.play("soul", -6.0)
 	queue_free()

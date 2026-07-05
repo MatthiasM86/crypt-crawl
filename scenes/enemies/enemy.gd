@@ -202,6 +202,7 @@ func _play_flash() -> void:
 func _die() -> void:
 	dead = true
 	_cancel_attack()
+	Sfx.play("death_enemy")
 	if randf() < POTION_DROP_CHANCE:
 		var drop := PICKUP_SCENE.instantiate()
 		drop.position = global_position  # before add_child: level sits at origin

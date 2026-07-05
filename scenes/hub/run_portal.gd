@@ -12,4 +12,5 @@ func _on_body_entered(_body: Node2D) -> void:
 	if _used:
 		return
 	_used = true
+	Sfx.play("stairs")
 	GameManager.start_run()
