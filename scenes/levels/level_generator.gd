@@ -28,6 +28,14 @@ const WALL_EPS := 0.1             # px overlap between wall rects: exactly
                                   # convex partition fail; overlaps are fine
 const ENEMIES_PER_ROOM_MAX := 2   # 1..this per room (player's room stays empty)
 const RANGED_CHANCE := 0.35       # per spawned enemy
+
+# --- Floor difficulty scaling (applied via enemy @export dials at spawn) ------
+const SCALE_HP_EVERY := 2         # +1 enemy max_hp every N floors
+const SCALE_COUNT_EVERY := 3      # +1 max enemies/room every N floors...
+const SCALE_COUNT_CAP := 4        # ...capped here
+const SCALE_SPEED_PER_FLOOR := 8.0
+const SCALE_SPEED_CAP := 60.0     # melee stays slower than the 300px/s player
+# ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 
 # --- Tile atlas (assets/sprites/tileset_placeholder.png, 32px grid) -----------
@@ -222,14 +230,22 @@ func _spawn_player_and_enemies() -> void:
 	var stairs := STAIRS_SCENE.instantiate()
 	stairs.position = _cell_center(_rooms[_rooms.size() - 1].get_center())
 	add_child(stairs)
+	var depth := GameManager.floor_num - 1
+	var hp_bonus := depth / SCALE_HP_EVERY
+	var speed_bonus := minf(depth * SCALE_SPEED_PER_FLOOR, SCALE_SPEED_CAP)
+	var room_max := mini(ENEMIES_PER_ROOM_MAX + depth / SCALE_COUNT_EVERY, SCALE_COUNT_CAP)
 	for i in range(1, _rooms.size()):
 		var room := _rooms[i]
-		for j in randi_range(1, ENEMIES_PER_ROOM_MAX):
+		for j in randi_range(1, room_max):
 			var scene := RANGED_SCENE if randf() < RANGED_CHANCE else MELEE_SCENE
 			var enemy := scene.instantiate()
 			enemy.position = _cell_center(Vector2i(
 					randi_range(room.position.x + 1, room.end.x - 2),
 					randi_range(room.position.y + 1, room.end.y - 2)))
+			# Scaling via the @export dials, set before add_child so the
+			# enemy's _ready() picks them up (hp = max_hp there).
+			enemy.max_hp += hp_bonus
+			enemy.move_speed += speed_bonus
 			add_child(enemy)
 
 
