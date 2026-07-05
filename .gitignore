@@ -17,3 +17,6 @@ export_credentials.cfg
 
 # Misc editor/OS temp files
 *.tmp
+
+# Stray debug log from an unrelated Firebase project (court-planner)
+firebase-debug.log
