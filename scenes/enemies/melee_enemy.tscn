@@ -1,0 +1,5 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/enemies/enemy.tscn" id="1_base"]
+
+[node name="MeleeEnemy" instance=ExtResource("1_base")]

@@ -14,10 +14,13 @@ radius = 14.0
 [sub_resource type="CircleShape2D" id="CircleShape2D_click"]
 radius = 26.0
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hitbox"]
+size = Vector2(44, 36)
+
 [node name="Enemy" type="CharacterBody2D"]
 motion_mode = 1
 collision_layer = 4
-collision_mask = 3
+collision_mask = 7
 script = ExtResource("1_enemy")
 
 [node name="Visual" type="Polygon2D" parent="."]
@@ -35,3 +38,24 @@ monitoring = false
 
 [node name="ClickShape" type="CollisionShape2D" parent="ClickArea"]
 shape = SubResource("CircleShape2D_click")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
+path_desired_distance = 4.0
+target_desired_distance = 8.0
+
+[node name="AttackPivot" type="Node2D" parent="."]
+
+[node name="Hitbox" type="Area2D" parent="AttackPivot"]
+collision_layer = 8
+collision_mask = 2
+monitorable = false
+
+[node name="HitboxShape" type="CollisionShape2D" parent="AttackPivot/Hitbox"]
+position = Vector2(32, 0)
+shape = SubResource("RectangleShape2D_hitbox")
+
+[node name="WeaponVisual" type="Polygon2D" parent="AttackPivot"]
+visible = false
+position = Vector2(10, 0)
+color = Color(0.95, 0.6, 0.5, 1)
+polygon = PackedVector2Array(0, -3, 20, -3, 20, 3, 0, 3)

@@ -2,6 +2,8 @@ extends CharacterBody2D
 ## Diablo-style click-to-move / attack-move.
 ## Left click (action "click"): on enemy -> pursue + strike when in range;
 ## on ground -> walk there. Holding steers continuously.
+## Damage contract (duck-typed, mirrors enemies): take_damage(amount,
+## source_position) + `dead` flag -- enemies and projectiles call/read these.
 
 # --- Feel dials -------------------------------------------------------------
 const MOVE_SPEED := 300.0
@@ -12,6 +14,12 @@ const ATTACK_RECOVER := 0.15     # damage frame -> can act again
 const ATTACK_DAMAGE := 1
 const HIT_TRAUMA := 0.22
 const KILL_TRAUMA := 0.35
+const MAX_HP := 5
+const HURT_TRAUMA := 0.45        # taking a hit out-shakes dealing one
+const INVULN_TIME := 0.6         # i-frames: 3 converging melees can't stunlock
+const FLASH_TIME := 0.15
+const DEATH_POP_TIME := 0.25
+const DEATH_TRAUMA := 0.6
 # ----------------------------------------------------------------------------
 
 const CLICKABLE_MASK := 32  # physics layer 6 "clickable" (enemy ClickAreas)
@@ -20,16 +28,26 @@ enum State { IDLE, MOVE, ATTACK }
 
 var state := State.IDLE
 var attack_target: Node2D = null
+var hp: int
+var dead := false
 var _click_held := false
 var _cooldown_left := 0.0
 var _attack_time := 0.0
 var _struck := false
+var _invuln_left := 0.0
+var _flash_tween: Tween
+var _blink_tween: Tween
 
 @onready var _nav: NavigationAgent2D = $NavigationAgent2D
 @onready var _pivot: Node2D = $AttackPivot
 @onready var _hitbox: Area2D = $AttackPivot/Hitbox
 @onready var _weapon: Polygon2D = $AttackPivot/WeaponVisual
 @onready var _camera: Camera2D = $Camera2D
+@onready var _visual: Polygon2D = $Visual
+
+
+func _ready() -> void:
+	hp = MAX_HP
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -41,6 +59,9 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _physics_process(delta: float) -> void:
+	if dead:
+		return
+	_invuln_left = maxf(_invuln_left - delta, 0.0)
 	_cooldown_left = maxf(_cooldown_left - delta, 0.0)
 	_validate_target()
 	if _click_held and state != State.ATTACK:
@@ -137,3 +158,52 @@ func _strike() -> void:
 		_camera.add_trauma(KILL_TRAUMA)
 	elif landed:
 		_camera.add_trauma(HIT_TRAUMA)
+
+
+func take_damage(amount: int, _source_position: Vector2) -> void:
+	# _source_position kept for contract symmetry (player knockback is a
+	# deliberate non-feature this milestone -- revisit if hits feel weightless).
+	if dead or _invuln_left > 0.0:
+		return
+	hp -= amount
+	_invuln_left = INVULN_TIME
+	_camera.add_trauma(HURT_TRAUMA)
+	_play_flash()
+	if hp <= 0:
+		_die()
+	else:
+		_play_invuln_blink()
+
+
+func _play_flash() -> void:
+	if _flash_tween:
+		_flash_tween.kill()
+	_visual.material.set_shader_parameter("flash_amount", 1.0)
+	_flash_tween = create_tween()
+	_flash_tween.tween_property(_visual.material, "shader_parameter/flash_amount", 0.0, FLASH_TIME)
+
+
+func _play_invuln_blink() -> void:
+	if _blink_tween:
+		_blink_tween.kill()
+	_blink_tween = create_tween().set_loops(3)  # 3 * 0.2s = INVULN_TIME
+	_blink_tween.tween_property(_visual, "modulate:a", 0.4, INVULN_TIME / 6.0)
+	_blink_tween.tween_property(_visual, "modulate:a", 1.0, INVULN_TIME / 6.0)
+
+
+func _die() -> void:
+	dead = true
+	velocity = Vector2.ZERO
+	set_process_unhandled_input(false)
+	# Can't free/disable shapes mid-physics-callback.
+	$CollisionShape2D.set_deferred("disabled", true)
+	_weapon.visible = false
+	if _blink_tween:
+		_blink_tween.kill()
+	_camera.add_trauma(DEATH_TRAUMA)
+	# Pop the Visual only -- scaling the root would scale the child Camera2D
+	# and zoom the whole viewport.
+	var t := create_tween().set_parallel()
+	t.tween_property(_visual, "scale", Vector2(1.4, 1.4), DEATH_POP_TIME)
+	t.tween_property(_visual, "modulate:a", 0.0, DEATH_POP_TIME)
+	GameManager.player_died()
