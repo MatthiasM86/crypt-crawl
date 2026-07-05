@@ -16,6 +16,7 @@ const LUNGE_SPEED := 240.0                       # melee forward pop on strike
 const WORLD_MASK := 1                            # LOS ray: walls/pillar only
 const POTION_DROP_CHANCE := 0.22
 const PICKUP_SCENE := preload("res://scenes/pickups/potion_pickup.tscn")
+const SOUL_SCENE := preload("res://scenes/pickups/soul_wisp.tscn")
 # ------------------------------------------------------------------------------
 
 # --- Archetype dials (variants override these in their .tscn) -----------------
@@ -27,6 +28,7 @@ const PICKUP_SCENE := preload("res://scenes/pickups/potion_pickup.tscn")
 @export var attack_recover := 0.3
 @export var attack_cooldown := 1.1
 @export var attack_damage := 1
+@export var soul_value := 2         # meta-currency dropped on death
 @export var ai_enabled := true      # false = passive training dummy
 # ------------------------------------------------------------------------------
 
@@ -204,6 +206,10 @@ func _die() -> void:
 		var drop := PICKUP_SCENE.instantiate()
 		drop.position = global_position  # before add_child: level sits at origin
 		get_parent().add_child(drop)
+	var wisp := SOUL_SCENE.instantiate()
+	wisp.value = soul_value
+	wisp.position = global_position
+	get_parent().add_child(wisp)
 	# Stop blocking movement/clicks immediately; can't free shapes mid-physics.
 	$CollisionShape2D.set_deferred("disabled", true)
 	$ClickArea/ClickShape.set_deferred("disabled", true)

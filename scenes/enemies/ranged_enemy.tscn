@@ -12,6 +12,7 @@ attack_range = 380.0
 attack_windup = 0.5
 attack_recover = 0.25
 attack_cooldown = 1.6
+soul_value = 3
 
 [node name="Visual" parent="."]
 color = Color(0.45, 0.8, 0.5, 1)

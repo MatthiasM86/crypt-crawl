@@ -12,23 +12,26 @@ func _process(_delta: float) -> void:
 
 
 func _draw() -> void:
-	var max_hp: int = _player.MAX_HP
+	var max_hp: int = _player.max_hp
 	var hp: int = _player.hp
 	for i in max_hp:
 		var color := Color(0.85, 0.25, 0.25) if i < hp else Color(0.22, 0.1, 0.1)
 		draw_rect(Rect2(10 + i * 24, 10, 20, 20), color)
 	# Ability row: potion belt [1/Q], dash [Space/Shift], slam [RMB]
-	for i in _player.POTION_MAX:
+	var belt: int = _player.potion_max
+	for i in belt:
 		var potion_color := Color(0.35, 0.8, 0.4) if i < _player.potion_charges else Color(0.13, 0.22, 0.14)
 		draw_rect(Rect2(10 + i * 24, 38, 20, 20), potion_color)
-	_draw_cooldown_square(Vector2(88, 38), Color(0.45, 0.8, 0.95),
-			_player.dash_cooldown_left, _player.DASH_COOLDOWN)
-	_draw_cooldown_square(Vector2(112, 38), Color(1.0, 0.75, 0.35),
+	_draw_cooldown_square(Vector2(16 + belt * 24, 38), Color(0.45, 0.8, 0.95),
+			_player.dash_cooldown_left, _player.dash_cooldown)
+	_draw_cooldown_square(Vector2(40 + belt * 24, 38), Color(1.0, 0.75, 0.35),
 			_player.skill_cooldown_left, _player.SLAM_COOLDOWN)
-	draw_string(ThemeDB.fallback_font, Vector2(138, 54), "[1] [Spc] [RMB]",
+	draw_string(ThemeDB.fallback_font, Vector2(66 + belt * 24, 54), "[1] [Spc] [RMB]",
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.55, 0.55, 0.6))
 	draw_string(ThemeDB.fallback_font, Vector2(10, 84), "Ebene %d" % GameManager.floor_num,
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.8, 0.8, 0.85))
+	draw_string(ThemeDB.fallback_font, Vector2(10, 108), "Seelen: %d" % GameManager.souls,
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.55, 0.9, 1.0))
 
 
 func _draw_cooldown_square(pos: Vector2, ready_color: Color, left: float, total: float) -> void:

@@ -1,0 +1,72 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/hub/hub.gd" id="1_hub"]
+[ext_resource type="PackedScene" path="res://scenes/player/player.tscn" id="2_player"]
+[ext_resource type="PackedScene" path="res://scenes/hub/shrine.tscn" id="3_shrine"]
+[ext_resource type="PackedScene" path="res://scenes/hub/run_portal.tscn" id="4_portal"]
+
+[sub_resource type="NavigationPolygon" id="NavigationPolygon_hub"]
+outlines = Array[PackedVector2Array]([PackedVector2Array(32, 32, 800, 32, 800, 480, 32, 480)])
+parsed_geometry_type = 1
+parsed_collision_mask = 1
+agent_radius = 16.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_h"]
+size = Vector2(832, 32)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_v"]
+size = Vector2(32, 512)
+
+[node name="Hub" type="Node2D"]
+script = ExtResource("1_hub")
+
+[node name="Darkness" type="CanvasModulate" parent="."]
+color = Color(0.42, 0.4, 0.48, 1)
+
+[node name="Floor" type="Polygon2D" parent="."]
+color = Color(0.16, 0.15, 0.18, 1)
+polygon = PackedVector2Array(32, 32, 800, 32, 800, 480, 32, 480)
+
+[node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
+navigation_polygon = SubResource("NavigationPolygon_hub")
+
+[node name="Walls" type="StaticBody2D" parent="NavigationRegion2D"]
+collision_layer = 1
+collision_mask = 0
+
+[node name="WallTop" type="CollisionShape2D" parent="NavigationRegion2D/Walls"]
+position = Vector2(416, 16)
+shape = SubResource("RectangleShape2D_wall_h")
+
+[node name="WallBottom" type="CollisionShape2D" parent="NavigationRegion2D/Walls"]
+position = Vector2(416, 496)
+shape = SubResource("RectangleShape2D_wall_h")
+
+[node name="WallLeft" type="CollisionShape2D" parent="NavigationRegion2D/Walls"]
+position = Vector2(16, 256)
+shape = SubResource("RectangleShape2D_wall_v")
+
+[node name="WallRight" type="CollisionShape2D" parent="NavigationRegion2D/Walls"]
+position = Vector2(816, 256)
+shape = SubResource("RectangleShape2D_wall_v")
+
+[node name="Player" parent="." instance=ExtResource("2_player")]
+position = Vector2(120, 256)
+
+[node name="ShrineVitality" parent="." instance=ExtResource("3_shrine")]
+position = Vector2(230, 160)
+
+[node name="ShrineMight" parent="." instance=ExtResource("3_shrine")]
+position = Vector2(390, 160)
+upgrade_id = "might"
+
+[node name="ShrineReflexes" parent="." instance=ExtResource("3_shrine")]
+position = Vector2(550, 160)
+upgrade_id = "reflexes"
+
+[node name="ShrineBelt" parent="." instance=ExtResource("3_shrine")]
+position = Vector2(390, 380)
+upgrade_id = "belt"
+
+[node name="RunPortal" parent="." instance=ExtResource("4_portal")]
+position = Vector2(730, 256)

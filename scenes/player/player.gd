@@ -43,6 +43,12 @@ var attack_target: Node2D = null
 var hp: int
 var potion_charges := 1
 var dead := false
+# Effective stats = base const + permanent meta-upgrades (set in _ready).
+var max_hp := MAX_HP
+var attack_damage := ATTACK_DAMAGE
+var slam_damage := SLAM_DAMAGE
+var dash_cooldown := DASH_COOLDOWN
+var potion_max := POTION_MAX
 var dash_cooldown_left := 0.0    # public: HUD reads these
 var skill_cooldown_left := 0.0
 var _click_held := false
@@ -68,17 +74,23 @@ var _blink_tween: Tween
 
 
 func _ready() -> void:
+	# Permanent meta-upgrades from the hub shrines.
+	max_hp = MAX_HP + 2 * GameManager.upgrades["vitality"]
+	attack_damage = ATTACK_DAMAGE + GameManager.upgrades["might"]
+	slam_damage = SLAM_DAMAGE + GameManager.upgrades["might"]
+	dash_cooldown = DASH_COOLDOWN - 0.1 * GameManager.upgrades["reflexes"]
+	potion_max = POTION_MAX + GameManager.upgrades["belt"]
 	# HP and potion belt carry across floor transitions; -1 marks a fresh run.
 	if GameManager.carry_hp > 0:
 		hp = GameManager.carry_hp
 		potion_charges = GameManager.carry_potions
 	else:
-		hp = MAX_HP
+		hp = max_hp
 		potion_charges = 1
 
 
 func add_potion() -> bool:
-	if potion_charges >= POTION_MAX:
+	if potion_charges >= potion_max:
 		return false
 	potion_charges += 1
 	return true
@@ -135,7 +147,7 @@ func _try_dash() -> void:
 	_dash_dir = dir.normalized()
 	state = State.DASH
 	_dash_time_left = DASH_TIME
-	dash_cooldown_left = DASH_COOLDOWN
+	dash_cooldown_left = dash_cooldown
 	_invuln_left = maxf(_invuln_left, DASH_TIME + 0.05)
 	collision_mask = 1
 	_weapon.visible = false
@@ -189,7 +201,7 @@ func _do_slam() -> void:
 	for hit in get_world_2d().direct_space_state.intersect_shape(params, 16):
 		var body: Node = hit.collider
 		if body.has_method("take_damage") and not body.get("dead"):
-			body.take_damage(SLAM_DAMAGE, global_position, SLAM_KNOCKBACK)
+			body.take_damage(slam_damage, global_position, SLAM_KNOCKBACK)
 
 
 func _spawn_slam_ring() -> void:
@@ -285,7 +297,7 @@ func _strike() -> void:
 	var killed := false
 	for body in _hitbox.get_overlapping_bodies():
 		if body.has_method("take_damage") and not body.get("dead"):
-			body.take_damage(ATTACK_DAMAGE, global_position)
+			body.take_damage(attack_damage, global_position)
 			landed = true
 			if body.get("dead"):
 				killed = true
@@ -311,10 +323,10 @@ func take_damage(amount: int, _source_position: Vector2) -> void:
 
 
 func _drink_potion() -> void:
-	if dead or potion_charges <= 0 or hp >= MAX_HP:
+	if dead or potion_charges <= 0 or hp >= max_hp:
 		return
 	potion_charges -= 1
-	hp = mini(hp + POTION_HEAL, MAX_HP)
+	hp = mini(hp + POTION_HEAL, max_hp)
 	_visual.modulate = Color(0.55, 1.25, 0.6, _visual.modulate.a)
 	var t := create_tween()
 	t.tween_property(_visual, "modulate", Color(1, 1, 1, _visual.modulate.a), 0.4)

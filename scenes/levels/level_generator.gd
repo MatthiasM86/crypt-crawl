@@ -246,6 +246,7 @@ func _spawn_player_and_enemies() -> void:
 			# enemy's _ready() picks them up (hp = max_hp there).
 			enemy.max_hp += hp_bonus
 			enemy.move_speed += speed_bonus
+			enemy.soul_value += depth / 3  # deeper floors pay better
 			add_child(enemy)
 
 
