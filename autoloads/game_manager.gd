@@ -76,8 +76,15 @@ func next_floor(current_hp: int, current_potions: int) -> void:
 	get_tree().reload_current_scene.call_deferred()
 
 
-func run_won() -> void:
+func bank_win() -> void:
+	## Called the moment a boss dies: the win survives even if the player
+	## descends further and dies down there.
 	wins += 1
+	_save()
+
+
+func return_to_hub() -> void:
+	## Victory-portal exit: run ends cleanly (win was already banked).
 	floor_num = 1
 	carry_hp = -1
 	carry_potions = 1

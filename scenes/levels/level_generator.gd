@@ -111,9 +111,16 @@ func _spawn_boss_encounter() -> void:
 
 
 func _on_boss_defeated() -> void:
+	GameManager.bank_win()
+	# Risk/reward choice: safe exit to the hub OR stairs deeper (stronger
+	# boss every BOSS_EVERY floors, better soul pay).
+	var center := _rooms[0].get_center()
 	var portal := VICTORY_PORTAL_SCENE.instantiate()
-	portal.position = _cell_center(_rooms[0].get_center())
+	portal.position = _cell_center(center + Vector2i(-2, 0))
 	add_child(portal)
+	var stairs := STAIRS_SCENE.instantiate()
+	stairs.position = _cell_center(center + Vector2i(2, 0))
+	add_child(stairs)
 
 
 func _generate_layout() -> void:
