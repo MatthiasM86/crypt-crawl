@@ -74,12 +74,10 @@ var _blink_tween: Tween
 
 
 func _ready() -> void:
-	# Permanent meta-upgrades from the hub shrines.
-	max_hp = MAX_HP + 2 * GameManager.upgrades["vitality"]
-	attack_damage = ATTACK_DAMAGE + GameManager.upgrades["might"]
-	slam_damage = SLAM_DAMAGE + GameManager.upgrades["might"]
-	dash_cooldown = DASH_COOLDOWN - 0.1 * GameManager.upgrades["reflexes"]
-	potion_max = POTION_MAX + GameManager.upgrades["belt"]
+	_apply_meta_upgrades()
+	# Re-apply live when a hub shrine sells an upgrade (the hub player is
+	# already spawned and would otherwise show stale stats until next run).
+	GameManager.upgrades_changed.connect(_apply_meta_upgrades)
 	# HP and potion belt carry across floor transitions; -1 marks a fresh run.
 	if GameManager.carry_hp > 0:
 		hp = GameManager.carry_hp
@@ -87,6 +85,17 @@ func _ready() -> void:
 	else:
 		hp = max_hp
 		potion_charges = 1
+
+
+func _apply_meta_upgrades() -> void:
+	var old_max := max_hp
+	max_hp = MAX_HP + 2 * GameManager.upgrades["vitality"]
+	attack_damage = ATTACK_DAMAGE + GameManager.upgrades["might"]
+	slam_damage = SLAM_DAMAGE + GameManager.upgrades["might"]
+	dash_cooldown = DASH_COOLDOWN - 0.1 * GameManager.upgrades["reflexes"]
+	potion_max = POTION_MAX + GameManager.upgrades["belt"]
+	if max_hp > old_max and hp > 0:
+		hp += max_hp - old_max  # fresh vitality fills the new squares
 
 
 func add_potion() -> bool:

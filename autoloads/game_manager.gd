@@ -18,6 +18,8 @@ const UPGRADE_DEFS := {
 	"belt": {"label": "Gürtel", "effect": "+1 Trank-Slot", "costs": [50, 150]},
 }
 
+signal upgrades_changed
+
 var floor_num := 1
 var carry_hp := -1
 var carry_potions := 1
@@ -51,6 +53,7 @@ func buy_upgrade(id: String) -> bool:
 	souls -= cost
 	upgrades[id] += 1
 	_save()
+	upgrades_changed.emit()
 	return true
 
 
