@@ -11,6 +11,7 @@ extends Node2D
 const PLAYER_SCENE := preload("res://scenes/player/player.tscn")
 const MELEE_SCENE := preload("res://scenes/enemies/melee_enemy.tscn")
 const RANGED_SCENE := preload("res://scenes/enemies/ranged_enemy.tscn")
+const STAIRS_SCENE := preload("res://scenes/levels/stairs.tscn")
 
 # --- Generation dials ---------------------------------------------------------
 const CELL := 32                  # px per grid cell
@@ -93,7 +94,9 @@ func _carve_corridor(from: Vector2i, to: Vector2i) -> void:
 func _all_rooms_reachable() -> bool:
 	# Flood-fill over floor cells from the spawn room (docs/plan.md demands
 	# the check even though chain-corridors connect by construction).
-	if _rooms.is_empty():
+	# At least 2 rooms: the stairs live in the last room and must not share
+	# the spawn room, or the player would transition on frame one.
+	if _rooms.size() < 2:
 		return false
 	var start: Vector2i = _rooms[0].get_center()
 	var visited := {start: true}
@@ -130,6 +133,17 @@ func _build_geometry() -> void:
 				(run.position.x + run.size.x / 2.0) * CELL,
 				(run.position.y + 0.5) * CELL)
 		walls.add_child(shape)
+		# Matching light occluder: walls cast shadows -> fog of war for free.
+		var occluder := LightOccluder2D.new()
+		var opoly := OccluderPolygon2D.new()
+		var hw := run.size.x * CELL / 2.0
+		var hh := CELL / 2.0
+		opoly.polygon = PackedVector2Array([
+			Vector2(-hw, -hh), Vector2(hw, -hh), Vector2(hw, hh), Vector2(-hw, hh),
+		])
+		occluder.occluder = opoly
+		occluder.position = shape.position
+		walls.add_child(occluder)
 	for run in _row_runs(true):
 		var floor_visual := Polygon2D.new()
 		floor_visual.color = FLOOR_COLOR
@@ -161,6 +175,9 @@ func _spawn_player_and_enemies() -> void:
 	var player := PLAYER_SCENE.instantiate()
 	player.position = _cell_center(_rooms[0].get_center())
 	add_child(player)
+	var stairs := STAIRS_SCENE.instantiate()
+	stairs.position = _cell_center(_rooms[_rooms.size() - 1].get_center())
+	add_child(stairs)
 	for i in range(1, _rooms.size()):
 		var room := _rooms[i]
 		for j in randi_range(1, ENEMIES_PER_ROOM_MAX):

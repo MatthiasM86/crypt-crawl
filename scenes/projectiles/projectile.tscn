@@ -1,6 +1,7 @@
 [gd_scene format=3]
 
 [ext_resource type="Script" path="res://scenes/projectiles/projectile.gd" id="1_projectile"]
+[ext_resource type="GradientTexture2D" path="res://assets/textures/radial_light.tres" id="2_light"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_hit"]
 radius = 5.0
@@ -17,3 +18,9 @@ polygon = PackedVector2Array(8, 0, -6, -4, -6, 4)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_hit")
+
+[node name="Glow" type="PointLight2D" parent="."]
+color = Color(0.6, 1, 0.4, 1)
+energy = 0.7
+texture = ExtResource("2_light")
+texture_scale = 0.35

@@ -21,8 +21,20 @@ size = Vector2(32, 648)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_pillar"]
 size = Vector2(120, 120)
 
+[sub_resource type="OccluderPolygon2D" id="Occluder_wall_h"]
+polygon = PackedVector2Array(-576, -16, 576, -16, 576, 16, -576, 16)
+
+[sub_resource type="OccluderPolygon2D" id="Occluder_wall_v"]
+polygon = PackedVector2Array(-16, -324, 16, -324, 16, 324, -16, 324)
+
+[sub_resource type="OccluderPolygon2D" id="Occluder_pillar"]
+polygon = PackedVector2Array(-60, -60, 60, -60, 60, 60, -60, 60)
+
 [node name="TestRoom" type="Node2D"]
 script = ExtResource("1_room")
+
+[node name="Darkness" type="CanvasModulate" parent="."]
+color = Color(0.16, 0.16, 0.21, 1)
 
 [node name="Floor" type="Polygon2D" parent="."]
 color = Color(0.14, 0.13, 0.15, 1)
@@ -51,6 +63,22 @@ shape = SubResource("RectangleShape2D_wall_v")
 position = Vector2(1136, 324)
 shape = SubResource("RectangleShape2D_wall_v")
 
+[node name="OccluderTop" type="LightOccluder2D" parent="NavigationRegion2D/Walls"]
+position = Vector2(576, 16)
+occluder = SubResource("Occluder_wall_h")
+
+[node name="OccluderBottom" type="LightOccluder2D" parent="NavigationRegion2D/Walls"]
+position = Vector2(576, 632)
+occluder = SubResource("Occluder_wall_h")
+
+[node name="OccluderLeft" type="LightOccluder2D" parent="NavigationRegion2D/Walls"]
+position = Vector2(16, 324)
+occluder = SubResource("Occluder_wall_v")
+
+[node name="OccluderRight" type="LightOccluder2D" parent="NavigationRegion2D/Walls"]
+position = Vector2(1136, 324)
+occluder = SubResource("Occluder_wall_v")
+
 [node name="Pillar" type="StaticBody2D" parent="NavigationRegion2D"]
 position = Vector2(700, 320)
 collision_layer = 1
@@ -62,6 +90,9 @@ shape = SubResource("RectangleShape2D_pillar")
 [node name="PillarVisual" type="Polygon2D" parent="NavigationRegion2D/Pillar"]
 color = Color(0.05, 0.05, 0.07, 1)
 polygon = PackedVector2Array(-60, -60, 60, -60, 60, 60, -60, 60)
+
+[node name="PillarOccluder" type="LightOccluder2D" parent="NavigationRegion2D/Pillar"]
+occluder = SubResource("Occluder_pillar")
 
 [node name="Player" parent="." instance=ExtResource("2_player")]
 position = Vector2(200, 324)

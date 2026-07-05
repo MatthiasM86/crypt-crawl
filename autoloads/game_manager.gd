@@ -1,12 +1,24 @@
 extends Node
-## Global run-state singleton (autoload). First real responsibility
-## (docs/plan.md Phase 4/6): the death -> restart loop. The player calls
-## player_died(); we hold a beat so the death pop reads, then reload the
-## run. Floor transitions / run stats extend this later.
+## Global run-state singleton (autoload): floor counter, death -> restart,
+## floor -> floor transitions. HP carries between floors via carry_hp
+## (-1 = fresh run); the heal potion refills every floor.
 
 const RESTART_DELAY := 0.9
 
+var floor_num := 1
+var carry_hp := -1
+
+
+func next_floor(current_hp: int) -> void:
+	floor_num += 1
+	carry_hp = current_hp
+	# Deferred: callers include Area2D physics callbacks, where changing the
+	# scene mid-flush is an error.
+	get_tree().reload_current_scene.call_deferred()
+
 
 func player_died() -> void:
+	floor_num = 1
+	carry_hp = -1
 	await get_tree().create_timer(RESTART_DELAY).timeout
 	get_tree().reload_current_scene()

@@ -10,13 +10,17 @@ feel fun?"* — this is a feel-first prototype, not a full game. Placeholder gra
 (colored rectangles) are deliberate; pixel art, sound, meta-progression, bosses,
 items, and balancing are explicitly post-PoC.
 
-Implemented so far (Phase 4 steps 1–5 of the plan): Diablo-style click-to-move /
-attack-move, melee combat with hit feedback (shader hit-flash, knockback,
-trauma-based screenshake), enemy AI (Idle → Chase → Attack state machine with LOS
-detection and windup telegraphing), a ranged enemy with projectiles, player
-HP/i-frames/death → restart, and a procedural rooms-and-corridors level generator
-with runtime navmesh baking. Still open from the plan: fog-of-war/lighting
-(PointLight2D), stairs/floor transitions, heal potion, dash, HP display.
+Implemented (all of Phase 4): Diablo-style click-to-move / attack-move, melee
+combat with hit feedback (shader hit-flash, knockback, trauma-based screenshake),
+enemy AI (Idle → Chase → Attack state machine with LOS detection and windup
+telegraphing), a ranged enemy with projectiles, player HP/i-frames, heal potion
+on hotkey 1/Q (one charge, refills per floor), torchlight fog-of-war
+(CanvasModulate darkness + shadowed PointLight2D + LightOccluder2D on every
+wall), stairs → next generated floor (HP carries over; GameManager tracks
+`floor_num`), death → full run reset, and a minimal HUD (HP squares, potion,
+floor number — custom `_draw()` on a Control with `mouse_filter = IGNORE`).
+Still open from the plan: dash (marked optional for the PoC); everything in the
+"Ausblick" section (meta-progression, art, bosses, items) is post-PoC.
 
 ## Running things
 

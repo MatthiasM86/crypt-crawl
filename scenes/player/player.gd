@@ -15,6 +15,7 @@ const ATTACK_DAMAGE := 1
 const HIT_TRAUMA := 0.22
 const KILL_TRAUMA := 0.35
 const MAX_HP := 5
+const POTION_HEAL := 3           # one refill per floor (see GameManager)
 const HURT_TRAUMA := 0.45        # taking a hit out-shakes dealing one
 const INVULN_TIME := 0.6         # i-frames: 3 converging melees can't stunlock
 const FLASH_TIME := 0.15
@@ -29,6 +30,7 @@ enum State { IDLE, MOVE, ATTACK }
 var state := State.IDLE
 var attack_target: Node2D = null
 var hp: int
+var potion_charges := 1
 var dead := false
 var _click_held := false
 var _cooldown_left := 0.0
@@ -47,7 +49,8 @@ var _blink_tween: Tween
 
 
 func _ready() -> void:
-	hp = MAX_HP
+	# HP carries across floor transitions; -1 marks a fresh run.
+	hp = GameManager.carry_hp if GameManager.carry_hp > 0 else MAX_HP
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -56,6 +59,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		_click_held = true
 	elif event.is_action_released("click"):
 		_click_held = false
+	elif event.is_action_pressed("potion"):
+		_drink_potion()
 
 
 func _physics_process(delta: float) -> void:
@@ -173,6 +178,16 @@ func take_damage(amount: int, _source_position: Vector2) -> void:
 		_die()
 	else:
 		_play_invuln_blink()
+
+
+func _drink_potion() -> void:
+	if dead or potion_charges <= 0 or hp >= MAX_HP:
+		return
+	potion_charges -= 1
+	hp = mini(hp + POTION_HEAL, MAX_HP)
+	_visual.modulate = Color(0.55, 1.25, 0.6, _visual.modulate.a)
+	var t := create_tween()
+	t.tween_property(_visual, "modulate", Color(1, 1, 1, _visual.modulate.a), 0.4)
 
 
 func _play_flash() -> void:
