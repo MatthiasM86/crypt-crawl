@@ -24,9 +24,17 @@ pipeline), stairs → next generated floor (HP + potion belt carry over;
 GameManager tracks `floor_num`), death → full run reset, and a minimal HUD
 (HP squares, potion belt, dash/skill cooldowns, floor number — custom `_draw()`
 on a Control with `mouse_filter = IGNORE`).
-Not yet: floor-based difficulty scaling (`floor_num` is cosmetic so far),
-character sprites (waiting on assets per docs/asset-spec.md), and everything in
-the plan's "Ausblick" (meta-progression, bosses, item system, sound).
+Beyond the PoC, already built: floor-based difficulty scaling (enemy HP/speed/
+count via @export dials at spawn), meta-progression (soul wisps from kills,
+persistent save at user://save.cfg, hub scene with four upgrade shrines and a
+run portal; death returns to the hub), a boss ("Kryptwächter", boss.gd extends
+enemy.gd) every 5th floor in a generated arena with two telegraphed patterns —
+victory is banked on the kill and spawns BOTH a hub portal and stairs deeper —
+synthesized audio (Sfx autoload builds all SFX + ambient drone in memory at
+startup; no audio files), and an ESC pause menu (PauseMenu autoload, code-built
+UI, pauses the tree; "Aufgeben" only in runs).
+Not yet: character sprites (waiting on assets per docs/asset-spec.md), more
+enemy types, item system, biomes/prefab rooms.
 
 ## Running things
 

@@ -16,6 +16,8 @@ var _pool_index := 0
 
 
 func _ready() -> void:
+	# Keep audio (esp. the ambient drone) running while the tree is paused.
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	_build_streams()
 	for i in POOL_SIZE:
 		var p := AudioStreamPlayer.new()
