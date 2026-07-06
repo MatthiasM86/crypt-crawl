@@ -25,3 +25,12 @@ color = Color(1, 0.78, 0.4, 1)
 energy = 1.0
 texture = ExtResource("2_light")
 texture_scale = 0.8
+
+[node name="Hint" type="Label" parent="."]
+offset_left = -70.0
+offset_top = -56.0
+offset_right = 70.0
+offset_bottom = -36.0
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 11
+text = "[E] Hinabsteigen"

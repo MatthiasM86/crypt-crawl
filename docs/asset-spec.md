@@ -94,6 +94,40 @@ müssen sich bei 32px klar unterscheiden.
 - `stairs.png`: 32×32, abwärtsführende Steintreppe, von oben.
 - `potion_icon.png`: 16×16, roter/grüner Heiltrank (HUD).
 
+## 4. Offene PixelLab-Aufgaben (Stand Juli 2026)
+
+Was noch Platzhalter ist bzw. gebraucht wird, nach Priorität. Technik-Hinweise:
+statische Props via `create_map_object` (min. 32×32), Tiles via `create_tiles_pro`
+(NICHT `create_topdown_tileset` — das ist ein Wang-Autotiler), Umfärbungen
+kostenlos per Hue-Shift wie bei den Schrein-Edelsteinen.
+
+1. **Truhe** (`scenes/pickups/chest.tscn` ist noch Polygon2D): `chest.png` 32×32,
+   geschlossene Holztruhe mit Metallband, von oben. Verfluchte Variante =
+   Hue-Shift ins Violette (0 Gens). Optional zweiter Frame „offen" — aktuell
+   wird beim Öffnen nur abgedunkelt.
+2. **7 Relikt-Icons** 16×16 (Boden-Pickup + HUD ersetzen die farbigen Rauten):
+   Brandsiegel (Flamme), Blutdurst (Blutstropfen), Schattenschritt (Stiefel/
+   Schemen), Wuchtklinge (Faust/Hammer), Hetzjagd (Flügel), Konzentrat
+   (Trank+Stern), Seelengier (Seelen-Auge). Farbcodes stehen in
+   `GameManager.RELIC_DEFS` — Icons sollten je Relikt in dieser Farbe dominieren.
+3. **HUD-Skill-Icons** 16×16: Dash (Stiefel/Blitz) und Rundumschlag (Schockwelle)
+   ersetzen die farbigen Cooldown-Quadrate in `hud.gd`; HP-Kästchen könnten
+   Herzen/Schilde werden.
+4. **Gore/Blut-Decals** (plan.md Ausblick 2): 2–3 Blutspritzer 32×32 (opak auf
+   Boden gelegt, per Zufallsrotation beim Gegner-Tod gespawnt) + Knochenhaufen
+   als Raum-Deko. Braucht einen kleinen Code-Hook in `enemy._die()`.
+5. **Biom-Tilesets** für plan.md Ausblick 3 (Katakomben ab Ebene 6, Fleischgrube
+   ab 11): exakt dasselbe **256×64-Layout** wie das Krypta-Tileset, dann wählt
+   der Generator per `floor_num` nur eine andere Textur. Katakomben = braunere
+   Knochen-Nischen, Fleischgrube = rötlich-organisch.
+6. **Feuerfläche** (Brandsiegel-Relikt, aktuell prozedural gezeichnet): optional
+   4-Frame-Loop 64×64 Bodenfeuer, transparent.
+7. **Sprites für künftige Gegnertypen** (Exploder, Schild-Tank …): gleiche
+   8-Richtungs-Pipeline wie Brute/Cultist (idle/walk/attack/death/hurt) — erst
+   generieren, wenn der Typ gebaut wird.
+8. **Projekt-Icon** (Fenster/Dock + itch.io-Export): 128×128, z.B. der
+   Kryptritter-Kopf vor dunklem Portal. `config/icon` in project.godot setzen.
+
 ## Einbau-Reihenfolge
 
 1. Tileset tauschen → sofort sichtbar, kein Code nötig.

@@ -1,16 +1,13 @@
-extends Area2D
-## Floor exit. Touching it carries the player's HP to the next generated
-## floor (GameManager owns the transition; the heal potion refills per floor).
+extends "res://scenes/levels/interact_zone.gd"
+## Floor exit. Standing on it and pressing E carries HP, potion belt and
+## relics to the next generated floor (explicit confirm -- walking over
+## stairs by accident used to end exploration prematurely).
 
 var _used := false
 
 
-func _ready() -> void:
-	body_entered.connect(_on_body_entered)
-
-
-func _on_body_entered(body: Node2D) -> void:
-	if _used or body.get("dead"):
+func _activate(body: Node2D) -> void:
+	if _used:
 		return
 	_used = true
 	Sfx.play("stairs")
