@@ -96,7 +96,14 @@ Fühlt es sich schwammig an → an Schritt 2 (Feedback/Game Feel) schrauben, **b
    → ❌ *offen (Bossarena existiert, aber generiert, keine Prefabs)*
 5. **Risk/Reward:** verfluchte Truhen, optionale Schatzräume; Loot/Gegner nach Distanz zum Spawn skalieren
    → 🔶 *teilweise: nach Boss-Sieg weiter absteigen (Win schon gebankt), Gegner/Seelen skalieren mit Ebene; offen: Truhen, Schatzräume*
-6. **Content:** 5–8 Gegnertypen, 20–30 Items, Skills, Controller-Support
-   → ❌ *dünnste Stelle: 2 Gegnertypen + 1 Boss; Items nur Heiltrank; Skills nur Dash + Rundumschlag; kein Controller*
-7. **Vertrieb:** itch.io (kostenlos, unkompliziert) → später Steam; Mobile-Port optional
+6. **Item-/Loot-System** (eigenes Großsystem — Kern des Diablo-Langzeit-Loops):
+   Drops von Gegnern & Truhen (Waffen, Rüstung, Schmuck), Seltenheitsstufen
+   (normal / magisch / selten), Affixe als Stat-Modifikatoren, Inventar- &
+   Ausrüstungs-UI, Gear bestimmt Basis-Stats (Schaden/HP/Tempo statt Konstanten)
+   → ❌ *offen: aktuell nur Heiltränke. Bewusst groß geplant — zieht Balancing,
+   UI und eine Stat-Pipeline nach sich; das duck-typed `take_damage`-Kontrakt
+   und die @export-Dials sind dafür schon die richtige Andockstelle*
+7. **Content:** 5–8 Gegnertypen, Skills, Controller-Support (Items → Punkt 6)
+   → ❌ *dünnste Stelle: 2 Gegnertypen + 1 Boss; Skills nur Dash + Rundumschlag; kein Controller*
+8. **Vertrieb:** itch.io (kostenlos, unkompliziert) → später Steam; Mobile-Port optional
    → ❌ *offen: noch kein Export-Preset / Build*
