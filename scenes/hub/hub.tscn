@@ -23,9 +23,7 @@ script = ExtResource("1_hub")
 [node name="Darkness" type="CanvasModulate" parent="."]
 color = Color(0.42, 0.4, 0.48, 1)
 
-[node name="Floor" type="Polygon2D" parent="."]
-color = Color(0.16, 0.15, 0.18, 1)
-polygon = PackedVector2Array(32, 32, 800, 32, 800, 480, 32, 480)
+[node name="Tiles" type="TileMapLayer" parent="."]
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="."]
 navigation_polygon = SubResource("NavigationPolygon_hub")
