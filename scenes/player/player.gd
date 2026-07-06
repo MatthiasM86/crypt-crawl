@@ -399,9 +399,10 @@ func _strike() -> void:
 	_apply_lifesteal(kills)
 
 
-func take_damage(amount: int, _source_position: Vector2) -> void:
-	# _source_position kept for contract symmetry (player knockback is a
-	# deliberate non-feature this milestone -- revisit if hits feel weightless).
+func take_damage(amount: int, _source_position: Vector2, _knockback_scale := 1.0) -> void:
+	# _source_position/_knockback_scale kept for contract symmetry with the
+	# enemies (callers like the exploder blast pass all three); player
+	# knockback stays a deliberate non-feature.
 	if dead or _invuln_left > 0.0:
 		return
 	hp -= amount

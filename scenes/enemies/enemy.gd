@@ -18,6 +18,8 @@ const WORLD_MASK := 1                            # LOS ray: walls/pillar only
 const POTION_DROP_CHANCE := 0.22
 const PICKUP_SCENE := preload("res://scenes/pickups/potion_pickup.tscn")
 const SOUL_SCENE := preload("res://scenes/pickups/soul_wisp.tscn")
+const RELIC_SCENE := preload("res://scenes/pickups/relic_pickup.tscn")
+const ELITE_TINT := Color(0.9, 0.55, 1.0)  # violet: distinct from the yellow telegraph
 # ------------------------------------------------------------------------------
 
 # --- Archetype dials (variants override these in their .tscn) -----------------
@@ -31,6 +33,7 @@ const SOUL_SCENE := preload("res://scenes/pickups/soul_wisp.tscn")
 @export var attack_damage := 1
 @export var soul_value := 2         # meta-currency dropped on death
 @export var ai_enabled := true      # false = passive training dummy
+@export var elite := false          # generator flag: bigger, meaner, drops a relic
 # ------------------------------------------------------------------------------
 
 # 8-way sprite facing (see player.gd). +Y down: rotation 0 = east, PI/2 = south.
@@ -41,6 +44,7 @@ enum State { IDLE, CHASE, ATTACK }
 var hp: int
 var dead := false
 var state := State.IDLE
+var _base_scale := Vector2.ONE   # elites are bigger; telegraph scales relative
 var _knockback := Vector2.ZERO
 var _flash_tween: Tween
 var _telegraph_tween: Tween
@@ -58,6 +62,13 @@ var _hurt_left := 0.0
 
 
 func _ready() -> void:
+	if elite:
+		max_hp = max_hp * 2 + 2
+		attack_damage += 1
+		soul_value *= 3
+		_base_scale = Vector2(1.3, 1.3)
+		_visual.scale = _base_scale
+		_visual.self_modulate = ELITE_TINT
 	hp = max_hp
 	_base_color = _visual.self_modulate
 	_player = get_tree().get_first_node_in_group("player") as Node2D
@@ -143,7 +154,7 @@ func _start_telegraph() -> void:
 		_telegraph_tween.kill()
 	_telegraph_tween = create_tween().set_parallel()
 	_telegraph_tween.tween_property(_visual, "self_modulate", TELEGRAPH_COLOR, attack_windup)
-	_telegraph_tween.tween_property(_visual, "scale", Vector2.ONE * TELEGRAPH_SCALE, attack_windup)
+	_telegraph_tween.tween_property(_visual, "scale", _base_scale * TELEGRAPH_SCALE, attack_windup)
 	_show_attack_tell()
 
 
@@ -178,7 +189,7 @@ func _snap_telegraph_back() -> void:
 	if _telegraph_tween:
 		_telegraph_tween.kill()
 	_visual.self_modulate = _base_color
-	_visual.scale = Vector2.ONE
+	_visual.scale = _base_scale
 
 
 func _cancel_attack() -> void:
@@ -241,6 +252,22 @@ func _die() -> void:
 	wisp.value = soul_value
 	wisp.position = global_position
 	get_parent().add_child(wisp)
+	if elite:
+		# Elites guarantee a relic the run doesn't own yet (souls burst as
+		# fallback once the run holds everything).
+		var owned: Array = _player.relics if _player_alive() and _player.get("relics") != null else []
+		var relic_id: String = GameManager.random_unowned_relic(owned)
+		if relic_id != "":
+			var rp := RELIC_SCENE.instantiate()
+			rp.relic_id = relic_id
+			rp.position = global_position + Vector2(0, 24)
+			get_parent().add_child(rp)
+		else:
+			for i in 3:
+				var bonus := SOUL_SCENE.instantiate()
+				bonus.value = 5
+				bonus.position = global_position
+				get_parent().add_child(bonus)
 	# Stop blocking movement/clicks immediately; can't free shapes mid-physics.
 	$CollisionShape2D.set_deferred("disabled", true)
 	$ClickArea/ClickShape.set_deferred("disabled", true)

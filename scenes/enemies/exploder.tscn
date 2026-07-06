@@ -1,0 +1,19 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/enemies/enemy.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scenes/enemies/exploder.gd" id="2_exploder"]
+
+[node name="Exploder" instance=ExtResource("1_base")]
+script = ExtResource("2_exploder")
+max_hp = 2
+move_speed = 340.0
+detect_radius = 400.0
+attack_range = 60.0
+attack_windup = 0.6
+attack_recover = 0.2
+attack_cooldown = 99.0
+attack_damage = 2
+soul_value = 3
+
+[node name="Visual" parent="."]
+self_modulate = Color(1, 0.6, 0.3, 1)

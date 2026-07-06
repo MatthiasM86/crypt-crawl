@@ -16,6 +16,7 @@ const BOSS_SCENE := preload("res://scenes/enemies/boss.tscn")
 const VICTORY_PORTAL_SCENE := preload("res://scenes/levels/victory_portal.tscn")
 const CHEST_SCENE := preload("res://scenes/pickups/chest.tscn")
 const RELIC_PICKUP_SCENE := preload("res://scenes/pickups/relic_pickup.tscn")
+const EXPLODER_SCENE := preload("res://scenes/enemies/exploder.tscn")
 
 const BOSS_EVERY := 5             # every Nth floor is a boss arena
 const CHEST_ROOM_CHANCE := 0.3    # per room (player's room excluded)...
@@ -37,6 +38,8 @@ const WALL_EPS := 0.1             # px overlap between wall rects: exactly
                                   # convex partition fail; overlaps are fine
 const ENEMIES_PER_ROOM_MAX := 2   # 1..this per room (player's room stays empty)
 const RANGED_CHANCE := 0.35       # per spawned enemy
+const EXPLODER_CHANCE := 0.2      # per spawned enemy, from floor 2 (learn curve)
+const ELITE_CHANCE := 0.12        # per spawned enemy, max 1/floor, from floor 2
 
 # --- Floor difficulty scaling (applied via enemy @export dials at spawn) ------
 const SCALE_HP_EVERY := 2         # +1 enemy max_hp every N floors
@@ -300,10 +303,19 @@ func _spawn_player_and_enemies() -> void:
 	var hp_bonus := depth / SCALE_HP_EVERY
 	var speed_bonus := minf(depth * SCALE_SPEED_PER_FLOOR, SCALE_SPEED_CAP)
 	var room_max := mini(ENEMIES_PER_ROOM_MAX + depth / SCALE_COUNT_EVERY, SCALE_COUNT_CAP)
+	var elite_placed := false
+	var exploder_chance := EXPLODER_CHANCE if GameManager.floor_num >= 2 else 0.0
 	for i in range(1, _rooms.size()):
 		var room := _rooms[i]
 		for j in randi_range(1, room_max):
-			var scene := RANGED_SCENE if randf() < RANGED_CHANCE else MELEE_SCENE
+			var roll := randf()
+			var scene := MELEE_SCENE
+			var is_exploder := false
+			if roll < exploder_chance:
+				scene = EXPLODER_SCENE
+				is_exploder = true
+			elif roll < exploder_chance + RANGED_CHANCE:
+				scene = RANGED_SCENE
 			var enemy := scene.instantiate()
 			enemy.position = _cell_center(Vector2i(
 					randi_range(room.position.x + 1, room.end.x - 2),
@@ -313,6 +325,12 @@ func _spawn_player_and_enemies() -> void:
 			enemy.max_hp += hp_bonus
 			enemy.move_speed += speed_bonus
 			enemy.soul_value += depth / 3  # deeper floors pay better
+			# One elite per floor at most; exploders excluded (an elite bomb
+			# with +1 damage would be pure chaos).
+			if not elite_placed and not is_exploder and GameManager.floor_num >= 2 \
+					and randf() < ELITE_CHANCE:
+				enemy.elite = true
+				elite_placed = true
 			add_child(enemy)
 	# Loot chests in side rooms (never the spawn room); cursed ambushes use
 	# the same floor scaling as regular spawns.
