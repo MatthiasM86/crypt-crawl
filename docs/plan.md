@@ -95,7 +95,7 @@ Fühlt es sich schwammig an → an Schritt 2 (Feedback/Game Feel) schrauben, **b
 4. **Prefab-Räume** einstreuen (Schatzkammer, Schrein, Bossarena — wie Spelunky/Dead Cells)
    → ❌ *offen (Bossarena existiert, aber generiert, keine Prefabs)*
 5. **Risk/Reward:** verfluchte Truhen, optionale Schatzräume; Loot/Gegner nach Distanz zum Spawn skalieren
-   → 🔶 *teilweise: nach Boss-Sieg weiter absteigen (Win schon gebankt), Gegner/Seelen skalieren mit Ebene; offen: Truhen, Schatzräume*
+   → ✅ *weitgehend: Truhen in Seitenräumen (verfluchte sichtbar lila → Hinterhalt beim Öffnen), nach Boss-Sieg weiter absteigen, Gegner/Seelen skalieren mit Ebene; offen: dedizierte Schatzräume*
 6. **Item-System (Roguelike-Zuschnitt, bewusst schlank):** keine Diablo-Loot-Flut,
    kein Inventar, keine Affixe — stattdessen **Relikte**: seltene, run-gebundene
    Fundstücke (aus Truhen, von Elites, nach dem Boss), die den Build *dieses* Runs
@@ -103,8 +103,9 @@ Fühlt es sich schwammig an → an Schritt 2 (Feedback/Game Feel) schrauben, **b
    „+1 Dash-Ladung", „Projektile prallen ab"). Aufheben = Sofort-Entscheidung,
    max. ~4 gleichzeitig als Icons im HUD, Tod = weg. Motivation kommt aus
    Run-Varianz (Hades/Dead Cells), nicht aus Stash-Verwaltung
-   → ❌ *offen: aktuell nur Heiltränke. Gute erste Scheibe: 6–8 Relikte mit je
-   einem klaren Effekt + Drop-Quellen (Truhe/Elite/Boss)*
+   → ✅ *erste Scheibe umgesetzt: 7 Relikte (Brandsiegel, Blutdurst, Schattenschritt,
+   Wuchtklinge, Hetzjagd, Konzentrat, Seelengier), max. 4 als HUD-Icons, Drop aus
+   Truhen (60%) und nach jedem Boss-Kill; offen: weitere Relikte, Elite-Drops*
 7. **Content:** 5–8 Gegnertypen, Skills, Controller-Support (Items → Punkt 6)
    → ❌ *dünnste Stelle: 2 Gegnertypen + 1 Boss; Skills nur Dash + Rundumschlag; kein Controller*
 8. **Vertrieb:** itch.io (kostenlos, unkompliziert) → später Steam; Mobile-Port optional
