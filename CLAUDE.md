@@ -96,6 +96,9 @@ orange-tinted brute + spec entry.)
   implements `take_damage(amount: int, source_position: Vector2)` and exposes a
   `dead` bool; callers check `has_method("take_damage")` / `get("dead")`. Player and
   enemies both implement it; projectiles and hitboxes only speak this contract.
+- **Enemy roster & recipe:** `docs/enemies.md` lists every enemy type with
+  stats/counterplay/spawn rules and the step-by-step recipe for adding a new
+  type — keep it updated when touching enemies.
 - **Enemy inheritance:** `scenes/enemies/enemy.gd`/`enemy.tscn` is the base AND the
   melee archetype (state machine, telegraph, strike). `melee_enemy.tscn` is a pure
   inherited pass-through; `ranged_enemy.gd extends "res://.../enemy.gd"` and
