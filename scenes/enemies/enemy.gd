@@ -9,6 +9,7 @@ extends CharacterBody2D
 const KNOCKBACK_SPEED := 260.0      # px/s impulse when hit
 const KNOCKBACK_FRICTION := 1100.0  # px/s^2 decay -> ~30 px slide
 const FLASH_TIME := 0.15
+const HURT_ANIM_TIME := 0.3          # flinch clip hold on a surviving hit
 const DEATH_POP_TIME := 0.12
 const TELEGRAPH_COLOR := Color(1.0, 0.85, 0.3)  # windup ramps body to this
 const TELEGRAPH_SCALE := 1.15                    # ...and grows to this
@@ -48,6 +49,7 @@ var _base_color: Color
 var _cooldown_left := 0.0
 var _attack_time := 0.0
 var _struck := false
+var _hurt_left := 0.0
 
 @onready var _visual: AnimatedSprite2D = $Visual
 @onready var _nav: NavigationAgent2D = $NavigationAgent2D
@@ -65,6 +67,7 @@ func _ready() -> void:
 
 func _physics_process(delta: float) -> void:
 	_cooldown_left = maxf(_cooldown_left - delta, 0.0)
+	_hurt_left = maxf(_hurt_left - delta, 0.0)
 	var ai_velocity := Vector2.ZERO
 	if ai_enabled and _player_alive():
 		match state:
@@ -90,6 +93,8 @@ func _dir_name() -> String:
 func _update_animation() -> void:
 	# State + facing -> "<state>_<dir>" clip; the color/scale telegraph and (for
 	# melee) the forward lunge layer on top. Missing clip -> hold current frame.
+	if _hurt_left > 0.0:
+		return  # let the hit flinch play out (knockback still slides the body)
 	var base := "idle"
 	match state:
 		State.CHASE:
@@ -208,6 +213,12 @@ func take_damage(amount: int, source_position: Vector2, knockback_scale := 1.0) 
 		state = State.CHASE  # hit from cover -> wake up
 	if hp <= 0:
 		_die()
+	elif state != State.ATTACK and _visual.sprite_frames \
+			and _visual.sprite_frames.has_animation("hurt_" + _dir_name()):
+		# Flinch on a surviving hit -- skipped mid-windup so the attack telegraph
+		# stays readable, and skipped entirely when there's no hurt clip (boss).
+		_hurt_left = HURT_ANIM_TIME
+		_visual.play("hurt_" + _dir_name())
 
 
 func _play_flash() -> void:
@@ -234,7 +245,10 @@ func _die() -> void:
 	$CollisionShape2D.set_deferred("disabled", true)
 	$ClickArea/ClickShape.set_deferred("disabled", true)
 	set_physics_process(false)
-	var t := create_tween().set_parallel()
-	t.tween_property(self, "scale", Vector2(1.35, 1.35), DEATH_POP_TIME)
-	t.tween_property(self, "modulate:a", 0.0, DEATH_POP_TIME)
-	t.chain().tween_callback(queue_free)
+	# Play the fall-back death clip in the last facing, then fade the corpse out.
+	if _visual.sprite_frames and _visual.sprite_frames.has_animation("death_" + _dir_name()):
+		_visual.play("death_" + _dir_name())
+	var t := create_tween()
+	t.tween_interval(0.55)
+	t.tween_property(self, "modulate:a", 0.0, 0.3)
+	t.tween_callback(queue_free)

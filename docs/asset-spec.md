@@ -56,6 +56,13 @@ Prompt-Baustein (englisch, für Bild-KI):
 > `enemy.gd` fährt jetzt eine `AnimatedSprite2D`: das gelbe Windup-Telegraph
 > tönt `self_modulate` (statt `color`), der Melee-„Lunge" bleibt, die WeaponVisual
 > ist weg. Der windup→snap-Read (docs/plan.md) bleibt voll erhalten.
+>
+> **Status Tod/Treffer (erledigt):** Alle Figuren haben zusätzlich `death`
+> (falling-back-death) und `hurt` (taking-punch) je Richtung — außer der Boss
+> (kein `hurt`, bleibt unerschütterlich). `_die()` spielt jetzt `death_<dir>` und
+> blendet dann aus (Player + Gegner); der Spieler-Flinch ist **nicht
+> unterbrechend** (kein Hitstun, plan.md), der Gegner-Flinch pausiert nicht während
+> des eigenen Windups. Frames/Clips liegen bei den jeweiligen `*_frames.tres`.
 
 Alle Charaktere: **32×32 px pro Frame**, horizontale Streifen (Frames
 nebeneinander), Blickrichtung **rechts** (das Spiel rotiert/spiegelt selbst),

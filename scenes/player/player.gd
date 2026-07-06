@@ -30,6 +30,7 @@ const SLAM_TRAUMA := 0.5
 const HURT_TRAUMA := 0.45        # taking a hit out-shakes dealing one
 const INVULN_TIME := 0.6         # i-frames: 3 converging melees can't stunlock
 const FLASH_TIME := 0.15
+const HURT_ANIM_TIME := 0.22     # non-interrupting flinch: clip holds this long, control stays live
 const DEATH_POP_TIME := 0.25
 const DEATH_TRAUMA := 0.6
 # ----------------------------------------------------------------------------
@@ -66,6 +67,7 @@ var _cooldown_left := 0.0
 var _attack_time := 0.0
 var _struck := false
 var _invuln_left := 0.0
+var _hurt_left := 0.0
 var _flash_tween: Tween
 var _blink_tween: Tween
 
@@ -128,6 +130,7 @@ func _physics_process(delta: float) -> void:
 	if dead:
 		return
 	_invuln_left = maxf(_invuln_left - delta, 0.0)
+	_hurt_left = maxf(_hurt_left - delta, 0.0)
 	_cooldown_left = maxf(_cooldown_left - delta, 0.0)
 	dash_cooldown_left = maxf(dash_cooldown_left - delta, 0.0)
 	skill_cooldown_left = maxf(skill_cooldown_left - delta, 0.0)
@@ -159,6 +162,8 @@ func _dir_name() -> String:
 func _update_animation() -> void:
 	# State + facing -> "<state>_<dir>" clip. idle/walk loop; attack plays once
 	# (non-looping in the SpriteFrames) and is left alone once it has started.
+	if _hurt_left > 0.0:
+		return  # hold the non-interrupting hurt flinch (physics/control still run)
 	var base := "idle"
 	match state:
 		State.MOVE, State.DASH:
@@ -352,6 +357,12 @@ func take_damage(amount: int, _source_position: Vector2) -> void:
 		_die()
 	else:
 		_play_invuln_blink()
+		# Non-interrupting flinch: shows the hit landing without stopping control.
+		# Skipped mid-swing so the player's own attack animation still reads.
+		if state != State.ATTACK and state != State.SLAM \
+				and _visual.sprite_frames.has_animation("hurt_" + _dir_name()):
+			_hurt_left = HURT_ANIM_TIME
+			_visual.play("hurt_" + _dir_name())
 
 
 func take_potion_pickup() -> bool:
@@ -408,9 +419,12 @@ func _die() -> void:
 		_blink_tween.kill()
 	_camera.add_trauma(DEATH_TRAUMA)
 	Sfx.play("death_player")
-	# Pop the Visual only -- scaling the root would scale the child Camera2D
-	# and zoom the whole viewport.
-	var t := create_tween().set_parallel()
-	t.tween_property(_visual, "scale", Vector2(1.4, 1.4), DEATH_POP_TIME)
-	t.tween_property(_visual, "modulate:a", 0.0, DEATH_POP_TIME)
+	# Play the fall-back death clip in the last facing, then fade out inside
+	# GameManager's 0.9s RESTART_DELAY (before the scene changes).
+	_hurt_left = 0.0
+	_visual.modulate.a = 1.0
+	_visual.play("death_" + _dir_name())
+	var t := create_tween()
+	t.tween_interval(0.55)
+	t.tween_property(_visual, "modulate:a", 0.0, 0.3)
 	GameManager.player_died()

@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://scenes/levels/stairs.gd" id="1_stairs"]
 [ext_resource type="GradientTexture2D" path="res://assets/textures/radial_light.tres" id="2_light"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/stairs.png" id="3_tex"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_trigger"]
 size = Vector2(40, 40)
@@ -12,13 +13,9 @@ collision_mask = 2
 monitorable = false
 script = ExtResource("1_stairs")
 
-[node name="Visual" type="Polygon2D" parent="."]
-color = Color(1, 0.8, 0.35, 1)
-polygon = PackedVector2Array(-20, -20, 20, -20, 20, 20, -20, 20)
-
-[node name="Inner" type="Polygon2D" parent="."]
-color = Color(0.35, 0.22, 0.05, 1)
-polygon = PackedVector2Array(-12, -12, 12, -12, 12, 12, -12, 12)
+[node name="Visual" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("3_tex")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("RectangleShape2D_trigger")

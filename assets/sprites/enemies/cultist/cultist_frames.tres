@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=105 format=3]
+[gd_resource type="SpriteFrames" load_steps=209 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/idle/east/frame_000.png" id="t0"]
 [ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/idle/east/frame_001.png" id="t1"]
@@ -104,6 +104,110 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/attack/north-east/frame_002.png" id="t101"]
 [ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/attack/north-east/frame_003.png" id="t102"]
 [ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/attack/north-east/frame_004.png" id="t103"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/east/frame_000.png" id="t104"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/east/frame_001.png" id="t105"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/east/frame_002.png" id="t106"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/east/frame_003.png" id="t107"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/east/frame_004.png" id="t108"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/east/frame_005.png" id="t109"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/east/frame_006.png" id="t110"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/south-east/frame_000.png" id="t111"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/south-east/frame_001.png" id="t112"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/south-east/frame_002.png" id="t113"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/south-east/frame_003.png" id="t114"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/south-east/frame_004.png" id="t115"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/south-east/frame_005.png" id="t116"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/south-east/frame_006.png" id="t117"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/south/frame_000.png" id="t118"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/south/frame_001.png" id="t119"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/south/frame_002.png" id="t120"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/south/frame_003.png" id="t121"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/south/frame_004.png" id="t122"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/south/frame_005.png" id="t123"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/south/frame_006.png" id="t124"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/south-west/frame_000.png" id="t125"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/south-west/frame_001.png" id="t126"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/south-west/frame_002.png" id="t127"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/south-west/frame_003.png" id="t128"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/south-west/frame_004.png" id="t129"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/south-west/frame_005.png" id="t130"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/south-west/frame_006.png" id="t131"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/west/frame_000.png" id="t132"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/west/frame_001.png" id="t133"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/west/frame_002.png" id="t134"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/west/frame_003.png" id="t135"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/west/frame_004.png" id="t136"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/west/frame_005.png" id="t137"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/west/frame_006.png" id="t138"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/north-west/frame_000.png" id="t139"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/north-west/frame_001.png" id="t140"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/north-west/frame_002.png" id="t141"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/north-west/frame_003.png" id="t142"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/north-west/frame_004.png" id="t143"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/north-west/frame_005.png" id="t144"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/north-west/frame_006.png" id="t145"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/north/frame_000.png" id="t146"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/north/frame_001.png" id="t147"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/north/frame_002.png" id="t148"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/north/frame_003.png" id="t149"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/north/frame_004.png" id="t150"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/north/frame_005.png" id="t151"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/north/frame_006.png" id="t152"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/north-east/frame_000.png" id="t153"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/north-east/frame_001.png" id="t154"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/north-east/frame_002.png" id="t155"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/north-east/frame_003.png" id="t156"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/north-east/frame_004.png" id="t157"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/north-east/frame_005.png" id="t158"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/death/north-east/frame_006.png" id="t159"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/east/frame_000.png" id="t160"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/east/frame_001.png" id="t161"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/east/frame_002.png" id="t162"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/east/frame_003.png" id="t163"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/east/frame_004.png" id="t164"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/east/frame_005.png" id="t165"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/south-east/frame_000.png" id="t166"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/south-east/frame_001.png" id="t167"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/south-east/frame_002.png" id="t168"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/south-east/frame_003.png" id="t169"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/south-east/frame_004.png" id="t170"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/south-east/frame_005.png" id="t171"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/south/frame_000.png" id="t172"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/south/frame_001.png" id="t173"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/south/frame_002.png" id="t174"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/south/frame_003.png" id="t175"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/south/frame_004.png" id="t176"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/south/frame_005.png" id="t177"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/south-west/frame_000.png" id="t178"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/south-west/frame_001.png" id="t179"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/south-west/frame_002.png" id="t180"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/south-west/frame_003.png" id="t181"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/south-west/frame_004.png" id="t182"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/south-west/frame_005.png" id="t183"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/west/frame_000.png" id="t184"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/west/frame_001.png" id="t185"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/west/frame_002.png" id="t186"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/west/frame_003.png" id="t187"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/west/frame_004.png" id="t188"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/west/frame_005.png" id="t189"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/north-west/frame_000.png" id="t190"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/north-west/frame_001.png" id="t191"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/north-west/frame_002.png" id="t192"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/north-west/frame_003.png" id="t193"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/north-west/frame_004.png" id="t194"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/north-west/frame_005.png" id="t195"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/north/frame_000.png" id="t196"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/north/frame_001.png" id="t197"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/north/frame_002.png" id="t198"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/north/frame_003.png" id="t199"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/north/frame_004.png" id="t200"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/north/frame_005.png" id="t201"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/north-east/frame_000.png" id="t202"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/north-east/frame_001.png" id="t203"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/north-east/frame_002.png" id="t204"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/north-east/frame_003.png" id="t205"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/north-east/frame_004.png" id="t206"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/cultist/hurt/north-east/frame_005.png" id="t207"]
 
 [resource]
 animations = [{
@@ -122,7 +226,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"idle_east",
-"speed": 6.0
+"speed": 6
 }, {
 "frames": [{
 "duration": 1.0,
@@ -139,7 +243,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"idle_south-east",
-"speed": 6.0
+"speed": 6
 }, {
 "frames": [{
 "duration": 1.0,
@@ -156,7 +260,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"idle_south",
-"speed": 6.0
+"speed": 6
 }, {
 "frames": [{
 "duration": 1.0,
@@ -173,7 +277,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"idle_south-west",
-"speed": 6.0
+"speed": 6
 }, {
 "frames": [{
 "duration": 1.0,
@@ -190,7 +294,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"idle_west",
-"speed": 6.0
+"speed": 6
 }, {
 "frames": [{
 "duration": 1.0,
@@ -207,7 +311,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"idle_north-west",
-"speed": 6.0
+"speed": 6
 }, {
 "frames": [{
 "duration": 1.0,
@@ -224,7 +328,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"idle_north",
-"speed": 6.0
+"speed": 6
 }, {
 "frames": [{
 "duration": 1.0,
@@ -241,7 +345,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"idle_north-east",
-"speed": 6.0
+"speed": 6
 }, {
 "frames": [{
 "duration": 1.0,
@@ -258,7 +362,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_east",
-"speed": 8.0
+"speed": 8
 }, {
 "frames": [{
 "duration": 1.0,
@@ -275,7 +379,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_south-east",
-"speed": 8.0
+"speed": 8
 }, {
 "frames": [{
 "duration": 1.0,
@@ -292,7 +396,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_south",
-"speed": 8.0
+"speed": 8
 }, {
 "frames": [{
 "duration": 1.0,
@@ -309,7 +413,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_south-west",
-"speed": 8.0
+"speed": 8
 }, {
 "frames": [{
 "duration": 1.0,
@@ -326,7 +430,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_west",
-"speed": 8.0
+"speed": 8
 }, {
 "frames": [{
 "duration": 1.0,
@@ -343,7 +447,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_north-west",
-"speed": 8.0
+"speed": 8
 }, {
 "frames": [{
 "duration": 1.0,
@@ -360,7 +464,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_north",
-"speed": 8.0
+"speed": 8
 }, {
 "frames": [{
 "duration": 1.0,
@@ -377,7 +481,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_north-east",
-"speed": 8.0
+"speed": 8
 }, {
 "frames": [{
 "duration": 1.0,
@@ -397,7 +501,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack_east",
-"speed": 12.0
+"speed": 12
 }, {
 "frames": [{
 "duration": 1.0,
@@ -417,7 +521,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack_south-east",
-"speed": 12.0
+"speed": 12
 }, {
 "frames": [{
 "duration": 1.0,
@@ -437,7 +541,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack_south",
-"speed": 12.0
+"speed": 12
 }, {
 "frames": [{
 "duration": 1.0,
@@ -457,7 +561,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack_south-west",
-"speed": 12.0
+"speed": 12
 }, {
 "frames": [{
 "duration": 1.0,
@@ -477,7 +581,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack_west",
-"speed": 12.0
+"speed": 12
 }, {
 "frames": [{
 "duration": 1.0,
@@ -497,7 +601,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack_north-west",
-"speed": 12.0
+"speed": 12
 }, {
 "frames": [{
 "duration": 1.0,
@@ -517,7 +621,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack_north",
-"speed": 12.0
+"speed": 12
 }, {
 "frames": [{
 "duration": 1.0,
@@ -537,5 +641,397 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack_north-east",
-"speed": 12.0
+"speed": 12
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t104")
+},{
+"duration": 1.0,
+"texture": ExtResource("t105")
+},{
+"duration": 1.0,
+"texture": ExtResource("t106")
+},{
+"duration": 1.0,
+"texture": ExtResource("t107")
+},{
+"duration": 1.0,
+"texture": ExtResource("t108")
+},{
+"duration": 1.0,
+"texture": ExtResource("t109")
+},{
+"duration": 1.0,
+"texture": ExtResource("t110")
+}],
+"loop": false,
+"name": &"death_east",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t111")
+},{
+"duration": 1.0,
+"texture": ExtResource("t112")
+},{
+"duration": 1.0,
+"texture": ExtResource("t113")
+},{
+"duration": 1.0,
+"texture": ExtResource("t114")
+},{
+"duration": 1.0,
+"texture": ExtResource("t115")
+},{
+"duration": 1.0,
+"texture": ExtResource("t116")
+},{
+"duration": 1.0,
+"texture": ExtResource("t117")
+}],
+"loop": false,
+"name": &"death_south-east",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t118")
+},{
+"duration": 1.0,
+"texture": ExtResource("t119")
+},{
+"duration": 1.0,
+"texture": ExtResource("t120")
+},{
+"duration": 1.0,
+"texture": ExtResource("t121")
+},{
+"duration": 1.0,
+"texture": ExtResource("t122")
+},{
+"duration": 1.0,
+"texture": ExtResource("t123")
+},{
+"duration": 1.0,
+"texture": ExtResource("t124")
+}],
+"loop": false,
+"name": &"death_south",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t125")
+},{
+"duration": 1.0,
+"texture": ExtResource("t126")
+},{
+"duration": 1.0,
+"texture": ExtResource("t127")
+},{
+"duration": 1.0,
+"texture": ExtResource("t128")
+},{
+"duration": 1.0,
+"texture": ExtResource("t129")
+},{
+"duration": 1.0,
+"texture": ExtResource("t130")
+},{
+"duration": 1.0,
+"texture": ExtResource("t131")
+}],
+"loop": false,
+"name": &"death_south-west",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t132")
+},{
+"duration": 1.0,
+"texture": ExtResource("t133")
+},{
+"duration": 1.0,
+"texture": ExtResource("t134")
+},{
+"duration": 1.0,
+"texture": ExtResource("t135")
+},{
+"duration": 1.0,
+"texture": ExtResource("t136")
+},{
+"duration": 1.0,
+"texture": ExtResource("t137")
+},{
+"duration": 1.0,
+"texture": ExtResource("t138")
+}],
+"loop": false,
+"name": &"death_west",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t139")
+},{
+"duration": 1.0,
+"texture": ExtResource("t140")
+},{
+"duration": 1.0,
+"texture": ExtResource("t141")
+},{
+"duration": 1.0,
+"texture": ExtResource("t142")
+},{
+"duration": 1.0,
+"texture": ExtResource("t143")
+},{
+"duration": 1.0,
+"texture": ExtResource("t144")
+},{
+"duration": 1.0,
+"texture": ExtResource("t145")
+}],
+"loop": false,
+"name": &"death_north-west",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t146")
+},{
+"duration": 1.0,
+"texture": ExtResource("t147")
+},{
+"duration": 1.0,
+"texture": ExtResource("t148")
+},{
+"duration": 1.0,
+"texture": ExtResource("t149")
+},{
+"duration": 1.0,
+"texture": ExtResource("t150")
+},{
+"duration": 1.0,
+"texture": ExtResource("t151")
+},{
+"duration": 1.0,
+"texture": ExtResource("t152")
+}],
+"loop": false,
+"name": &"death_north",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t153")
+},{
+"duration": 1.0,
+"texture": ExtResource("t154")
+},{
+"duration": 1.0,
+"texture": ExtResource("t155")
+},{
+"duration": 1.0,
+"texture": ExtResource("t156")
+},{
+"duration": 1.0,
+"texture": ExtResource("t157")
+},{
+"duration": 1.0,
+"texture": ExtResource("t158")
+},{
+"duration": 1.0,
+"texture": ExtResource("t159")
+}],
+"loop": false,
+"name": &"death_north-east",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t160")
+},{
+"duration": 1.0,
+"texture": ExtResource("t161")
+},{
+"duration": 1.0,
+"texture": ExtResource("t162")
+},{
+"duration": 1.0,
+"texture": ExtResource("t163")
+},{
+"duration": 1.0,
+"texture": ExtResource("t164")
+},{
+"duration": 1.0,
+"texture": ExtResource("t165")
+}],
+"loop": false,
+"name": &"hurt_east",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t166")
+},{
+"duration": 1.0,
+"texture": ExtResource("t167")
+},{
+"duration": 1.0,
+"texture": ExtResource("t168")
+},{
+"duration": 1.0,
+"texture": ExtResource("t169")
+},{
+"duration": 1.0,
+"texture": ExtResource("t170")
+},{
+"duration": 1.0,
+"texture": ExtResource("t171")
+}],
+"loop": false,
+"name": &"hurt_south-east",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t172")
+},{
+"duration": 1.0,
+"texture": ExtResource("t173")
+},{
+"duration": 1.0,
+"texture": ExtResource("t174")
+},{
+"duration": 1.0,
+"texture": ExtResource("t175")
+},{
+"duration": 1.0,
+"texture": ExtResource("t176")
+},{
+"duration": 1.0,
+"texture": ExtResource("t177")
+}],
+"loop": false,
+"name": &"hurt_south",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t178")
+},{
+"duration": 1.0,
+"texture": ExtResource("t179")
+},{
+"duration": 1.0,
+"texture": ExtResource("t180")
+},{
+"duration": 1.0,
+"texture": ExtResource("t181")
+},{
+"duration": 1.0,
+"texture": ExtResource("t182")
+},{
+"duration": 1.0,
+"texture": ExtResource("t183")
+}],
+"loop": false,
+"name": &"hurt_south-west",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t184")
+},{
+"duration": 1.0,
+"texture": ExtResource("t185")
+},{
+"duration": 1.0,
+"texture": ExtResource("t186")
+},{
+"duration": 1.0,
+"texture": ExtResource("t187")
+},{
+"duration": 1.0,
+"texture": ExtResource("t188")
+},{
+"duration": 1.0,
+"texture": ExtResource("t189")
+}],
+"loop": false,
+"name": &"hurt_west",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t190")
+},{
+"duration": 1.0,
+"texture": ExtResource("t191")
+},{
+"duration": 1.0,
+"texture": ExtResource("t192")
+},{
+"duration": 1.0,
+"texture": ExtResource("t193")
+},{
+"duration": 1.0,
+"texture": ExtResource("t194")
+},{
+"duration": 1.0,
+"texture": ExtResource("t195")
+}],
+"loop": false,
+"name": &"hurt_north-west",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t196")
+},{
+"duration": 1.0,
+"texture": ExtResource("t197")
+},{
+"duration": 1.0,
+"texture": ExtResource("t198")
+},{
+"duration": 1.0,
+"texture": ExtResource("t199")
+},{
+"duration": 1.0,
+"texture": ExtResource("t200")
+},{
+"duration": 1.0,
+"texture": ExtResource("t201")
+}],
+"loop": false,
+"name": &"hurt_north",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t202")
+},{
+"duration": 1.0,
+"texture": ExtResource("t203")
+},{
+"duration": 1.0,
+"texture": ExtResource("t204")
+},{
+"duration": 1.0,
+"texture": ExtResource("t205")
+},{
+"duration": 1.0,
+"texture": ExtResource("t206")
+},{
+"duration": 1.0,
+"texture": ExtResource("t207")
+}],
+"loop": false,
+"name": &"hurt_north-east",
+"speed": 14
 }]

@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=121 format=3]
+[gd_resource type="SpriteFrames" load_steps=177 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/idle/east/frame_000.png" id="t0"]
 [ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/idle/east/frame_001.png" id="t1"]
@@ -120,6 +120,62 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/attack/north-east/frame_004.png" id="t117"]
 [ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/attack/north-east/frame_005.png" id="t118"]
 [ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/attack/north-east/frame_006.png" id="t119"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/east/frame_000.png" id="t120"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/east/frame_001.png" id="t121"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/east/frame_002.png" id="t122"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/east/frame_003.png" id="t123"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/east/frame_004.png" id="t124"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/east/frame_005.png" id="t125"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/east/frame_006.png" id="t126"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/south-east/frame_000.png" id="t127"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/south-east/frame_001.png" id="t128"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/south-east/frame_002.png" id="t129"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/south-east/frame_003.png" id="t130"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/south-east/frame_004.png" id="t131"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/south-east/frame_005.png" id="t132"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/south-east/frame_006.png" id="t133"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/south/frame_000.png" id="t134"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/south/frame_001.png" id="t135"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/south/frame_002.png" id="t136"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/south/frame_003.png" id="t137"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/south/frame_004.png" id="t138"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/south/frame_005.png" id="t139"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/south/frame_006.png" id="t140"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/south-west/frame_000.png" id="t141"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/south-west/frame_001.png" id="t142"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/south-west/frame_002.png" id="t143"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/south-west/frame_003.png" id="t144"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/south-west/frame_004.png" id="t145"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/south-west/frame_005.png" id="t146"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/south-west/frame_006.png" id="t147"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/west/frame_000.png" id="t148"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/west/frame_001.png" id="t149"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/west/frame_002.png" id="t150"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/west/frame_003.png" id="t151"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/west/frame_004.png" id="t152"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/west/frame_005.png" id="t153"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/west/frame_006.png" id="t154"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/north-west/frame_000.png" id="t155"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/north-west/frame_001.png" id="t156"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/north-west/frame_002.png" id="t157"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/north-west/frame_003.png" id="t158"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/north-west/frame_004.png" id="t159"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/north-west/frame_005.png" id="t160"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/north-west/frame_006.png" id="t161"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/north/frame_000.png" id="t162"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/north/frame_001.png" id="t163"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/north/frame_002.png" id="t164"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/north/frame_003.png" id="t165"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/north/frame_004.png" id="t166"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/north/frame_005.png" id="t167"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/north/frame_006.png" id="t168"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/north-east/frame_000.png" id="t169"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/north-east/frame_001.png" id="t170"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/north-east/frame_002.png" id="t171"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/north-east/frame_003.png" id="t172"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/north-east/frame_004.png" id="t173"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/north-east/frame_005.png" id="t174"]
+[ext_resource type="Texture2D" path="res://assets/sprites/enemies/boss/death/north-east/frame_006.png" id="t175"]
 
 [resource]
 animations = [{
@@ -138,7 +194,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"idle_east",
-"speed": 6.0
+"speed": 6
 }, {
 "frames": [{
 "duration": 1.0,
@@ -155,7 +211,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"idle_south-east",
-"speed": 6.0
+"speed": 6
 }, {
 "frames": [{
 "duration": 1.0,
@@ -172,7 +228,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"idle_south",
-"speed": 6.0
+"speed": 6
 }, {
 "frames": [{
 "duration": 1.0,
@@ -189,7 +245,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"idle_south-west",
-"speed": 6.0
+"speed": 6
 }, {
 "frames": [{
 "duration": 1.0,
@@ -206,7 +262,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"idle_west",
-"speed": 6.0
+"speed": 6
 }, {
 "frames": [{
 "duration": 1.0,
@@ -223,7 +279,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"idle_north-west",
-"speed": 6.0
+"speed": 6
 }, {
 "frames": [{
 "duration": 1.0,
@@ -240,7 +296,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"idle_north",
-"speed": 6.0
+"speed": 6
 }, {
 "frames": [{
 "duration": 1.0,
@@ -257,7 +313,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"idle_north-east",
-"speed": 6.0
+"speed": 6
 }, {
 "frames": [{
 "duration": 1.0,
@@ -274,7 +330,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_east",
-"speed": 8.0
+"speed": 8
 }, {
 "frames": [{
 "duration": 1.0,
@@ -291,7 +347,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_south-east",
-"speed": 8.0
+"speed": 8
 }, {
 "frames": [{
 "duration": 1.0,
@@ -308,7 +364,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_south",
-"speed": 8.0
+"speed": 8
 }, {
 "frames": [{
 "duration": 1.0,
@@ -325,7 +381,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_south-west",
-"speed": 8.0
+"speed": 8
 }, {
 "frames": [{
 "duration": 1.0,
@@ -342,7 +398,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_west",
-"speed": 8.0
+"speed": 8
 }, {
 "frames": [{
 "duration": 1.0,
@@ -359,7 +415,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_north-west",
-"speed": 8.0
+"speed": 8
 }, {
 "frames": [{
 "duration": 1.0,
@@ -376,7 +432,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_north",
-"speed": 8.0
+"speed": 8
 }, {
 "frames": [{
 "duration": 1.0,
@@ -393,7 +449,7 @@ animations = [{
 }],
 "loop": true,
 "name": &"walk_north-east",
-"speed": 8.0
+"speed": 8
 }, {
 "frames": [{
 "duration": 1.0,
@@ -419,7 +475,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack_east",
-"speed": 10.0
+"speed": 10
 }, {
 "frames": [{
 "duration": 1.0,
@@ -445,7 +501,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack_south-east",
-"speed": 10.0
+"speed": 10
 }, {
 "frames": [{
 "duration": 1.0,
@@ -471,7 +527,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack_south",
-"speed": 10.0
+"speed": 10
 }, {
 "frames": [{
 "duration": 1.0,
@@ -497,7 +553,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack_south-west",
-"speed": 10.0
+"speed": 10
 }, {
 "frames": [{
 "duration": 1.0,
@@ -523,7 +579,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack_west",
-"speed": 10.0
+"speed": 10
 }, {
 "frames": [{
 "duration": 1.0,
@@ -549,7 +605,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack_north-west",
-"speed": 10.0
+"speed": 10
 }, {
 "frames": [{
 "duration": 1.0,
@@ -575,7 +631,7 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack_north",
-"speed": 10.0
+"speed": 10
 }, {
 "frames": [{
 "duration": 1.0,
@@ -601,5 +657,213 @@ animations = [{
 }],
 "loop": false,
 "name": &"attack_north-east",
-"speed": 10.0
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t120")
+},{
+"duration": 1.0,
+"texture": ExtResource("t121")
+},{
+"duration": 1.0,
+"texture": ExtResource("t122")
+},{
+"duration": 1.0,
+"texture": ExtResource("t123")
+},{
+"duration": 1.0,
+"texture": ExtResource("t124")
+},{
+"duration": 1.0,
+"texture": ExtResource("t125")
+},{
+"duration": 1.0,
+"texture": ExtResource("t126")
+}],
+"loop": false,
+"name": &"death_east",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t127")
+},{
+"duration": 1.0,
+"texture": ExtResource("t128")
+},{
+"duration": 1.0,
+"texture": ExtResource("t129")
+},{
+"duration": 1.0,
+"texture": ExtResource("t130")
+},{
+"duration": 1.0,
+"texture": ExtResource("t131")
+},{
+"duration": 1.0,
+"texture": ExtResource("t132")
+},{
+"duration": 1.0,
+"texture": ExtResource("t133")
+}],
+"loop": false,
+"name": &"death_south-east",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t134")
+},{
+"duration": 1.0,
+"texture": ExtResource("t135")
+},{
+"duration": 1.0,
+"texture": ExtResource("t136")
+},{
+"duration": 1.0,
+"texture": ExtResource("t137")
+},{
+"duration": 1.0,
+"texture": ExtResource("t138")
+},{
+"duration": 1.0,
+"texture": ExtResource("t139")
+},{
+"duration": 1.0,
+"texture": ExtResource("t140")
+}],
+"loop": false,
+"name": &"death_south",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t141")
+},{
+"duration": 1.0,
+"texture": ExtResource("t142")
+},{
+"duration": 1.0,
+"texture": ExtResource("t143")
+},{
+"duration": 1.0,
+"texture": ExtResource("t144")
+},{
+"duration": 1.0,
+"texture": ExtResource("t145")
+},{
+"duration": 1.0,
+"texture": ExtResource("t146")
+},{
+"duration": 1.0,
+"texture": ExtResource("t147")
+}],
+"loop": false,
+"name": &"death_south-west",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t148")
+},{
+"duration": 1.0,
+"texture": ExtResource("t149")
+},{
+"duration": 1.0,
+"texture": ExtResource("t150")
+},{
+"duration": 1.0,
+"texture": ExtResource("t151")
+},{
+"duration": 1.0,
+"texture": ExtResource("t152")
+},{
+"duration": 1.0,
+"texture": ExtResource("t153")
+},{
+"duration": 1.0,
+"texture": ExtResource("t154")
+}],
+"loop": false,
+"name": &"death_west",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t155")
+},{
+"duration": 1.0,
+"texture": ExtResource("t156")
+},{
+"duration": 1.0,
+"texture": ExtResource("t157")
+},{
+"duration": 1.0,
+"texture": ExtResource("t158")
+},{
+"duration": 1.0,
+"texture": ExtResource("t159")
+},{
+"duration": 1.0,
+"texture": ExtResource("t160")
+},{
+"duration": 1.0,
+"texture": ExtResource("t161")
+}],
+"loop": false,
+"name": &"death_north-west",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t162")
+},{
+"duration": 1.0,
+"texture": ExtResource("t163")
+},{
+"duration": 1.0,
+"texture": ExtResource("t164")
+},{
+"duration": 1.0,
+"texture": ExtResource("t165")
+},{
+"duration": 1.0,
+"texture": ExtResource("t166")
+},{
+"duration": 1.0,
+"texture": ExtResource("t167")
+},{
+"duration": 1.0,
+"texture": ExtResource("t168")
+}],
+"loop": false,
+"name": &"death_north",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t169")
+},{
+"duration": 1.0,
+"texture": ExtResource("t170")
+},{
+"duration": 1.0,
+"texture": ExtResource("t171")
+},{
+"duration": 1.0,
+"texture": ExtResource("t172")
+},{
+"duration": 1.0,
+"texture": ExtResource("t173")
+},{
+"duration": 1.0,
+"texture": ExtResource("t174")
+},{
+"duration": 1.0,
+"texture": ExtResource("t175")
+}],
+"loop": false,
+"name": &"death_north-east",
+"speed": 10
 }]
