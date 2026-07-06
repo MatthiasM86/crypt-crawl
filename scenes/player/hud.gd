@@ -28,8 +28,13 @@ func _draw() -> void:
 	for i in belt:
 		var tint := Color.WHITE if i < _player.potion_charges else Color(0.3, 0.3, 0.35, 0.7)
 		draw_texture_rect(POTION_ICON, Rect2(10 + i * 24, 36, 22, 22), false, tint)
+	# Dash square reads charges: ready as soon as one charge is up.
 	_draw_cooldown_square(Vector2(16 + belt * 24, 38), Color(0.45, 0.8, 0.95),
-			_player.dash_cooldown_left, _player.dash_cooldown)
+			0.0 if _player.dash_charges > 0 else _player.dash_cooldown_left,
+			_player.dash_cooldown)
+	if _player.max_dash_charges > 1:
+		draw_string(ThemeDB.fallback_font, Vector2(20 + belt * 24, 53),
+				str(_player.dash_charges), HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.1, 0.15, 0.2))
 	_draw_cooldown_square(Vector2(40 + belt * 24, 38), Color(1.0, 0.75, 0.35),
 			_player.skill_cooldown_left, _player.SLAM_COOLDOWN)
 	draw_string(ThemeDB.fallback_font, Vector2(66 + belt * 24, 54), "[1] [Spc] [RMB]",
@@ -38,7 +43,29 @@ func _draw() -> void:
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.8, 0.8, 0.85))
 	draw_string(ThemeDB.fallback_font, Vector2(10, 108), "Seelen: %d" % GameManager.souls,
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.55, 0.9, 1.0))
+	_draw_relics()
+	_draw_message()
 	_draw_boss_bar()
+
+
+func _draw_relics() -> void:
+	# One colored diamond per carried relic (max player.RELIC_MAX).
+	for i in _player.relics.size():
+		var def: Dictionary = GameManager.RELIC_DEFS[_player.relics[i]]
+		var c := Vector2(20 + i * 26, 130)
+		draw_colored_polygon(PackedVector2Array([
+			c + Vector2(0, -9), c + Vector2(8, 0), c + Vector2(0, 9), c + Vector2(-8, 0),
+		]), def["color"])
+
+
+func _draw_message() -> void:
+	# Transient announcement (relic pickups), fading out near the end.
+	if _player.hud_message_left <= 0.0:
+		return
+	var alpha: float = clampf(_player.hud_message_left / 0.6, 0.0, 1.0)
+	var w := get_viewport_rect().size.x
+	draw_string(ThemeDB.fallback_font, Vector2(0, 92), _player.hud_message,
+			HORIZONTAL_ALIGNMENT_CENTER, w, 17, Color(1.0, 0.92, 0.7, alpha))
 
 
 func _draw_boss_bar() -> void:

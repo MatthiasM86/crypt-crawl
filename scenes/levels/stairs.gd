@@ -14,4 +14,4 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 	_used = true
 	Sfx.play("stairs")
-	GameManager.next_floor(body.hp, body.potion_charges)
+	GameManager.next_floor(body.hp, body.potion_charges, body.relics.duplicate())

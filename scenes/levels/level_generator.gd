@@ -14,8 +14,13 @@ const RANGED_SCENE := preload("res://scenes/enemies/ranged_enemy.tscn")
 const STAIRS_SCENE := preload("res://scenes/levels/stairs.tscn")
 const BOSS_SCENE := preload("res://scenes/enemies/boss.tscn")
 const VICTORY_PORTAL_SCENE := preload("res://scenes/levels/victory_portal.tscn")
+const CHEST_SCENE := preload("res://scenes/pickups/chest.tscn")
+const RELIC_PICKUP_SCENE := preload("res://scenes/pickups/relic_pickup.tscn")
 
 const BOSS_EVERY := 5             # every Nth floor is a boss arena
+const CHEST_ROOM_CHANCE := 0.3    # per room (player's room excluded)...
+const CHEST_MAX := 2              # ...capped per floor
+const CHEST_CURSED_CHANCE := 0.4
 
 # --- Generation dials ---------------------------------------------------------
 const CELL := 32                  # px per grid cell
@@ -121,6 +126,15 @@ func _on_boss_defeated() -> void:
 	var stairs := STAIRS_SCENE.instantiate()
 	stairs.position = _cell_center(center + Vector2i(2, 0))
 	add_child(stairs)
+	# Boss always pays a relic (if the run doesn't own them all yet).
+	var player := get_tree().get_first_node_in_group("player")
+	var owned: Array = player.relics if player else []
+	var relic_id := GameManager.random_unowned_relic(owned)
+	if relic_id != "":
+		var pickup := RELIC_PICKUP_SCENE.instantiate()
+		pickup.relic_id = relic_id
+		pickup.position = _cell_center(center + Vector2i(0, 2))
+		add_child(pickup)
 
 
 func _generate_layout() -> void:
@@ -300,6 +314,26 @@ func _spawn_player_and_enemies() -> void:
 			enemy.move_speed += speed_bonus
 			enemy.soul_value += depth / 3  # deeper floors pay better
 			add_child(enemy)
+	# Loot chests in side rooms (never the spawn room); cursed ambushes use
+	# the same floor scaling as regular spawns.
+	var chests := 0
+	for i in range(1, _rooms.size()):
+		if chests >= CHEST_MAX:
+			break
+		if randf() > CHEST_ROOM_CHANCE:
+			continue
+		var room := _rooms[i]
+		if room.size.x < 5 or room.size.y < 5:
+			continue
+		var chest := CHEST_SCENE.instantiate()
+		chest.cursed = randf() < CHEST_CURSED_CHANCE
+		chest.ambush_hp_bonus = hp_bonus
+		chest.ambush_speed_bonus = speed_bonus
+		chest.position = _cell_center(Vector2i(
+				randi_range(room.position.x + 2, room.end.x - 3),
+				randi_range(room.position.y + 2, room.end.y - 3)))
+		add_child(chest)
+		chests += 1
 
 
 func _cell_center(cell: Vector2i) -> Vector2:

@@ -29,6 +29,10 @@ const SLAM_KNOCKBACK := 2.2      # multiplier on the enemies' base knockback
 const SLAM_TRAUMA := 0.5
 const HURT_TRAUMA := 0.45        # taking a hit out-shakes dealing one
 const INVULN_TIME := 0.6         # i-frames: 3 converging melees can't stunlock
+const RELIC_MAX := 4             # run-bound relics carried at once
+const SWIFT_BONUS := 40.0        # "Hetzjagd" relic: bonus move speed
+const HEAVY_KNOCKBACK := 2.0     # "Wuchtklinge" relic: strike knockback scale
+const HUD_MESSAGE_TIME := 3.0
 const FLASH_TIME := 0.15
 const HURT_ANIM_TIME := 0.22     # non-interrupting flinch: clip holds this long, control stays live
 const DEATH_POP_TIME := 0.25
@@ -36,6 +40,7 @@ const DEATH_TRAUMA := 0.6
 # ----------------------------------------------------------------------------
 
 const CLICKABLE_MASK := 32  # physics layer 6 "clickable" (enemy ClickAreas)
+const FIRE_PATCH := preload("res://scenes/effects/fire_patch.gd")
 
 # 8-way sprite facing, indexed by round(pivot.rotation / 45deg). +Y is down, so
 # rotation 0 = east, PI/2 = south. Names match the SpriteFrames clip suffixes.
@@ -48,14 +53,20 @@ var attack_target: Node2D = null
 var hp: int
 var potion_charges := 1
 var dead := false
-# Effective stats = base const + permanent meta-upgrades (set in _ready).
+var relics: Array = []           # run-bound relic ids (GameManager.RELIC_DEFS)
+# Effective stats = base const + permanent meta-upgrades + relics (in _ready).
 var max_hp := MAX_HP
 var attack_damage := ATTACK_DAMAGE
 var slam_damage := SLAM_DAMAGE
 var dash_cooldown := DASH_COOLDOWN
 var potion_max := POTION_MAX
+var move_speed := MOVE_SPEED
+var max_dash_charges := 1
+var dash_charges := 1
 var dash_cooldown_left := 0.0    # public: HUD reads these
 var skill_cooldown_left := 0.0
+var hud_message := ""            # transient announcement (relic pickups)
+var hud_message_left := 0.0
 var _click_held := false
 var _dash_requested := false
 var _skill_requested := false
@@ -79,7 +90,9 @@ var _blink_tween: Tween
 
 
 func _ready() -> void:
+	relics = GameManager.carry_relics.duplicate()  # before stats: relics feed them
 	_apply_meta_upgrades()
+	dash_charges = max_dash_charges
 	# Re-apply live when a hub shrine sells an upgrade (the hub player is
 	# already spawned and would otherwise show stale stats until next run).
 	GameManager.upgrades_changed.connect(_apply_meta_upgrades)
@@ -101,8 +114,28 @@ func _apply_meta_upgrades() -> void:
 	slam_damage = SLAM_DAMAGE + GameManager.upgrades["might"]
 	dash_cooldown = DASH_COOLDOWN - 0.1 * GameManager.upgrades["reflexes"]
 	potion_max = POTION_MAX + GameManager.upgrades["belt"]
+	# Relic-driven stats live here too so one recompute covers both sources.
+	move_speed = MOVE_SPEED + (SWIFT_BONUS if has_relic("swift") else 0.0)
+	max_dash_charges = 2 if has_relic("dash_charge") else 1
 	if max_hp > old_max and hp > 0:
 		hp += max_hp - old_max  # fresh vitality fills the new squares
+
+
+func has_relic(id: String) -> bool:
+	return relics.has(id)
+
+
+func add_relic(id: String) -> bool:
+	if relics.size() >= RELIC_MAX or relics.has(id):
+		return false
+	relics.append(id)
+	_apply_meta_upgrades()
+	dash_charges = clampi(dash_charges + 1, 0, max_dash_charges)  # fresh charge feels good
+	var def: Dictionary = GameManager.RELIC_DEFS[id]
+	hud_message = "Relikt: %s — %s" % [def["label"], def["desc"]]
+	hud_message_left = HUD_MESSAGE_TIME
+	Sfx.play("relic")
+	return true
 
 
 func add_potion() -> bool:
@@ -134,6 +167,11 @@ func _physics_process(delta: float) -> void:
 	_cooldown_left = maxf(_cooldown_left - delta, 0.0)
 	dash_cooldown_left = maxf(dash_cooldown_left - delta, 0.0)
 	skill_cooldown_left = maxf(skill_cooldown_left - delta, 0.0)
+	hud_message_left = maxf(hud_message_left - delta, 0.0)
+	if dash_cooldown_left == 0.0 and dash_charges < max_dash_charges:
+		dash_charges += 1
+		if dash_charges < max_dash_charges:
+			dash_cooldown_left = dash_cooldown
 	_validate_target()
 	if _dash_requested:
 		_dash_requested = false
@@ -178,7 +216,8 @@ func _update_animation() -> void:
 func _try_dash() -> void:
 	# Dash cancels windups/slams (responsiveness is the point) and grants
 	# i-frames; collision mask drops to world-only so you dash THROUGH enemies.
-	if dead or dash_cooldown_left > 0.0 or state == State.DASH:
+	# Charge-based: normally 1, the Schattenschritt relic grants a second.
+	if dead or dash_charges <= 0 or state == State.DASH:
 		return
 	var dir := get_global_mouse_position() - global_position
 	if dir.length() < 4.0:
@@ -186,7 +225,9 @@ func _try_dash() -> void:
 	_dash_dir = dir.normalized()
 	state = State.DASH
 	_dash_time_left = DASH_TIME
-	dash_cooldown_left = dash_cooldown
+	dash_charges -= 1
+	if dash_cooldown_left == 0.0:
+		dash_cooldown_left = dash_cooldown
 	_invuln_left = maxf(_invuln_left, DASH_TIME + 0.05)
 	collision_mask = 1
 	Sfx.play("dash")
@@ -231,6 +272,11 @@ func _do_slam() -> void:
 	_camera.add_trauma(SLAM_TRAUMA)
 	Sfx.play("slam")
 	_spawn_slam_ring()
+	if has_relic("fire_slam"):
+		var patch := FIRE_PATCH.new()
+		patch.position = global_position
+		get_parent().add_child(patch)
+	var kills := 0
 	var shape := CircleShape2D.new()
 	shape.radius = SLAM_RADIUS
 	var params := PhysicsShapeQueryParameters2D.new()
@@ -241,6 +287,14 @@ func _do_slam() -> void:
 		var body: Node = hit.collider
 		if body.has_method("take_damage") and not body.get("dead"):
 			body.take_damage(slam_damage, global_position, SLAM_KNOCKBACK)
+			if body.get("dead"):
+				kills += 1
+	_apply_lifesteal(kills)
+
+
+func _apply_lifesteal(kills: int) -> void:
+	if kills > 0 and has_relic("lifesteal") and not dead:
+		hp = mini(hp + kills, max_hp)
 
 
 func _spawn_slam_ring() -> void:
@@ -302,7 +356,7 @@ func _tick_movement() -> void:
 		return
 	state = State.MOVE
 	var next := _nav.get_next_path_position()
-	velocity = global_position.direction_to(next) * MOVE_SPEED
+	velocity = global_position.direction_to(next) * move_speed
 	if attack_target == null and velocity != Vector2.ZERO:
 		_pivot.rotation = velocity.angle()
 	move_and_slide()
@@ -328,19 +382,21 @@ func _tick_attack(delta: float) -> void:
 
 func _strike() -> void:
 	var landed := false
-	var killed := false
+	var kills := 0
+	var knockback := HEAVY_KNOCKBACK if has_relic("heavy_hits") else 1.0
 	for body in _hitbox.get_overlapping_bodies():
 		if body.has_method("take_damage") and not body.get("dead"):
-			body.take_damage(attack_damage, global_position)
+			body.take_damage(attack_damage, global_position, knockback)
 			landed = true
 			if body.get("dead"):
-				killed = true
-	if killed:
+				kills += 1
+	if kills > 0:
 		_camera.add_trauma(KILL_TRAUMA)
 	elif landed:
 		_camera.add_trauma(HIT_TRAUMA)
 	if landed:
 		Sfx.play("hit")
+	_apply_lifesteal(kills)
 
 
 func take_damage(amount: int, _source_position: Vector2) -> void:
@@ -372,17 +428,21 @@ func take_potion_pickup() -> bool:
 	if add_potion():
 		return true
 	if hp < max_hp:
-		hp = mini(hp + POTION_HEAL, max_hp)
+		hp = mini(hp + _potion_heal_amount(), max_hp)
 		_heal_feedback()
 		return true
 	return false
+
+
+func _potion_heal_amount() -> int:
+	return max_hp if has_relic("potion_power") else POTION_HEAL
 
 
 func _drink_potion() -> void:
 	if dead or potion_charges <= 0 or hp >= max_hp:
 		return
 	potion_charges -= 1
-	hp = mini(hp + POTION_HEAL, max_hp)
+	hp = mini(hp + _potion_heal_amount(), max_hp)
 	_heal_feedback()
 
 

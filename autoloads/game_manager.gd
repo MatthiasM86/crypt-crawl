@@ -18,11 +18,24 @@ const UPGRADE_DEFS := {
 	"belt": {"label": "Gürtel", "effect": "+1 Trank-Slot", "costs": [50, 150]},
 }
 
+## Run-bound relics (docs/plan.md Ausblick 6): one clear effect each, no
+## inventory, lost on death. Effects hook into player.gd / add_souls.
+const RELIC_DEFS := {
+	"fire_slam": {"label": "Brandsiegel", "desc": "Rundumschlag hinterlässt Feuer", "color": Color(1.0, 0.55, 0.2)},
+	"lifesteal": {"label": "Blutdurst", "desc": "Kills heilen 1 HP", "color": Color(0.9, 0.2, 0.25)},
+	"dash_charge": {"label": "Schattenschritt", "desc": "+1 Dash-Ladung", "color": Color(0.45, 0.55, 1.0)},
+	"heavy_hits": {"label": "Wuchtklinge", "desc": "Doppelter Knockback", "color": Color(0.85, 0.9, 1.0)},
+	"swift": {"label": "Hetzjagd", "desc": "+40 Tempo", "color": Color(0.4, 0.9, 0.5)},
+	"potion_power": {"label": "Konzentrat", "desc": "Tränke heilen vollständig", "color": Color(1.0, 0.5, 0.8)},
+	"soul_greed": {"label": "Seelengier", "desc": "+50% Seelen", "color": Color(0.55, 0.9, 1.0)},
+}
+
 signal upgrades_changed
 
 var floor_num := 1
 var carry_hp := -1
 var carry_potions := 1
+var carry_relics: Array = []
 var souls := 0
 var wins := 0
 var upgrades := {"vitality": 0, "might": 0, "reflexes": 0, "belt": 0}
@@ -33,7 +46,19 @@ func _ready() -> void:
 
 
 func add_souls(amount: int) -> void:
+	var player := get_tree().get_first_node_in_group("player")
+	if player and player.has_method("has_relic") and player.has_relic("soul_greed"):
+		amount = ceili(amount * 1.5)
 	souls += amount
+
+
+func random_unowned_relic(owned: Array) -> String:
+	## "" when the run already holds every relic.
+	var pool: Array = []
+	for id in RELIC_DEFS:
+		if not owned.has(id):
+			pool.append(id)
+	return "" if pool.is_empty() else pool.pick_random()
 
 
 func upgrade_level(id: String) -> int:
@@ -62,14 +87,16 @@ func start_run() -> void:
 	floor_num = 1
 	carry_hp = -1
 	carry_potions = 1
+	carry_relics = []
 	_save()
 	get_tree().change_scene_to_file.call_deferred(RUN_SCENE)
 
 
-func next_floor(current_hp: int, current_potions: int) -> void:
+func next_floor(current_hp: int, current_potions: int, current_relics: Array) -> void:
 	floor_num += 1
 	carry_hp = current_hp
 	carry_potions = current_potions
+	carry_relics = current_relics
 	_save()
 	# Deferred: callers include Area2D physics callbacks, where changing the
 	# scene mid-flush is an error.
@@ -88,6 +115,7 @@ func return_to_hub() -> void:
 	floor_num = 1
 	carry_hp = -1
 	carry_potions = 1
+	carry_relics = []
 	_save()
 	get_tree().change_scene_to_file.call_deferred(HUB_SCENE)
 
@@ -96,6 +124,7 @@ func player_died() -> void:
 	floor_num = 1
 	carry_hp = -1
 	carry_potions = 1
+	carry_relics = []
 	_save()
 	await get_tree().create_timer(RESTART_DELAY).timeout
 	get_tree().change_scene_to_file.call_deferred(HUB_SCENE)

@@ -87,6 +87,15 @@ func _build_streams() -> void:
 	_streams["stairs"] = _synth(0.4, func(t: float, d: float) -> float:
 		var f := lerpf(300.0, 900.0, t / d)
 		return sin(TAU * f * t) * sin(PI * t / d) * 0.45)
+	# relic: three-note ascending arpeggio (the "important find" cue)
+	_streams["relic"] = _synth(0.36, func(t: float, d: float) -> float:
+		var third := d / 3.0
+		var f := 520.0 if t < third else (660.0 if t < 2.0 * third else 880.0)
+		return sin(TAU * f * t) * exp(-fmod(t, third) * 14.0) * 0.5)
+	# chest: low wooden creak-thud
+	_streams["chest"] = _synth(0.28, func(t: float, d: float) -> float:
+		var f := lerpf(90.0, 55.0, t / d)
+		return (sin(TAU * f * t) * 0.6 + rng.randf_range(-1, 1) * 0.3) * exp(-t * 10.0))
 	# ambient: loopable low crypt drone
 	var drone := _synth(6.0, func(t: float, d: float) -> float:
 		var lfo := 0.75 + 0.25 * sin(TAU * t / d)  # period == length -> seamless
