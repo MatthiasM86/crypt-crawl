@@ -72,6 +72,18 @@ Caveats learned the hard way:
   covers less wall/sim time than N/60 seconds suggests.
 - Commit `*.uid` sidecar files; never commit `.godot/`.
 
+## Asset workflow (PixelLab pipeline)
+
+All real art comes from the PixelLab MCP pipeline in batched generation
+passes. **Rule: any feature that introduces or changes a visual** (new enemy
+type, prop, pickup, effect, UI element) **ships with an interim look**
+(tinted existing sprite, Polygon2D, or code-drawn) **and MUST add an entry to
+`docs/asset-spec.md` §4 "Offene PixelLab-Aufgaben"** — with pixel size, style
+notes, and which scene/file the finished asset swaps into. That list is the
+single backlog the art passes work off; a visual that isn't on it will keep
+its placeholder forever. (Example: the exploder enemy launched as an
+orange-tinted brute + spec entry.)
+
 ## Architecture
 
 - **Scene scripts live next to their `.tscn`** in `scenes/<category>/` (player,
