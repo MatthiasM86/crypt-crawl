@@ -129,6 +129,9 @@ kostenlos per Hue-Shift wie bei den Schrein-Edelsteinen.
    generieren, wenn der Typ gebaut wird.
 8. **Projekt-Icon** (Fenster/Dock + itch.io-Export): 128×128, z.B. der
    Kryptritter-Kopf vor dunklem Portal. `config/icon` in project.godot setzen.
+9. **Blutschrein-Altar** (`scenes/levels/blood_shrine.tscn` ist Polygon2D):
+   32×32 dunkler Steinaltar mit rotem Kristall, von oben; „erschöpft"-Variante
+   = entsättigter Hue-Shift (0 Gens). Stil wie die Hub-Schreine.
 
 ## Einbau-Reihenfolge
 

@@ -39,6 +39,39 @@ const WALL_EPS := 0.1             # px overlap between wall rects: exactly
 const ENEMIES_PER_ROOM_MAX := 2   # 1..this per room (player's room stays empty)
 # Spawn mix + elite chance now live per-biome in GameManager.BIOMES.
 
+# --- Prefab rooms (plan.md Ausblick 4): hand-built templates stamped into a
+# fitting middle room. "#" = wall cell (never overwrites carved corridors),
+# "C" chest, "K" cursed chest, "B" blood shrine. Interior-only: outer walls
+# come from the surrounding void like every room. -----------------------------
+var prefab_chance := 0.6          # per floor (var so probes can force it)
+const PREFABS := [
+	{"name": "Schatzkammer", "rows": [
+		".........",
+		".##...##.",
+		".#C...K#.",
+		".........",
+		".#.....#.",
+		".##...##.",
+		".........",
+	]},
+	{"name": "Blutschrein", "rows": [
+		".......",
+		".#...#.",
+		"...B...",
+		".#...#.",
+		".......",
+	]},
+	{"name": "Säulenhalle", "rows": [
+		".........",
+		".#.#.#.#.",
+		".........",
+		".#.#.#.#.",
+		".........",
+	]},
+]
+const BLOOD_SHRINE_SCENE := preload("res://scenes/levels/blood_shrine.tscn")
+# ------------------------------------------------------------------------------
+
 # --- Floor difficulty scaling (applied via enemy @export dials at spawn) ------
 const SCALE_HP_EVERY := 2         # +1 enemy max_hp every N floors
 const SCALE_COUNT_EVERY := 3      # +1 max enemies/room every N floors...
@@ -58,6 +91,8 @@ const WALL_VARIANTS: Array[Vector2i] = [Vector2i(0, 1), Vector2i(1, 1), Vector2i
 
 var _rooms: Array[Rect2i] = []
 var _floor := {}  # Set: Vector2i -> true
+var _prefab_spawns: Array = []    # [{type, cell, cursed?}] from stamped prefabs
+var _prefab_room_index := -1
 
 @onready var _region: NavigationRegion2D = $NavigationRegion2D
 @onready var _tiles: TileMapLayer = $Tiles
@@ -78,6 +113,7 @@ func _ready() -> void:
 				break
 			if attempt == 2:
 				push_error("Level generation failed the reachability check 3x; using last layout")
+		_stamp_prefab()
 	_build_tiles()
 	_build_geometry()
 	if boss_floor:
@@ -85,6 +121,42 @@ func _ready() -> void:
 	else:
 		_spawn_player_and_enemies()
 	_bake_navmesh()
+
+
+func _stamp_prefab() -> void:
+	# Stamp one hand-built template into a fitting middle room (never the
+	# spawn or stairs room). "#" only erases floor that a corridor didn't
+	# already claim, so entrances survive; if the walls still break
+	# reachability, they get carved away again (markers stay).
+	if randf() > prefab_chance or _rooms.size() < 3:
+		return
+	var prefab: Dictionary = PREFABS.pick_random()
+	var rows: Array = prefab["rows"]
+	var ph := rows.size()
+	var pw := (rows[0] as String).length()
+	var candidates: Array[int] = []
+	for i in range(1, _rooms.size() - 1):
+		if _rooms[i].size.x >= pw and _rooms[i].size.y >= ph:
+			candidates.append(i)
+	if candidates.is_empty():
+		return
+	_prefab_room_index = candidates.pick_random()
+	var room := _rooms[_prefab_room_index]
+	var origin := room.position + Vector2i((room.size.x - pw) / 2, (room.size.y - ph) / 2)
+	for y in ph:
+		for x in pw:
+			var cell := origin + Vector2i(x, y)
+			match (rows[y] as String)[x]:
+				"#":
+					_floor.erase(cell)
+				"C":
+					_prefab_spawns.append({"type": "chest", "cell": cell, "cursed": false})
+				"K":
+					_prefab_spawns.append({"type": "chest", "cell": cell, "cursed": true})
+				"B":
+					_prefab_spawns.append({"type": "shrine", "cell": cell})
+	if not _all_rooms_reachable():
+		_carve_room(room)  # fallback: drop the walls, keep the loot spawns
 
 
 func _generate_boss_arena() -> void:
@@ -333,13 +405,27 @@ func _spawn_player_and_enemies() -> void:
 				enemy.elite = true
 				elite_placed = true
 			add_child(enemy)
-	# Loot chests in side rooms (never the spawn room); cursed ambushes use
-	# the same floor scaling as regular spawns.
+	# Prefab markers first: their chests/shrines are hand-placed.
+	for spawn in _prefab_spawns:
+		match spawn["type"]:
+			"chest":
+				var pchest := CHEST_SCENE.instantiate()
+				pchest.cursed = spawn["cursed"]
+				pchest.ambush_hp_bonus = hp_bonus
+				pchest.ambush_speed_bonus = speed_bonus
+				pchest.position = _cell_center(spawn["cell"])
+				add_child(pchest)
+			"shrine":
+				var shrine := BLOOD_SHRINE_SCENE.instantiate()
+				shrine.position = _cell_center(spawn["cell"])
+				add_child(shrine)
+	# Loot chests in side rooms (never the spawn or prefab room); cursed
+	# ambushes use the same floor scaling as regular spawns.
 	var chests := 0
 	for i in range(1, _rooms.size()):
 		if chests >= CHEST_MAX:
 			break
-		if randf() > CHEST_ROOM_CHANCE:
+		if i == _prefab_room_index or randf() > CHEST_ROOM_CHANCE:
 			continue
 		var room := _rooms[i]
 		if room.size.x < 5 or room.size.y < 5:

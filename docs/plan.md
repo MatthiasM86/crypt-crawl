@@ -96,9 +96,14 @@ Fühlt es sich schwammig an → an Schritt 2 (Feedback/Game Feel) schrauben, **b
    Lichtstimmung, Gegner-Mix pro Biom und Biom-Name im HUD; offen: echte
    PixelLab-Biom-Tilesets (asset-spec §4.5)*
 4. **Prefab-Räume** einstreuen (Schatzkammer, Schrein, Bossarena — wie Spelunky/Dead Cells)
-   → ❌ *offen (Bossarena existiert, aber generiert, keine Prefabs)*
+   → ✅ *umgesetzt: ASCII-Templates werden in passende Mittelräume gestempelt
+   (60%/Ebene) — Schatzkammer (2 Truhen in Nischen), Blutschrein-Raum (3 HP →
+   35 Seelen, einmalig), Säulenhalle; Flood-Fill sichert Erreichbarkeit ab.
+   Neue Templates = neuer Eintrag in `PREFABS` (level_generator.gd)*
 5. **Risk/Reward:** verfluchte Truhen, optionale Schatzräume; Loot/Gegner nach Distanz zum Spawn skalieren
-   → ✅ *weitgehend: Truhen in Seitenräumen (verfluchte sichtbar lila → Hinterhalt beim Öffnen), nach Boss-Sieg weiter absteigen, Gegner/Seelen skalieren mit Ebene; offen: dedizierte Schatzräume*
+   → ✅ *umgesetzt: Truhen in Seitenräumen (verfluchte sichtbar lila → Hinterhalt),
+   Schatzkammer-/Blutschrein-Prefabs, nach Boss-Sieg weiter absteigen, Gegner/Seelen
+   skalieren mit Ebene*
 6. **Item-System (Roguelike-Zuschnitt, bewusst schlank):** keine Diablo-Loot-Flut,
    kein Inventar, keine Affixe — stattdessen **Relikte**: seltene, run-gebundene
    Fundstücke (aus Truhen, von Elites, nach dem Boss), die den Build *dieses* Runs

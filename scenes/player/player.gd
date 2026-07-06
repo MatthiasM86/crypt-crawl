@@ -422,6 +422,17 @@ func take_damage(amount: int, _source_position: Vector2, _knockback_scale := 1.0
 			_visual.play("hurt_" + _dir_name())
 
 
+func sacrifice_hp(amount: int) -> bool:
+	## Voluntary HP cost (blood shrine): bypasses i-frames, refuses to kill.
+	if dead or hp <= amount:
+		return false
+	hp -= amount
+	_camera.add_trauma(0.3)
+	Sfx.play("hurt")
+	_play_flash()
+	return true
+
+
 func take_potion_pickup() -> bool:
 	## Called by potion pickups. Belt first; with a full belt an injured
 	## player drinks on the spot. Returns false only at full belt + full HP
