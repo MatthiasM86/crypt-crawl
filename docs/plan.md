@@ -89,7 +89,7 @@ Fühlt es sich schwammig an → an Schritt 2 (Feedback/Game Feel) schrauben, **b
 1. **Meta-Progression** (Hades-Style): Seelen-Währung, Hub, permanente Upgrades, Freischaltungen
    → ✅ *umgesetzt: Seelen-Wisps, begehbarer Hub mit 4 Schreinen, Save-File; offen: Freischaltungen (neue Skills/Waffen statt nur Stats)*
 2. **Pixel-Art & Atmosphäre:** düstere Tilesets, Gore-Details, Ambient-Sound
-   → ✅ *weitgehend: PixelLab-Tileset + 8-Richtungs-Sprites (Spieler, Brute, Kultist, Boss, inkl. Tod/Treffer) + Props; Sound bisher synthetisierte Platzhalter (Sfx-Autoload); offen: Gore, echte Audio-Dateien*
+   → ✅ *weitgehend: PixelLab-Tileset + 8-Richtungs-Sprites (Spieler, Brute, Kultist, Boss, inkl. Tod/Treffer) + Props; Sound bisher synthetisierte Platzhalter (Sfx-Autoload); offen: **hübsches HUD** (komplettes UI-Kit — Rahmen, Slots, Icons, Pixel-Font — spezifiziert in asset-spec.md §4.3, braucht PixelLab-Pass + hud.gd-Milestone), Gore, echte Audio-Dateien*
 3. **Ebenen-Struktur:** alle 4–5 Ebenen Boss/Elite-Raum, Biomwechsel (Krypta → Katakomben → Fleischgrube)
    → ✅ *umgesetzt: Boss alle 5 Ebenen, Elites ab Ebene 2, Biome Krypta (1–5) →
    Katakomben (6–10) → Fleischgrube (11+) mit eigenem Tileset (interim Hue-Shift),
