@@ -5,12 +5,29 @@ extends Area2D
 
 @export var upgrade_id := "vitality"
 
+# Per-upgrade shrine sprite (recolored gem) + a matching glow colour.
+const GEM_TEX := {
+	"vitality": preload("res://assets/sprites/props/shrine_vitality.png"),
+	"might": preload("res://assets/sprites/props/shrine_might.png"),
+	"reflexes": preload("res://assets/sprites/props/shrine_reflexes.png"),
+	"belt": preload("res://assets/sprites/props/shrine_belt.png"),
+}
+const GEM_GLOW := {
+	"vitality": Color(1.0, 0.4, 0.4),
+	"might": Color(1.0, 0.7, 0.35),
+	"reflexes": Color(0.4, 0.9, 1.0),
+	"belt": Color(0.8, 0.5, 1.0),
+}
+
 var _player_near := false
 
 @onready var _label: Label = $Info
 
 
 func _ready() -> void:
+	if upgrade_id in GEM_TEX:
+		$Visual.texture = GEM_TEX[upgrade_id]
+		$Glow.color = GEM_GLOW[upgrade_id]
 	body_entered.connect(_on_body_changed.bind(true))
 	body_exited.connect(_on_body_changed.bind(false))
 	_refresh()

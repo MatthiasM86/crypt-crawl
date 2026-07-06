@@ -4,7 +4,13 @@ extends Control
 ## every level and is unaffected by the CanvasModulate darkness.
 ## mouse_filter must stay IGNORE (Controls otherwise eat click-to-move).
 
+const POTION_ICON := preload("res://assets/sprites/props/potion.png")
+
 @onready var _player: Node = get_parent().get_parent()
+
+
+func _ready() -> void:
+	texture_filter = TEXTURE_FILTER_NEAREST  # crisp pixel-art HUD icons
 
 
 func _process(_delta: float) -> void:
@@ -20,8 +26,8 @@ func _draw() -> void:
 	# Ability row: potion belt [1/Q], dash [Space/Shift], slam [RMB]
 	var belt: int = _player.potion_max
 	for i in belt:
-		var potion_color := Color(0.35, 0.8, 0.4) if i < _player.potion_charges else Color(0.13, 0.22, 0.14)
-		draw_rect(Rect2(10 + i * 24, 38, 20, 20), potion_color)
+		var tint := Color.WHITE if i < _player.potion_charges else Color(0.3, 0.3, 0.35, 0.7)
+		draw_texture_rect(POTION_ICON, Rect2(10 + i * 24, 36, 22, 22), false, tint)
 	_draw_cooldown_square(Vector2(16 + belt * 24, 38), Color(0.45, 0.8, 0.95),
 			_player.dash_cooldown_left, _player.dash_cooldown)
 	_draw_cooldown_square(Vector2(40 + belt * 24, 38), Color(1.0, 0.75, 0.35),

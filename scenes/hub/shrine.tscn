@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://scenes/hub/shrine.gd" id="1_shrine"]
 [ext_resource type="GradientTexture2D" path="res://assets/textures/radial_light.tres" id="2_light"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/shrine_vitality.png" id="3_tex"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_area"]
 radius = 34.0
@@ -12,13 +13,9 @@ collision_mask = 2
 monitorable = false
 script = ExtResource("1_shrine")
 
-[node name="Pedestal" type="Polygon2D" parent="."]
-color = Color(0.32, 0.3, 0.38, 1)
-polygon = PackedVector2Array(-10, -4, 10, -4, 12, 14, -12, 14)
-
-[node name="Gem" type="Polygon2D" parent="."]
-color = Color(0.7, 0.45, 1, 1)
-polygon = PackedVector2Array(0, -16, 7, -7, 0, 2, -7, -7)
+[node name="Visual" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("3_tex")
 
 [node name="Glow" type="PointLight2D" parent="."]
 color = Color(0.7, 0.5, 1, 1)

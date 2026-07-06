@@ -25,6 +25,7 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	position += direction * SPEED * delta
 	_age += delta
+	$Visual.scale = Vector2.ONE * (1.0 + 0.15 * sin(_age * 40.0))  # crackle flicker
 	if _age >= LIFETIME:
 		queue_free()
 

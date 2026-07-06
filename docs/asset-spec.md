@@ -14,6 +14,11 @@ Allgemeine Anforderungen an jede Datei:
 
 ## 1. Tileset (sofort einbaubar)
 
+> **Status (erledigt):** über PixelLab `create_tiles_pro` (square top-down, 32px)
+> generiert und als `tileset_placeholder.png` im **gleichen 256×64-Layout**
+> eingebaut — Böden `(0,0)`–`(3,0)`, Riss `(4,0)`, Wände `(0,1)`–`(2,1)`. Drop-in,
+> kein Code nötig (`level_generator.gd` liest dieselben Atlas-Zellen).
+
 Ersetzt `assets/sprites/tileset_placeholder.png` — **gleicher Dateiname, gleiches
 Layout**, dann ist es ohne Code-Änderung im Spiel:
 
@@ -79,6 +84,11 @@ dämonische Gestalt, Fernkämpfer = giftgrüner Kultist/Schütze. Silhouetten
 müssen sich bei 32px klar unterscheiden.
 
 ## 3. Kleinkram
+
+> **Status (erledigt):** `projectile`, `potion` (+ HUD-Icon in `hud.gd`), `stairs`,
+> Seelen-Wisp und die 4 Hub-Schreine (Edelstein je Upgrade umgefärbt via Hue-Shift,
+> Textur/Glow per `upgrade_id` in `shrine.gd`) sind über PixelLab map-objects generiert
+> und verdrahtet (Polygon2D → Sprite2D, `assets/sprites/props/`). Keine Platzhalter mehr.
 
 - `projectile.png`: 16×16, 2 Frames nebeneinander (Flackern), giftgrünes Geschoss.
 - `stairs.png`: 32×32, abwärtsführende Steintreppe, von oben.

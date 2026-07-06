@@ -24,6 +24,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	_age += delta
+	$Visual.scale = Vector2.ONE * (1.0 + 0.12 * sin(_age * 12.0))  # flame flicker
 	if _age > MAX_LIFE:
 		_collect()
 		return
