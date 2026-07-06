@@ -92,6 +92,10 @@ func _build_streams() -> void:
 		var third := d / 3.0
 		var f := 520.0 if t < third else (660.0 if t < 2.0 * third else 880.0)
 		return sin(TAU * f * t) * exp(-fmod(t, third) * 14.0) * 0.5)
+	# clank: metallic shield block
+	_streams["clank"] = _synth(0.09, func(t: float, d: float) -> float:
+		return (sin(TAU * 1250.0 * t) * 0.45 + sin(TAU * 1870.0 * t) * 0.25
+				+ rng.randf_range(-1, 1) * 0.3) * exp(-t * 40.0))
 	# chest: low wooden creak-thud
 	_streams["chest"] = _synth(0.28, func(t: float, d: float) -> float:
 		var f := lerpf(90.0, 55.0, t / d)

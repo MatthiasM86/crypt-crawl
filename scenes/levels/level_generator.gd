@@ -17,6 +17,16 @@ const VICTORY_PORTAL_SCENE := preload("res://scenes/levels/victory_portal.tscn")
 const CHEST_SCENE := preload("res://scenes/pickups/chest.tscn")
 const RELIC_PICKUP_SCENE := preload("res://scenes/pickups/relic_pickup.tscn")
 const EXPLODER_SCENE := preload("res://scenes/enemies/exploder.tscn")
+const TANK_SCENE := preload("res://scenes/enemies/shield_tank.tscn")
+const SUMMONER_SCENE := preload("res://scenes/enemies/summoner.tscn")
+
+## Maps GameManager.BIOMES weight keys to scenes; fixed order for the roll.
+const SPAWN_TYPES := ["exploder", "tank", "summoner", "ranged", "melee"]
+const SPAWN_SCENES := {
+	"exploder": EXPLODER_SCENE, "tank": TANK_SCENE, "summoner": SUMMONER_SCENE,
+	"ranged": RANGED_SCENE, "melee": MELEE_SCENE,
+}
+const ELITE_EXCLUDED := ["exploder", "summoner"]  # elite bombs/spawners = chaos
 
 const BOSS_EVERY := 5             # every Nth floor is a boss arena
 const CHEST_ROOM_CHANCE := 0.3    # per room (player's room excluded)...
@@ -374,22 +384,24 @@ func _spawn_player_and_enemies() -> void:
 	var room_max := mini(ENEMIES_PER_ROOM_MAX + depth / SCALE_COUNT_EVERY, SCALE_COUNT_CAP)
 	var elite_placed := false
 	var biome := GameManager.biome()
-	var weights: Dictionary = biome["weights"]
 	var elite_chance: float = biome["elite_chance"]
-	var exploder_w: float = weights["exploder"] if GameManager.floor_num >= 2 else 0.0
-	var weight_total: float = weights["melee"] + weights["ranged"] + exploder_w
+	var weights := (biome["weights"] as Dictionary).duplicate()
+	if GameManager.floor_num < 2:
+		weights["exploder"] = 0.0  # learn curve: floor 1 stays basics-only
+	var weight_total := 0.0
+	for type in SPAWN_TYPES:
+		weight_total += float(weights.get(type, 0.0))
 	for i in range(1, _rooms.size()):
 		var room := _rooms[i]
 		for j in randi_range(1, room_max):
 			var roll := randf() * weight_total
-			var scene := MELEE_SCENE
-			var is_exploder := false
-			if roll < exploder_w:
-				scene = EXPLODER_SCENE
-				is_exploder = true
-			elif roll < exploder_w + float(weights["ranged"]):
-				scene = RANGED_SCENE
-			var enemy := scene.instantiate()
+			var picked := "melee"
+			for type in SPAWN_TYPES:
+				roll -= float(weights.get(type, 0.0))
+				if roll < 0.0:
+					picked = type
+					break
+			var enemy: Node2D = (SPAWN_SCENES[picked] as PackedScene).instantiate()
 			enemy.position = _cell_center(Vector2i(
 					randi_range(room.position.x + 1, room.end.x - 2),
 					randi_range(room.position.y + 1, room.end.y - 2)))
@@ -398,10 +410,9 @@ func _spawn_player_and_enemies() -> void:
 			enemy.max_hp += hp_bonus
 			enemy.move_speed += speed_bonus
 			enemy.soul_value += depth / 3  # deeper floors pay better
-			# One elite per floor at most; exploders excluded (an elite bomb
-			# with +1 damage would be pure chaos).
-			if not elite_placed and not is_exploder and GameManager.floor_num >= 2 \
-					and randf() < elite_chance:
+			# One elite per floor at most; exploders/summoners excluded.
+			if not elite_placed and not ELITE_EXCLUDED.has(picked) \
+					and GameManager.floor_num >= 2 and randf() < elite_chance:
 				enemy.elite = true
 				elite_placed = true
 			add_child(enemy)

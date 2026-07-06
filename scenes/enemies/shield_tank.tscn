@@ -1,0 +1,19 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/enemies/enemy.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scenes/enemies/shield_tank.gd" id="2_tank"]
+
+[node name="ShieldTank" instance=ExtResource("1_base")]
+script = ExtResource("2_tank")
+max_hp = 6
+move_speed = 130.0
+detect_radius = 340.0
+attack_range = 55.0
+attack_windup = 0.6
+attack_recover = 0.4
+attack_cooldown = 1.6
+attack_damage = 2
+soul_value = 5
+
+[node name="Visual" parent="."]
+self_modulate = Color(0.55, 0.7, 1, 1)

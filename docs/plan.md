@@ -115,8 +115,9 @@ Fühlt es sich schwammig an → an Schritt 2 (Feedback/Game Feel) schrauben, **b
    Wuchtklinge, Hetzjagd, Konzentrat, Seelengier), max. 4 als HUD-Icons, Drop aus
    Truhen (60%) und nach jedem Boss-Kill; offen: weitere Relikte, Elite-Drops*
 7. **Content:** 5–8 Gegnertypen, Skills, Controller-Support (Items → Punkt 6)
-   → 🔶 *3 Gegnertypen (Brute, Kultist, Exploder ab Ebene 2) + Elite-Varianten + 1 Boss;
-   offen: Typ 4–5 (z.B. Schild-Tank, Beschwörer), Exploder-PixelLab-Sprite (interim
-   getönter Brute), Skilltree, Controller*
+   → 🔶 *Ziel-Untergrenze erreicht: 5 Typen (Brute, Kultist, Exploder, Schild-Tank
+   ab Katakomben, Beschwörer ab Fleischgrube — Register: docs/enemies.md) +
+   Elites + Boss; offen: PixelLab-Sprites für Typ 3–5 (interim getönt),
+   Skilltree, Controller*
 8. **Vertrieb:** itch.io (kostenlos, unkompliziert) → später Steam; Mobile-Port optional
    → ❌ *offen: noch kein Export-Preset / Build*

@@ -124,9 +124,15 @@ kostenlos per Hue-Shift wie bei den Schrein-Edelsteinen.
    rötlich-organisch (Adern, Membranen).
 6. **Feuerfläche** (Brandsiegel-Relikt, aktuell prozedural gezeichnet): optional
    4-Frame-Loop 64×64 Bodenfeuer, transparent.
-7. **Sprites für künftige Gegnertypen** (Exploder, Schild-Tank …): gleiche
-   8-Richtungs-Pipeline wie Brute/Cultist (idle/walk/attack/death/hurt) — erst
-   generieren, wenn der Typ gebaut wird.
+7. **Sprites für gebaute Gegnertypen** (gleiche 8-Richtungs-Pipeline wie
+   Brute/Cultist, idle/walk/attack/death/hurt):
+   - **Exploder** (interim: orange getönter Brute): aufgedunsener Kadaver /
+     Bombenträger, sollte "gleich platzt er" ausstrahlen.
+   - **Schild-Tank** (interim: stahlblau getönter Brute): massige Gestalt mit
+     Turmschild nach vorn — die Front muss als "geschützt" lesbar sein.
+   - **Beschwörer** (interim: violett getönter Kultist): Ritualist mit Grimoire/
+     Stab; Attack-Animation = Beschwörungsgeste (kein Schuss).
+   - Künftige Typen (Lurker, Splitter …) erst nach dem Bau generieren.
 8. **Projekt-Icon** (Fenster/Dock + itch.io-Export): 128×128, z.B. der
    Kryptritter-Kopf vor dunklem Portal. `config/icon` in project.godot setzen.
 9. **Blutschrein-Altar** (`scenes/levels/blood_shrine.tscn` ist Polygon2D):

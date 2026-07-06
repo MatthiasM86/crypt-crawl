@@ -1,0 +1,18 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/enemies/ranged_enemy.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scenes/enemies/summoner.gd" id="2_summoner"]
+
+[node name="Summoner" instance=ExtResource("1_base")]
+script = ExtResource("2_summoner")
+max_hp = 3
+move_speed = 150.0
+detect_radius = 400.0
+attack_range = 380.0
+attack_windup = 0.8
+attack_recover = 0.3
+attack_cooldown = 4.0
+soul_value = 6
+
+[node name="Visual" parent="."]
+self_modulate = Color(0.85, 0.55, 0.95, 1)
