@@ -32,6 +32,9 @@ const SOUL_SCENE := preload("res://scenes/pickups/soul_wisp.tscn")
 @export var ai_enabled := true      # false = passive training dummy
 # ------------------------------------------------------------------------------
 
+# 8-way sprite facing (see player.gd). +Y down: rotation 0 = east, PI/2 = south.
+const DIR8 := ["east", "south-east", "south", "south-west", "west", "north-west", "north", "north-east"]
+
 enum State { IDLE, CHASE, ATTACK }
 
 var hp: int
@@ -46,17 +49,18 @@ var _cooldown_left := 0.0
 var _attack_time := 0.0
 var _struck := false
 
-@onready var _visual: Polygon2D = $Visual
+@onready var _visual: AnimatedSprite2D = $Visual
 @onready var _nav: NavigationAgent2D = $NavigationAgent2D
 @onready var _pivot: Node2D = $AttackPivot
 @onready var _hitbox: Area2D = $AttackPivot/Hitbox
-@onready var _weapon: Polygon2D = $AttackPivot/WeaponVisual
 
 
 func _ready() -> void:
 	hp = max_hp
-	_base_color = _visual.color
+	_base_color = _visual.self_modulate
 	_player = get_tree().get_first_node_in_group("player") as Node2D
+	if _visual.sprite_frames and _visual.sprite_frames.has_animation("idle_south"):
+		_visual.play("idle_south")
 
 
 func _physics_process(delta: float) -> void:
@@ -76,6 +80,26 @@ func _physics_process(delta: float) -> void:
 	velocity = ai_velocity + _knockback
 	_knockback = _knockback.move_toward(Vector2.ZERO, KNOCKBACK_FRICTION * delta)
 	move_and_slide()
+	_update_animation()
+
+
+func _dir_name() -> String:
+	return DIR8[posmod(int(round(_pivot.rotation / (PI / 4.0))), 8)]
+
+
+func _update_animation() -> void:
+	# State + facing -> "<state>_<dir>" clip; the color/scale telegraph and (for
+	# melee) the forward lunge layer on top. Missing clip -> hold current frame.
+	var base := "idle"
+	match state:
+		State.CHASE:
+			base = "walk"
+		State.ATTACK:
+			base = "attack"
+	var want := base + "_" + _dir_name()
+	var frames := _visual.sprite_frames
+	if frames and frames.has_animation(want) and _visual.animation != want:
+		_visual.play(want)
 
 
 func _tick_idle() -> void:
@@ -113,17 +137,15 @@ func _start_telegraph() -> void:
 	if _telegraph_tween:
 		_telegraph_tween.kill()
 	_telegraph_tween = create_tween().set_parallel()
-	_telegraph_tween.tween_property(_visual, "color", TELEGRAPH_COLOR, attack_windup)
+	_telegraph_tween.tween_property(_visual, "self_modulate", TELEGRAPH_COLOR, attack_windup)
 	_telegraph_tween.tween_property(_visual, "scale", Vector2.ONE * TELEGRAPH_SCALE, attack_windup)
 	_show_attack_tell()
 
 
 func _show_attack_tell() -> void:
-	# Melee: blade creeps out along the locked strike direction ("where").
-	# Ranged overrides this to a no-op.
-	_weapon.visible = true
-	_weapon.position.x = 10.0
-	_telegraph_tween.tween_property(_weapon, "position:x", 22.0, attack_windup)
+	# Melee: the windup->strike now reads from the "attack_<dir>" sprite clip plus
+	# the color/scale telegraph. Ranged overrides this; boss adds an AoE ring.
+	pass
 
 
 func _tick_attack(delta: float) -> void:
@@ -133,7 +155,6 @@ func _tick_attack(delta: float) -> void:
 		_snap_telegraph_back()
 		_perform_attack()
 	if _attack_time >= attack_windup + attack_recover:
-		_weapon.visible = false
 		state = State.CHASE
 
 
@@ -141,7 +162,6 @@ func _perform_attack() -> void:
 	# Melee strike: locked-direction hitbox sweep + forward lunge via the
 	# knockback channel. Overlap list is fine here: monitoring Area2D,
 	# queried during _physics_process, not from a physics callback.
-	_weapon.position.x = 34.0
 	_knockback = Vector2.RIGHT.rotated(_pivot.rotation) * LUNGE_SPEED
 	for body in _hitbox.get_overlapping_bodies():
 		if body.has_method("take_damage") and not body.get("dead"):
@@ -152,13 +172,12 @@ func _snap_telegraph_back() -> void:
 	# Hard snap, no ease-out: the contrast IS the "hit happened now" read.
 	if _telegraph_tween:
 		_telegraph_tween.kill()
-	_visual.color = _base_color
+	_visual.self_modulate = _base_color
 	_visual.scale = Vector2.ONE
 
 
 func _cancel_attack() -> void:
 	_snap_telegraph_back()
-	_weapon.visible = false
 
 
 func _face_player() -> void:

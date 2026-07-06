@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://scenes/enemies/enemy.gd" id="1_enemy"]
 [ext_resource type="Shader" path="res://assets/shaders/hit_flash.gdshader" id="2_flash"]
+[ext_resource type="SpriteFrames" path="res://assets/sprites/enemies/brute/brute_frames.tres" id="3_frames"]
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_flash"]
 resource_local_to_scene = true
@@ -23,10 +24,12 @@ collision_layer = 4
 collision_mask = 7
 script = ExtResource("1_enemy")
 
-[node name="Visual" type="Polygon2D" parent="."]
+[node name="Visual" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
 material = SubResource("ShaderMaterial_flash")
-color = Color(0.85, 0.3, 0.3, 1)
-polygon = PackedVector2Array(-14, -14, 14, -14, 14, 14, -14, 14)
+sprite_frames = ExtResource("3_frames")
+animation = &"idle_south"
+offset = Vector2(0, -5)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_body")
@@ -53,9 +56,3 @@ monitorable = false
 [node name="HitboxShape" type="CollisionShape2D" parent="AttackPivot/Hitbox"]
 position = Vector2(32, 0)
 shape = SubResource("RectangleShape2D_hitbox")
-
-[node name="WeaponVisual" type="Polygon2D" parent="AttackPivot"]
-visible = false
-position = Vector2(10, 0)
-color = Color(0.95, 0.6, 0.5, 1)
-polygon = PackedVector2Array(0, -3, 20, -3, 20, 3, 0, 3)

@@ -44,7 +44,18 @@ Prompt-Baustein (englisch, für Bild-KI):
 > Player nutzt jetzt eine `AnimatedSprite2D` (Node „Visual"), gesteuert von
 > `state` + `_pivot.rotation` (siehe `_update_animation()` in `player.gd`); die
 > Polygon2D-Rechtecke und die WeaponVisual sind entfernt, Hit-Flash-Shader und
-> alle Effekte bleiben. Gegner folgen weiterhin dem Schema unten.
+> alle Effekte bleiben.
+>
+> **Status Gegner (erledigt):** Nahkämpfer (`brute`, blutroter Dämon),
+> Fernkämpfer (`cultist`, giftgrüner Armbrust-Kultist) und Boss (`Kryptwächter`,
+> schwarze Platte + Cleaver) sind ebenfalls über PixelLab als 8-Richtungs-
+> Charaktere generiert (idle/walk/attack). Frames unter
+> `assets/sprites/enemies/<name>/<state>/<richtung>/`, je ein
+> `<name>_frames.tres`. `enemy.tscn` (=Nahkämpfer) trägt die Brute-Frames;
+> `ranged_enemy.tscn`/`boss.tscn` überschreiben `sprite_frames` + `offset`.
+> `enemy.gd` fährt jetzt eine `AnimatedSprite2D`: das gelbe Windup-Telegraph
+> tönt `self_modulate` (statt `color`), der Melee-„Lunge" bleibt, die WeaponVisual
+> ist weg. Der windup→snap-Read (docs/plan.md) bleibt voll erhalten.
 
 Alle Charaktere: **32×32 px pro Frame**, horizontale Streifen (Frames
 nebeneinander), Blickrichtung **rechts** (das Spiel rotiert/spiegelt selbst),
