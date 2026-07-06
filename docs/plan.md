@@ -3,6 +3,11 @@
 **Plattform:** PC (Desktop) · **Engine:** Godot 4.x · **Genre:** 2D-Pixel-Roguelike, Echtzeit-Kampf, Top-down
 **Ziel des PoC:** Eine einzige Frage beantworten — *"Macht der Core-Loop Spaß?"*
 
+> **Stand Juli 2026:** PoC komplett umgesetzt, Erfolgskriterium im Spieltest
+> bestätigt. Vom Ausblick sind Punkt 1 (Meta-Progression) und Punkt 2
+> (Pixel-Art via PixelLab) weitgehend fertig, Punkt 3 und 5 teilweise —
+> Status-Marker an den Punkten unten.
+
 ---
 
 ## Kernkonzept
@@ -16,33 +21,33 @@
 
 ## Phase 1: Design-Entscheidungen festnageln (1–2 Tage)
 
-- [ ] **Steuerung:** Linksklick = laufen/angreifen (Diablo-Standard), Rechtsklick = Skill (optional für PoC), Leertaste/Shift = Dash
-- [ ] **Kampf-Grundregeln:**
+- [x] **Steuerung:** Linksklick = laufen/angreifen (Diablo-Standard), Rechtsklick = Skill (optional für PoC), Leertaste/Shift = Dash
+- [x] **Kampf-Grundregeln:**
   - Angriff mit Cooldown (z.B. 0,5 s)
   - Hitbox vor dem Spieler
   - Gegner-Angriffe mit **Windup** (kurze Telegraphierung → Ausweichen möglich; Kern des Spielgefühls!)
-- [ ] **Minimal-Stats:** HP, Schaden, Bewegungstempo — sonst nichts
+- [x] **Minimal-Stats:** HP, Schaden, Bewegungstempo — sonst nichts
 
 ## Phase 2: PoC-Scope schriftlich fixieren
 
 Der PoC prüft nur: Fühlt sich Klicken, Treffen und Ausweichen gut an ("Game Feel")?
 
 **Enthalten:**
-- [ ] 1 prozedural generierte Ebene (Rooms & Corridors)
-- [ ] 1 Spielfigur
-- [ ] 2 Gegnertypen: Nahkämpfer (rennt auf dich zu) + Fernkämpfer (hält Abstand, schießt Projektil)
-- [ ] 1 Nahkampfangriff, 1 Heiltrank auf Hotkey
-- [ ] Fog of War / Sichtradius per Licht (PointLight2D → gratis düstere Atmosphäre)
-- [ ] Tod = Neustart
-- [ ] Platzhalter-Grafik (farbige Rechtecke reichen!)
+- [x] 1 prozedural generierte Ebene (Rooms & Corridors)
+- [x] 1 Spielfigur
+- [x] 2 Gegnertypen: Nahkämpfer (rennt auf dich zu) + Fernkämpfer (hält Abstand, schießt Projektil)
+- [x] 1 Nahkampfangriff, 1 Heiltrank auf Hotkey
+- [x] Fog of War / Sichtradius per Licht (PointLight2D → gratis düstere Atmosphäre)
+- [x] Tod = Neustart
+- [x] Platzhalter-Grafik (farbige Rechtecke reichen!) — inzwischen durch PixelLab-Pixel-Art ersetzt
 
 **Bewusst NICHT enthalten (nach dem PoC):**
 Pixel-Art, Meta-Progression, Biome, Bosse, Item-Vielfalt, Skilltrees, Sound, Balancing, Monetarisierung
 
 ## Phase 3: Technisches Fundament (parallel zu Phase 1)
 
-- [ ] Godot 4.x installieren, nur Desktop-Export
-- [ ] Kern-Nodes lernen:
+- [x] Godot 4.x installieren, nur Desktop-Export
+- [x] Kern-Nodes lernen:
 
 | Node | Zweck |
 |---|---|
@@ -52,22 +57,22 @@ Pixel-Art, Meta-Progression, Biome, Bosse, Item-Vielfalt, Skilltrees, Sound, Bal
 | `AnimationPlayer` / `AnimatedSprite2D` | Angriffs-Timing, Windups |
 | `PointLight2D` + `LightOccluder2D` | Fackellicht, Schatten, Fog of War |
 
-- [ ] **Szenen-Struktur:** `Player`, `Enemy` (Basis-Szene, Varianten erben), `Projectile`, `LevelGenerator`, `GameManager` (HP, Tod, Neustart)
+- [x] **Szenen-Struktur:** `Player`, `Enemy` (Basis-Szene, Varianten erben), `Projectile`, `LevelGenerator`, `GameManager` (HP, Tod, Neustart)
 
 ## Phase 4: Bauen (3–5 Wochen als Feierabend-Projekt)
 
 Reihenfolge — **Game Feel zuerst**:
 
-1. [ ] **Spieler-Bewegung** per Klick (`NavigationAgent2D`) in einem handgebauten Testraum
-2. [ ] **Angriff:** Klick auf Gegner → hinlaufen bis Reichweite → zuschlagen.
+1. [x] **Spieler-Bewegung** per Klick (`NavigationAgent2D`) in einem handgebauten Testraum
+2. [x] **Angriff:** Klick auf Gegner → hinlaufen bis Reichweite → zuschlagen.
    → Sofort an Feedback arbeiten: **Hit-Flash, kurzer Knockback, Screenshake.**
    → *Hier stecken 80 % des Diablo-Gefühls. Unverhältnismäßig viel Zeit investieren!*
-3. [ ] **Gegner-KI:** Zustandsmaschine mit 3 Zuständen: `Idle` → `Verfolgen` (sieht Spieler) → `Angreifen` (in Reichweite, mit Windup)
-4. [ ] **Fernkämpfer + Projektil**
-5. [ ] **Levelgenerator** anschließen (Rooms & Corridors)
+3. [x] **Gegner-KI:** Zustandsmaschine mit 3 Zuständen: `Idle` → `Verfolgen` (sieht Spieler) → `Angreifen` (in Reichweite, mit Windup)
+4. [x] **Fernkämpfer + Projektil**
+5. [x] **Levelgenerator** anschließen (Rooms & Corridors)
    → Navigation-Mesh pro generierter Ebene neu backen: `NavigationRegion2D.bake_navigation_polygon()`
    → Erreichbarkeit garantieren (Treppe immer verbunden, Flood-Fill-Check)
-6. [ ] **Licht/Fog of War**, Treppe, Ebenenwechsel, Tod & Neustart
+6. [x] **Licht/Fog of War**, Treppe, Ebenenwechsel, Tod & Neustart
 
 ## Erfolgskriterium
 
@@ -75,14 +80,23 @@ Reihenfolge — **Game Feel zuerst**:
 
 Fühlt es sich schwammig an → an Schritt 2 (Feedback/Game Feel) schrauben, **bevor** neue Features gebaut werden.
 
+✅ **Erfüllt** (Spieltest Juli 2026) — Basis-Feel bestätigt, danach Dash + Rundumschlag nachgelegt.
+
 ---
 
 ## Ausblick nach erfolgreichem PoC
 
 1. **Meta-Progression** (Hades-Style): Seelen-Währung, Hub, permanente Upgrades, Freischaltungen
+   → ✅ *umgesetzt: Seelen-Wisps, begehbarer Hub mit 4 Schreinen, Save-File; offen: Freischaltungen (neue Skills/Waffen statt nur Stats)*
 2. **Pixel-Art & Atmosphäre:** düstere Tilesets, Gore-Details, Ambient-Sound
+   → ✅ *weitgehend: PixelLab-Tileset + 8-Richtungs-Sprites (Spieler, Brute, Kultist, Boss, inkl. Tod/Treffer) + Props; Sound bisher synthetisierte Platzhalter (Sfx-Autoload); offen: Gore, echte Audio-Dateien*
 3. **Ebenen-Struktur:** alle 4–5 Ebenen Boss/Elite-Raum, Biomwechsel (Krypta → Katakomben → Fleischgrube)
+   → 🔶 *teilweise: Boss „Kryptwächter" alle 5 Ebenen mit Arena + Weiterspiel-Option; offen: Biomwechsel*
 4. **Prefab-Räume** einstreuen (Schatzkammer, Schrein, Bossarena — wie Spelunky/Dead Cells)
+   → ❌ *offen (Bossarena existiert, aber generiert, keine Prefabs)*
 5. **Risk/Reward:** verfluchte Truhen, optionale Schatzräume; Loot/Gegner nach Distanz zum Spawn skalieren
+   → 🔶 *teilweise: nach Boss-Sieg weiter absteigen (Win schon gebankt), Gegner/Seelen skalieren mit Ebene; offen: Truhen, Schatzräume*
 6. **Content:** 5–8 Gegnertypen, 20–30 Items, Skills, Controller-Support
+   → ❌ *dünnste Stelle: 2 Gegnertypen + 1 Boss; Items nur Heiltrank; Skills nur Dash + Rundumschlag; kein Controller*
 7. **Vertrieb:** itch.io (kostenlos, unkompliziert) → später Steam; Mobile-Port optional
+   → ❌ *offen: noch kein Export-Preset / Build*
