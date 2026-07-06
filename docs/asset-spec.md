@@ -110,9 +110,24 @@ kostenlos per Hue-Shift wie bei den Schrein-Edelsteinen.
    Schemen), Wuchtklinge (Faust/Hammer), Hetzjagd (Flügel), Konzentrat
    (Trank+Stern), Seelengier (Seelen-Auge). Farbcodes stehen in
    `GameManager.RELIC_DEFS` — Icons sollten je Relikt in dieser Farbe dominieren.
-3. **HUD-Skill-Icons** 16×16: Dash (Stiefel/Blitz) und Rundumschlag (Schockwelle)
-   ersetzen die farbigen Cooldown-Quadrate in `hud.gd`; HP-Kästchen könnten
-   Herzen/Schilde werden.
+3. **Hübsches HUD** (komplettes UI-Paket im Stil von `sample.png` — gerahmte
+   Balken statt roher Rechtecke). PixelLab-Tools: `create_ui_asset` für
+   Rahmen/Balken/Slots, `create_font` für die Schrift. Braucht danach einen
+   **Code-Milestone** (hud.gd zeichnet dann Texturen/NinePatch statt
+   `draw_rect`). Bestandteile:
+   - **HP-Leiste**: verzierter Rahmen (NinePatch-tauglich, ~240×28) + rote
+     Füll-Textur + Herz-Icon als Endkappe; Füllung als eigene Ebene, damit
+     der Code sie beschneiden kann.
+   - **Slot-Rahmen** 26×26 (dunkler Metall-/Steinrahmen, Diablo-Hotbar-Look)
+     für Trank-Gürtel, Dash, Rundumschlag und die 4 Relikt-Plätze; Variante
+     „leer" = abgedunkelt, Cooldown-Füllung macht weiterhin der Code.
+   - **Skill-Icons** 16×16: Dash (Stiefel/Schemen), Rundumschlag (Schockwelle).
+   - **Seelen-Zähler-Icon** 16×16 (cyan Wisp) + **Ebenen-/Biom-Plakette**
+     (kleines Banner ~120×24 hinter „Ebene 6 — Katakomben").
+   - **Boss-Leiste**: breiter Zierrahmen (~380×24) mit dunkler Füllung.
+   - **Pixel-Font** (via `create_font`): leicht gotisch, aber bei Größe 10–16
+     gut lesbar; ersetzt die Godot-Fallback-Font überall (HUD, Labels,
+     Pause-Menü, Schrein-Texte).
 4. **Gore/Blut-Decals** (plan.md Ausblick 2): 2–3 Blutspritzer 32×32 (opak auf
    Boden gelegt, per Zufallsrotation beim Gegner-Tod gespawnt) + Knochenhaufen
    als Raum-Deko. Braucht einen kleinen Code-Hook in `enemy._die()`.
