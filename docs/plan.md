@@ -87,7 +87,10 @@ Fühlt es sich schwammig an → an Schritt 2 (Feedback/Game Feel) schrauben, **b
 ## Ausblick nach erfolgreichem PoC
 
 1. **Meta-Progression** (Hades-Style): Seelen-Währung, Hub, permanente Upgrades, Freischaltungen
-   → ✅ *umgesetzt: Seelen-Wisps, begehbarer Hub mit 4 Schreinen, Save-File; offen: Freischaltungen (neue Skills/Waffen statt nur Stats)*
+   → ✅ *umgesetzt: Seelen-Wisps, begehbarer Hub mit 4 Schreinen, Save-File.
+   Entscheidung Juli 2026: neue Skills/Waffen werden NICHT hier permanent
+   freigeschaltet, sondern laufen run-gebunden über Punkt 6 — die Schreine
+   bleiben reine Stat-Upgrades*
 2. **Pixel-Art & Atmosphäre:** düstere Tilesets, Gore-Details, Ambient-Sound
    → ✅ *weitgehend: PixelLab-Tileset + 8-Richtungs-Sprites (Spieler, Brute, Kultist, Boss, inkl. Tod/Treffer) + Props; Sound bisher synthetisierte Platzhalter (Sfx-Autoload); offen: **hübsches HUD** (komplettes UI-Kit — Rahmen, Slots, Icons, Pixel-Font — spezifiziert in asset-spec.md §4.3, braucht PixelLab-Pass + hud.gd-Milestone), Gore, echte Audio-Dateien*
 3. **Ebenen-Struktur:** alle 4–5 Ebenen Boss/Elite-Raum, Biomwechsel (Krypta → Katakomben → Fleischgrube)
@@ -111,9 +114,29 @@ Fühlt es sich schwammig an → an Schritt 2 (Feedback/Game Feel) schrauben, **b
    „+1 Dash-Ladung", „Projektile prallen ab"). Aufheben = Sofort-Entscheidung,
    max. ~4 gleichzeitig als Icons im HUD, Tod = weg. Motivation kommt aus
    Run-Varianz (Hades/Dead Cells), nicht aus Stash-Verwaltung
-   → ✅ *erste Scheibe umgesetzt: 7 Relikte (Brandsiegel, Blutdurst, Schattenschritt,
+   → 🔶 *Relikte umgesetzt: 7 Stück (Brandsiegel, Blutdurst, Schattenschritt,
    Wuchtklinge, Hetzjagd, Konzentrat, Seelengier), max. 4 als HUD-Icons, Drop aus
-   Truhen (60%) und nach jedem Boss-Kill; offen: weitere Relikte, Elite-Drops*
+   Truhen (60%) und nach jedem Boss-Kill; offen: weitere Relikte, Elite-Drops.*
+
+   **Entscheidung Juli 2026 (Erweiterung):** Waffen und Skills werden — wie
+   Relikte — run-gebunden gefunden statt permanent freigeschaltet (siehe
+   Punkt 1); jeder Run soll sich anders anfühlen:
+   - **Waffen:** volles eigenes Moveset pro Waffe (Hitbox-Größe/-Position,
+     Reichweite, Timing, Schaden, Knockback — kein reiner Stat-Modifier auf
+     einen gemeinsamen Schwung), 1 ausgerüstet, Fund tauscht via Wahl-UI
+   - **Skills:** aktive Fähigkeiten mit eigenem Cooldown auf dem RMB-Slot,
+     1 ausgerüstet, Fund tauscht via Wahl-UI. Rundumschlag ist der Start-Skill
+   - **Vereinheitlichte Wahl-UI:** ein voller Slot (Relikt/Waffe/Skill) löst bei
+     neuem Fund eine Auswahl aus („behalten oder tauschen?") — ersetzt das
+     frühere stillschweigende Ignorieren bei vollen Relikt-Slots
+   → ✅ *umgesetzt: 3 Waffen (Kurzschwert, Spieß, Kriegshammer), 4 Skills
+   (Rundumschlag, Frostnova, Blutopfer, Seelenkette), `LoadoutChoice`-Autoload
+   für die Wahl-UI (pausiert währenddessen), Drop aus Truhen/Boss gleichmäßig
+   über Relikt/Waffe/Skill verteilt; Wächter-Beschwörung als Skill bewusst
+   zurückgestellt (Stretch-Goal, bräuchte umgedrehte enemy.gd-KI als
+   Verbündeten). Offen: alle drei Waffen teilen sich noch dieselbe
+   Schwung-Animation (asset-spec.md #10), Skill-/Waffen-Icons im HUD sind
+   Platzhalter-Formen*
 7. **Content:** 5–8 Gegnertypen, Skills, Controller-Support (Items → Punkt 6)
    → 🔶 *Ziel-Untergrenze erreicht: 5 Typen (Brute, Kultist, Exploder, Schild-Tank
    ab Katakomben, Beschwörer ab Fleischgrube — Register: docs/enemies.md) +

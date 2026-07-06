@@ -6,7 +6,7 @@
 [node name="Summoner" instance=ExtResource("1_base")]
 script = ExtResource("2_summoner")
 max_hp = 3
-move_speed = 150.0
+move_speed = 135.0
 detect_radius = 400.0
 attack_range = 380.0
 attack_windup = 0.8

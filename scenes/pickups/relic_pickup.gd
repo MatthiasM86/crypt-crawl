@@ -1,7 +1,7 @@
 extends Area2D
 ## Run-bound relic lying on the ground (from chests or the boss). Auto-pickup
-## on touch if the player has a free slot (player.RELIC_MAX); otherwise it
-## stays lying -- walking over a full-belt relic is a deliberate non-event.
+## on touch if the player has a free slot (player.RELIC_MAX); otherwise
+## LoadoutChoice offers a swap -- decline and it stays lying.
 
 @export var relic_id := "lifesteal"
 
@@ -22,5 +22,11 @@ func _start_bob() -> void:
 
 
 func _on_body_entered(body: Node2D) -> void:
-	if body.has_method("add_relic") and body.add_relic(relic_id):
+	if not body.has_method("add_relic"):
+		return
+	if body.add_relic(relic_id):
 		queue_free()
+	else:
+		# add_relic() only fails on a full belt here -- chest/boss drops
+		# already exclude relics the run owns, so this can't be a duplicate.
+		LoadoutChoice.offer("relic", relic_id, body.relics, body, self)

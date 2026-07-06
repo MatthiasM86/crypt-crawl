@@ -18,6 +18,13 @@ const FLOOR_MAX := Vector2i(24, 14)
 func _ready() -> void:
 	_build_tiles()
 	$NavigationRegion2D.bake_navigation_polygon(false)
+	# Room is smaller than the viewport at default zoom, so the camera must be
+	# clamped to the wall bounds or it shows the void past the edges.
+	var camera: Camera2D = $Player/Camera2D
+	camera.limit_left = 0
+	camera.limit_top = 0
+	camera.limit_right = (FLOOR_MAX.x + 2) * CELL
+	camera.limit_bottom = (FLOOR_MAX.y + 2) * CELL
 
 
 func _build_tiles() -> void:

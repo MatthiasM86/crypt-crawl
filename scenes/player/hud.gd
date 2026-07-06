@@ -35,8 +35,9 @@ func _draw() -> void:
 	if _player.max_dash_charges > 1:
 		draw_string(ThemeDB.fallback_font, Vector2(20 + belt * 24, 53),
 				str(_player.dash_charges), HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.1, 0.15, 0.2))
-	_draw_cooldown_square(Vector2(40 + belt * 24, 38), Color(1.0, 0.75, 0.35),
-			_player.skill_cooldown_left, _player.SLAM_COOLDOWN)
+	var skill_def: Dictionary = GameManager.SKILL_DEFS[_player.skill_id]
+	_draw_cooldown_square(Vector2(40 + belt * 24, 38), skill_def["color"],
+			_player.skill_cooldown_left, skill_def["cooldown"])
 	draw_string(ThemeDB.fallback_font, Vector2(66 + belt * 24, 54), "[1] [Spc] [RMB]",
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.55, 0.55, 0.6))
 	draw_string(ThemeDB.fallback_font, Vector2(10, 84),
@@ -44,16 +45,20 @@ func _draw() -> void:
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.8, 0.8, 0.85))
 	draw_string(ThemeDB.fallback_font, Vector2(10, 108), "Seelen: %d" % GameManager.souls,
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.55, 0.9, 1.0))
+	var weapon_def: Dictionary = GameManager.WEAPON_DEFS[_player.weapon_id]
+	draw_string(ThemeDB.fallback_font, Vector2(10, 130), "Waffe: %s" % weapon_def["label"],
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 14, weapon_def["color"])
 	_draw_relics()
 	_draw_message()
 	_draw_boss_bar()
+	_draw_minimap()
 
 
 func _draw_relics() -> void:
 	# One colored diamond per carried relic (max player.RELIC_MAX).
 	for i in _player.relics.size():
 		var def: Dictionary = GameManager.RELIC_DEFS[_player.relics[i]]
-		var c := Vector2(20 + i * 26, 130)
+		var c := Vector2(20 + i * 26, 154)
 		draw_colored_polygon(PackedVector2Array([
 			c + Vector2(0, -9), c + Vector2(8, 0), c + Vector2(0, 9), c + Vector2(-8, 0),
 		]), def["color"])
@@ -79,6 +84,33 @@ func _draw_boss_bar() -> void:
 	draw_rect(Rect2(x, 16, w * boss.hp / float(boss.max_hp), 14), Color(0.7, 0.15, 0.2))
 	draw_string(ThemeDB.fallback_font, Vector2(x, 48), "Kryptwächter",
 			HORIZONTAL_ALIGNMENT_LEFT, w, 14, Color(0.85, 0.7, 0.75))
+
+
+func _draw_minimap() -> void:
+	# Top-right corner; no-ops for scenes without get_map_data() (hub, test_room
+	# -- both small enough to not need one). [M] opens the full map.
+	var level := get_tree().current_scene
+	if level == null or not level.has_method("get_map_data"):
+		return
+	var data: Dictionary = level.get_map_data()
+	var cell: int = data["cell"]
+	var map_w: int = data["map_w"]
+	var map_h: int = data["map_h"]
+	const BOX_W := 160.0
+	const BOX_H := 90.0
+	var origin := Vector2(get_viewport_rect().size.x - BOX_W - 10, 10)
+	var scale_x: float = BOX_W / map_w
+	var scale_y: float = BOX_H / map_h
+	draw_rect(Rect2(origin, Vector2(BOX_W, BOX_H)), Color(0.05, 0.05, 0.07, 0.7))
+	var visited: Dictionary = data["visited"]
+	for c in visited:
+		var cv: Vector2i = c
+		draw_rect(Rect2(origin + Vector2(cv.x * scale_x, cv.y * scale_y),
+				Vector2(scale_x + 0.6, scale_y + 0.6)), Color(0.55, 0.55, 0.65, 0.85))
+	var p_pos: Vector2 = origin + (_player.position / cell) * Vector2(scale_x, scale_y)
+	draw_circle(p_pos, 3.0, Color(1.0, 0.85, 0.3))
+	draw_string(ThemeDB.fallback_font, origin + Vector2(0, BOX_H + 14), "[M] Karte",
+			HORIZONTAL_ALIGNMENT_LEFT, -1, 12, Color(0.6, 0.6, 0.65))
 
 
 func _draw_cooldown_square(pos: Vector2, ready_color: Color, left: float, total: float) -> void:

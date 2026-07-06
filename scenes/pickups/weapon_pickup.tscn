@@ -1,0 +1,33 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scenes/pickups/weapon_pickup.gd" id="1_weapon"]
+[ext_resource type="GradientTexture2D" path="res://assets/textures/radial_light.tres" id="2_light"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_grab"]
+radius = 14.0
+
+[node name="WeaponPickup" type="Area2D"]
+collision_layer = 0
+collision_mask = 2
+monitorable = false
+script = ExtResource("1_weapon")
+
+[node name="Visual" type="Polygon2D" parent="."]
+color = Color(1, 1, 1, 1)
+polygon = PackedVector2Array(0, -12, 3, -4, 3, 10, -3, 10, -3, -4)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_grab")
+
+[node name="Glow" type="PointLight2D" parent="."]
+energy = 0.7
+texture = ExtResource("2_light")
+texture_scale = 0.35
+
+[node name="Name" type="Label" parent="."]
+offset_left = -70.0
+offset_top = -30.0
+offset_right = 70.0
+offset_bottom = -12.0
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 10

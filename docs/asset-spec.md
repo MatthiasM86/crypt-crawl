@@ -119,12 +119,19 @@ kostenlos per Hue-Shift wie bei den Schrein-Edelsteinen.
      Füll-Textur + Herz-Icon als Endkappe; Füllung als eigene Ebene, damit
      der Code sie beschneiden kann.
    - **Slot-Rahmen** 26×26 (dunkler Metall-/Steinrahmen, Diablo-Hotbar-Look)
-     für Trank-Gürtel, Dash, Rundumschlag und die 4 Relikt-Plätze; Variante
-     „leer" = abgedunkelt, Cooldown-Füllung macht weiterhin der Code.
-   - **Skill-Icons** 16×16: Dash (Stiefel/Schemen), Rundumschlag (Schockwelle).
+     für Trank-Gürtel, Dash, den (jetzt austauschbaren) Skill-Slot und die
+     4 Relikt-Plätze; Variante „leer" = abgedunkelt, Cooldown-Füllung macht
+     weiterhin der Code.
+   - **Skill-Icons** 16×16: Dash (Stiefel/Schemen), plus je eins für
+     Rundumschlag (Schockwelle), Frostnova (Eiskristall), Blutopfer
+     (Blutstropfen+Explosion), Seelenkette (Kette/Sog) — Farbcodes in
+     `GameManager.SKILL_DEFS`.
    - **Seelen-Zähler-Icon** 16×16 (cyan Wisp) + **Ebenen-/Biom-Plakette**
      (kleines Banner ~120×24 hinter „Ebene 6 — Katakomben").
    - **Boss-Leiste**: breiter Zierrahmen (~380×24) mit dunkler Füllung.
+   - **Minimap-Rahmen** (~160×90, oben rechts) + **Karten-Rahmen** für die
+     große [M]-Kartenansicht (`autoloads/full_map_view.gd`) — aktuell beides
+     rohe `draw_rect`/`draw_circle`-Formen auf aufgedecktem Fog-of-War.
    - **Pixel-Font** (via `create_font`): leicht gotisch, aber bei Größe 10–16
      gut lesbar; ersetzt die Godot-Fallback-Font überall (HUD, Labels,
      Pause-Menü, Schrein-Texte).
@@ -153,6 +160,17 @@ kostenlos per Hue-Shift wie bei den Schrein-Edelsteinen.
 9. **Blutschrein-Altar** (`scenes/levels/blood_shrine.tscn` ist Polygon2D):
    32×32 dunkler Steinaltar mit rotem Kristall, von oben; „erschöpft"-Variante
    = entsättigter Hue-Shift (0 Gens). Stil wie die Hub-Schreine.
+10. **Waffen-System** (docs/plan.md Ausblick 6, Entscheidung Juli 2026, Code
+    steht bereits): `scenes/pickups/weapon_pickup.tscn` und `skill_pickup.tscn`
+    sind noch farbige Polygon2D-Platzhalter (Klinge bzw. Quadrat). Braucht:
+    - **3 Waffen-Icons** 16×16 für Boden-Pickup/HUD: Kurzschwert, Spieß,
+      Kriegshammer (Farbcodes in `GameManager.WEAPON_DEFS`).
+    - **Eigene Schwung-Animation pro Waffe** (aktuell teilen sich alle drei
+      dieselbe `attack_<dir>`-Klinge-Animation aus dem Spieler-Sprite-Sheet —
+      mechanisch schon unterschiedlich per Hitbox/Timing/Reichweite, visuell
+      noch nicht): Spieß = Stoß statt Schwung, Kriegshammer = breiterer,
+      langsamerer Überkopfschlag. Gleiche 8-Richtungs-Pipeline wie der
+      bestehende Spieler-Sprite-Satz.
 
 ## Einbau-Reihenfolge
 

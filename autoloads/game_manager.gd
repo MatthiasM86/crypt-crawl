@@ -4,7 +4,6 @@ extends Node
 ## saved to user://save.cfg). The hub scene is home base: runs start via
 ## start_run() from the hub portal and end back in the hub on death.
 
-const RESTART_DELAY := 0.9
 const SAVE_PATH := "user://save.cfg"
 const HUB_SCENE := "res://scenes/hub/hub.tscn"
 const RUN_SCENE := "res://scenes/levels/generated_level.tscn"
@@ -28,6 +27,37 @@ const RELIC_DEFS := {
 	"swift": {"label": "Hetzjagd", "desc": "+40 Tempo", "color": Color(0.4, 0.9, 0.5)},
 	"potion_power": {"label": "Konzentrat", "desc": "Tränke heilen vollständig", "color": Color(1.0, 0.5, 0.8)},
 	"soul_greed": {"label": "Seelengier", "desc": "+50% Seelen", "color": Color(0.55, 0.9, 1.0)},
+}
+
+## Run-bound weapons (docs/plan.md Ausblick 6, Entscheidung Juli 2026): full
+## movesets, not stat modifiers -- hitbox size/position, range, timing and
+## knockback all differ. Visuals still reuse the one attack animation
+## (interim; asset-spec.md tracks the per-weapon swing-animation backlog).
+const DEFAULT_WEAPON := "kurzschwert"
+const WEAPON_DEFS := {
+	"kurzschwert": {"label": "Kurzschwert", "desc": "Ausgewogen: mittlere Reichweite, mittleres Tempo",
+		"color": Color(0.75, 0.75, 0.8), "damage": 1, "range": 56.0,
+		"hitbox_size": Vector2(44, 36), "hitbox_pos": Vector2(34, 0),
+		"windup": 0.12, "recover": 0.15, "cooldown": 0.5, "knockback": 1.0},
+	"spiess": {"label": "Spieß", "desc": "Lange Reichweite, schnell, weniger Wucht",
+		"color": Color(0.6, 0.85, 0.6), "damage": 1, "range": 78.0,
+		"hitbox_size": Vector2(66, 20), "hitbox_pos": Vector2(50, 0),
+		"windup": 0.10, "recover": 0.12, "cooldown": 0.4, "knockback": 0.75},
+	"kriegshammer": {"label": "Kriegshammer", "desc": "Kurze Reichweite, langsam, brutale Wucht",
+		"color": Color(0.85, 0.5, 0.3), "damage": 3, "range": 48.0,
+		"hitbox_size": Vector2(52, 52), "hitbox_pos": Vector2(28, 0),
+		"windup": 0.32, "recover": 0.25, "cooldown": 0.95, "knockback": 2.4},
+}
+
+## Run-bound active skills (docs/plan.md Ausblick 6, Entscheidung Juli 2026):
+## the RMB slot, previously hardcoded to Rundumschlag. Behavior lives in
+## player.gd's _perform_skill(); these defs only carry display info + cooldown.
+const DEFAULT_SKILL := "rundumschlag"
+const SKILL_DEFS := {
+	"rundumschlag": {"label": "Rundumschlag", "desc": "AoE-Schlag um dich herum", "color": Color(1.0, 0.75, 0.35), "cooldown": 3.0},
+	"frostnova": {"label": "Frostnova", "desc": "Friert Gegner im Umkreis kurz ein", "color": Color(0.55, 0.85, 1.0), "cooldown": 4.0},
+	"blutopfer": {"label": "Blutopfer", "desc": "Opfert HP für Schadens-Nova + Lebensraub bei Kills", "color": Color(0.75, 0.15, 0.2), "cooldown": 5.0},
+	"seelenkette": {"label": "Seelenkette", "desc": "Zieht Gegner in einem Kegel heran", "color": Color(0.6, 0.4, 0.9), "cooldown": 4.5},
 }
 
 signal upgrades_changed
@@ -57,7 +87,10 @@ var floor_num := 1
 var carry_hp := -1
 var carry_potions := 1
 var carry_relics: Array = []
+var carry_weapon: String = DEFAULT_WEAPON
+var carry_skill: String = DEFAULT_SKILL
 var souls := 0
+var run_souls := 0  # earned this run only; feeds the death-screen recap
 var wins := 0
 var upgrades := {"vitality": 0, "might": 0, "reflexes": 0, "belt": 0}
 
@@ -79,6 +112,7 @@ func add_souls(amount: int) -> void:
 	if player and player.has_method("has_relic") and player.has_relic("soul_greed"):
 		amount = ceili(amount * 1.5)
 	souls += amount
+	run_souls += amount
 
 
 func random_unowned_relic(owned: Array) -> String:
@@ -87,6 +121,16 @@ func random_unowned_relic(owned: Array) -> String:
 	for id in RELIC_DEFS:
 		if not owned.has(id):
 			pool.append(id)
+	return "" if pool.is_empty() else pool.pick_random()
+
+
+func random_other_weapon(exclude_id: String) -> String:
+	var pool: Array = WEAPON_DEFS.keys().filter(func(id): return id != exclude_id)
+	return "" if pool.is_empty() else pool.pick_random()
+
+
+func random_other_skill(exclude_id: String) -> String:
+	var pool: Array = SKILL_DEFS.keys().filter(func(id): return id != exclude_id)
 	return "" if pool.is_empty() else pool.pick_random()
 
 
@@ -117,15 +161,21 @@ func start_run() -> void:
 	carry_hp = -1
 	carry_potions = 1
 	carry_relics = []
+	carry_weapon = DEFAULT_WEAPON
+	carry_skill = DEFAULT_SKILL
+	run_souls = 0
 	_save()
 	get_tree().change_scene_to_file.call_deferred(RUN_SCENE)
 
 
-func next_floor(current_hp: int, current_potions: int, current_relics: Array) -> void:
+func next_floor(current_hp: int, current_potions: int, current_relics: Array,
+		current_weapon: String, current_skill: String) -> void:
 	floor_num += 1
 	carry_hp = current_hp
 	carry_potions = current_potions
 	carry_relics = current_relics
+	carry_weapon = current_weapon
+	carry_skill = current_skill
 	_save()
 	# Deferred: callers include Area2D physics callbacks, where changing the
 	# scene mid-flush is an error.
@@ -145,18 +195,23 @@ func return_to_hub() -> void:
 	carry_hp = -1
 	carry_potions = 1
 	carry_relics = []
+	carry_weapon = DEFAULT_WEAPON
+	carry_skill = DEFAULT_SKILL
 	_save()
 	get_tree().change_scene_to_file.call_deferred(HUB_SCENE)
 
 
 func player_died() -> void:
+	var floor_reached := floor_num
+	var souls_earned := run_souls
 	floor_num = 1
 	carry_hp = -1
 	carry_potions = 1
 	carry_relics = []
+	carry_weapon = DEFAULT_WEAPON
+	carry_skill = DEFAULT_SKILL
 	_save()
-	await get_tree().create_timer(RESTART_DELAY).timeout
-	get_tree().change_scene_to_file.call_deferred(HUB_SCENE)
+	DeathScreen.show_recap(floor_reached, souls_earned)
 
 
 func _save() -> void:

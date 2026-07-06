@@ -6,7 +6,7 @@
 [node name="Exploder" instance=ExtResource("1_base")]
 script = ExtResource("2_exploder")
 max_hp = 2
-move_speed = 340.0
+move_speed = 305.0
 detect_radius = 400.0
 attack_range = 60.0
 attack_windup = 0.6

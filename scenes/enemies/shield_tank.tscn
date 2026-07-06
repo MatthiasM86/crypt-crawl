@@ -6,7 +6,7 @@
 [node name="ShieldTank" instance=ExtResource("1_base")]
 script = ExtResource("2_tank")
 max_hp = 6
-move_speed = 130.0
+move_speed = 115.0
 detect_radius = 340.0
 attack_range = 55.0
 attack_windup = 0.6

@@ -20,11 +20,12 @@ const PICKUP_SCENE := preload("res://scenes/pickups/potion_pickup.tscn")
 const SOUL_SCENE := preload("res://scenes/pickups/soul_wisp.tscn")
 const RELIC_SCENE := preload("res://scenes/pickups/relic_pickup.tscn")
 const ELITE_TINT := Color(0.9, 0.55, 1.0)  # violet: distinct from the yellow telegraph
+const FROST_TINT := Color(0.6, 0.85, 1.0)  # player's Frostnova skill
 # ------------------------------------------------------------------------------
 
 # --- Archetype dials (variants override these in their .tscn) -----------------
 @export var max_hp := 3
-@export var move_speed := 200.0     # < player 300 so disengaging always works
+@export var move_speed := 180.0     # < player 270 so disengaging always works
 @export var detect_radius := 320.0
 @export var attack_range := 55.0
 @export var attack_windup := 0.45   # dodge window: player covers 135 px
@@ -54,6 +55,8 @@ var _cooldown_left := 0.0
 var _attack_time := 0.0
 var _struck := false
 var _hurt_left := 0.0
+var _slow_factor := 1.0
+var _slow_time_left := 0.0
 
 @onready var _visual: AnimatedSprite2D = $Visual
 @onready var _nav: NavigationAgent2D = $NavigationAgent2D
@@ -79,6 +82,11 @@ func _ready() -> void:
 func _physics_process(delta: float) -> void:
 	_cooldown_left = maxf(_cooldown_left - delta, 0.0)
 	_hurt_left = maxf(_hurt_left - delta, 0.0)
+	if _slow_time_left > 0.0:
+		_slow_time_left = maxf(_slow_time_left - delta, 0.0)
+		if _slow_time_left == 0.0:
+			_slow_factor = 1.0
+			_visual.self_modulate = _base_color
 	var ai_velocity := Vector2.ZERO
 	if ai_enabled and _player_alive():
 		match state:
@@ -132,7 +140,7 @@ func _chase_velocity() -> Vector2:
 	_nav.target_position = _player.global_position
 	if _nav.is_navigation_finished():
 		return Vector2.ZERO
-	return global_position.direction_to(_nav.get_next_path_position()) * move_speed
+	return global_position.direction_to(_nav.get_next_path_position()) * move_speed * _slow_factor
 
 
 func _in_attack_position() -> bool:
@@ -212,6 +220,20 @@ func _has_los() -> bool:
 
 func _player_alive() -> bool:
 	return _player != null and is_instance_valid(_player) and not _player.get("dead")
+
+
+func apply_slow(factor: float, duration: float) -> void:
+	## Player's Frostnova skill. Chase movement only -- an in-progress attack
+	## windup still finishes, so it reads as a slow/freeze, not a total stun.
+	_slow_factor = factor
+	_slow_time_left = duration
+	_visual.self_modulate = FROST_TINT
+
+
+func apply_pull(target_position: Vector2, strength: float) -> void:
+	## Player's Seelenkette skill. Reuses the knockback channel (same friction
+	## decay in _physics_process), just pointed toward the target instead of away.
+	_knockback = (target_position - global_position).normalized() * strength
 
 
 func take_damage(amount: int, source_position: Vector2, knockback_scale := 1.0) -> void:

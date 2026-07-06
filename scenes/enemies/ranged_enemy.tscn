@@ -7,7 +7,7 @@
 [node name="RangedEnemy" instance=ExtResource("1_base")]
 script = ExtResource("2_ranged")
 max_hp = 2
-move_speed = 160.0
+move_speed = 145.0
 detect_radius = 400.0
 attack_range = 380.0
 attack_windup = 0.5

@@ -6,12 +6,7 @@ extends CharacterBody2D
 ## source_position) + `dead` flag -- enemies and projectiles call/read these.
 
 # --- Feel dials -------------------------------------------------------------
-const MOVE_SPEED := 300.0
-const ATTACK_RANGE := 56.0       # start swing when this close to target center
-const ATTACK_COOLDOWN := 0.5     # time between swing starts (docs/plan.md)
-const ATTACK_WINDUP := 0.12      # swing start -> damage frame
-const ATTACK_RECOVER := 0.15     # damage frame -> can act again
-const ATTACK_DAMAGE := 1
+const MOVE_SPEED := 270.0
 const HIT_TRAUMA := 0.22
 const KILL_TRAUMA := 0.35
 const MAX_HP := 10
@@ -20,13 +15,25 @@ const POTION_MAX := 3            # belt size; drops beyond this stay lying
 const DASH_SPEED := 950.0        # toward cursor; ~140 px per dash
 const DASH_TIME := 0.15
 const DASH_COOLDOWN := 0.8
-const SLAM_WINDUP := 0.2         # right-click AoE: commit before the boom
-const SLAM_RECOVER := 0.25
-const SLAM_COOLDOWN := 3.0
+const SKILL_WINDUP := 0.2        # right-click active skill: commit before it fires
+const SKILL_RECOVER := 0.25      # shared windup/recover across all equippable skills
+# --- Rundumschlag (starter skill) ---
 const SLAM_DAMAGE := 2
 const SLAM_RADIUS := 90.0
 const SLAM_KNOCKBACK := 2.2      # multiplier on the enemies' base knockback
 const SLAM_TRAUMA := 0.5
+# --- Frostnova ---
+const FROST_RADIUS := 100.0
+const FROST_DURATION := 1.4
+const FROST_FACTOR := 0.05       # near-total stop, not just a slow
+# --- Blutopfer ---
+const BLUTOPFER_COST := 2
+const BLUTOPFER_RADIUS := 80.0
+const BLUTOPFER_DAMAGE := 2
+# --- Seelenkette ---
+const SEELENKETTE_RADIUS := 140.0
+const SEELENKETTE_CONE_DEG := 70.0   # half-angle in front of the facing direction
+const SEELENKETTE_PULL := 420.0
 const HURT_TRAUMA := 0.45        # taking a hit out-shakes dealing one
 const INVULN_TIME := 0.6         # i-frames: 3 converging melees can't stunlock
 const RELIC_MAX := 4             # run-bound relics carried at once
@@ -46,7 +53,7 @@ const FIRE_PATCH := preload("res://scenes/effects/fire_patch.gd")
 # rotation 0 = east, PI/2 = south. Names match the SpriteFrames clip suffixes.
 const DIR8 := ["east", "south-east", "south", "south-west", "west", "north-west", "north", "north-east"]
 
-enum State { IDLE, MOVE, ATTACK, DASH, SLAM }
+enum State { IDLE, MOVE, ATTACK, DASH, SKILL }
 
 var state := State.IDLE
 var attack_target: Node2D = null
@@ -54,9 +61,16 @@ var hp: int
 var potion_charges := 1
 var dead := false
 var relics: Array = []           # run-bound relic ids (GameManager.RELIC_DEFS)
-# Effective stats = base const + permanent meta-upgrades + relics (in _ready).
+var weapon_id := "kurzschwert"    # run-bound, always exactly one (GameManager.WEAPON_DEFS)
+var skill_id := "rundumschlag"    # run-bound, always exactly one (GameManager.SKILL_DEFS)
+# Effective stats = base const + permanent meta-upgrades + relics + weapon (in _ready).
 var max_hp := MAX_HP
-var attack_damage := ATTACK_DAMAGE
+var attack_damage := 1
+var attack_range := 56.0
+var attack_windup := 0.12
+var attack_recover := 0.15
+var attack_cooldown := 0.5
+var weapon_knockback := 1.0
 var slam_damage := SLAM_DAMAGE
 var dash_cooldown := DASH_COOLDOWN
 var potion_max := POTION_MAX
@@ -65,15 +79,15 @@ var max_dash_charges := 1
 var dash_charges := 1
 var dash_cooldown_left := 0.0    # public: HUD reads these
 var skill_cooldown_left := 0.0
-var hud_message := ""            # transient announcement (relic pickups)
+var hud_message := ""            # transient announcement (relic/weapon/skill pickups)
 var hud_message_left := 0.0
 var _click_held := false
 var _dash_requested := false
 var _skill_requested := false
 var _dash_dir := Vector2.ZERO
 var _dash_time_left := 0.0
-var _slam_time := 0.0
-var _slam_struck := false
+var _skill_time := 0.0
+var _skill_struck := false
 var _cooldown_left := 0.0
 var _attack_time := 0.0
 var _struck := false
@@ -91,6 +105,8 @@ var _blink_tween: Tween
 
 func _ready() -> void:
 	relics = GameManager.carry_relics.duplicate()  # before stats: relics feed them
+	weapon_id = GameManager.carry_weapon
+	skill_id = GameManager.carry_skill
 	_apply_meta_upgrades()
 	dash_charges = max_dash_charges
 	# Re-apply live when a hub shrine sells an upgrade (the hub player is
@@ -110,7 +126,6 @@ func _ready() -> void:
 func _apply_meta_upgrades() -> void:
 	var old_max := max_hp
 	max_hp = MAX_HP + 2 * GameManager.upgrades["vitality"]
-	attack_damage = ATTACK_DAMAGE + GameManager.upgrades["might"]
 	slam_damage = SLAM_DAMAGE + GameManager.upgrades["might"]
 	dash_cooldown = DASH_COOLDOWN - 0.1 * GameManager.upgrades["reflexes"]
 	potion_max = POTION_MAX + GameManager.upgrades["belt"]
@@ -119,6 +134,24 @@ func _apply_meta_upgrades() -> void:
 	max_dash_charges = 2 if has_relic("dash_charge") else 1
 	if max_hp > old_max and hp > 0:
 		hp += max_hp - old_max  # fresh vitality fills the new squares
+	_apply_weapon()
+
+
+func _apply_weapon() -> void:
+	# Full moveset per weapon: hitbox size/position, range, timing and
+	# knockback all differ (docs/plan.md Ausblick 6). Visuals still reuse the
+	# one attack animation clip -- interim, see asset-spec.md backlog.
+	var def: Dictionary = GameManager.WEAPON_DEFS[weapon_id]
+	attack_damage = def["damage"] + GameManager.upgrades["might"]
+	attack_range = def["range"]
+	attack_windup = def["windup"]
+	attack_recover = def["recover"]
+	attack_cooldown = def["cooldown"]
+	weapon_knockback = def["knockback"]
+	var shape := RectangleShape2D.new()
+	shape.size = def["hitbox_size"]
+	$AttackPivot/Hitbox/HitboxShape.shape = shape
+	$AttackPivot/Hitbox/HitboxShape.position = def["hitbox_pos"]
 
 
 func has_relic(id: String) -> bool:
@@ -136,6 +169,37 @@ func add_relic(id: String) -> bool:
 	hud_message_left = HUD_MESSAGE_TIME
 	Sfx.play("relic")
 	return true
+
+
+func replace_relic(old_id: String, new_id: String) -> void:
+	## Called by LoadoutChoice when the relic belt is full and the player
+	## chose to swap one out.
+	relics.erase(old_id)
+	relics.append(new_id)
+	_apply_meta_upgrades()
+	var def: Dictionary = GameManager.RELIC_DEFS[new_id]
+	hud_message = "Relikt: %s — %s" % [def["label"], def["desc"]]
+	hud_message_left = HUD_MESSAGE_TIME
+	Sfx.play("relic")
+
+
+func set_weapon(id: String) -> void:
+	## Called directly (weapon slot has no "free space") or by LoadoutChoice.
+	weapon_id = id
+	_apply_weapon()
+	var def: Dictionary = GameManager.WEAPON_DEFS[id]
+	hud_message = "Waffe: %s — %s" % [def["label"], def["desc"]]
+	hud_message_left = HUD_MESSAGE_TIME
+	Sfx.play("relic")
+
+
+func set_skill(id: String) -> void:
+	skill_id = id
+	skill_cooldown_left = 0.0  # fresh skill, ready immediately -- feels good
+	var def: Dictionary = GameManager.SKILL_DEFS[id]
+	hud_message = "Skill: %s — %s" % [def["label"], def["desc"]]
+	hud_message_left = HUD_MESSAGE_TIME
+	Sfx.play("relic")
 
 
 func add_potion() -> bool:
@@ -178,13 +242,13 @@ func _physics_process(delta: float) -> void:
 		_try_dash()
 	if _skill_requested:
 		_skill_requested = false
-		_try_slam()
-	if _click_held and state != State.ATTACK and state != State.SLAM:
+		_try_skill()
+	if _click_held and state != State.ATTACK and state != State.SKILL:
 		_apply_click_intent()
 	if state == State.DASH:
 		_tick_dash(delta)
-	elif state == State.SLAM:
-		_tick_slam(delta)
+	elif state == State.SKILL:
+		_tick_skill(delta)
 	elif state == State.ATTACK:
 		_tick_attack(delta)
 	else:
@@ -206,7 +270,7 @@ func _update_animation() -> void:
 	match state:
 		State.MOVE, State.DASH:
 			base = "walk"
-		State.ATTACK, State.SLAM:
+		State.ATTACK, State.SKILL:
 			base = "attack"
 	var want := base + "_" + _dir_name()
 	if _visual.animation != want:
@@ -246,45 +310,50 @@ func _tick_dash(delta: float) -> void:
 		collision_mask = 5
 
 
-func _try_slam() -> void:
-	if dead or skill_cooldown_left > 0.0 or state == State.DASH or state == State.SLAM:
+func _try_skill() -> void:
+	if dead or skill_cooldown_left > 0.0 or state == State.DASH or state == State.SKILL:
 		return
-	skill_cooldown_left = SLAM_COOLDOWN
-	state = State.SLAM
-	_slam_time = 0.0
-	_slam_struck = false
+	skill_cooldown_left = GameManager.SKILL_DEFS[skill_id]["cooldown"]
+	state = State.SKILL
+	_skill_time = 0.0
+	_skill_struck = false
 	velocity = Vector2.ZERO
 	var t := create_tween()
-	t.tween_property(_visual, "scale", Vector2(1.3, 1.3), SLAM_WINDUP)
+	t.tween_property(_visual, "scale", Vector2(1.3, 1.3), SKILL_WINDUP)
 
 
-func _tick_slam(delta: float) -> void:
-	_slam_time += delta
-	if not _slam_struck and _slam_time >= SLAM_WINDUP:
-		_slam_struck = true
-		_do_slam()
-	if _slam_time >= SLAM_WINDUP + SLAM_RECOVER:
+func _tick_skill(delta: float) -> void:
+	_skill_time += delta
+	if not _skill_struck and _skill_time >= SKILL_WINDUP:
+		_skill_struck = true
+		_perform_skill()
+	if _skill_time >= SKILL_WINDUP + SKILL_RECOVER:
 		state = State.IDLE
 
 
-func _do_slam() -> void:
+func _perform_skill() -> void:
 	_visual.scale = Vector2.ONE
+	match skill_id:
+		"rundumschlag":
+			_do_rundumschlag()
+		"frostnova":
+			_do_frostnova()
+		"blutopfer":
+			_do_blutopfer()
+		"seelenkette":
+			_do_seelenkette()
+
+
+func _do_rundumschlag() -> void:
 	_camera.add_trauma(SLAM_TRAUMA)
 	Sfx.play("slam")
-	_spawn_slam_ring()
+	_spawn_skill_ring(SLAM_RADIUS, Color(1, 0.9, 0.6, 0.9))
 	if has_relic("fire_slam"):
 		var patch := FIRE_PATCH.new()
 		patch.position = global_position
 		get_parent().add_child(patch)
 	var kills := 0
-	var shape := CircleShape2D.new()
-	shape.radius = SLAM_RADIUS
-	var params := PhysicsShapeQueryParameters2D.new()
-	params.shape = shape
-	params.transform = Transform2D(0.0, global_position)
-	params.collision_mask = 4
-	for hit in get_world_2d().direct_space_state.intersect_shape(params, 16):
-		var body: Node = hit.collider
+	for body in _bodies_in_radius(SLAM_RADIUS):
 		if body.has_method("take_damage") and not body.get("dead"):
 			body.take_damage(slam_damage, global_position, SLAM_KNOCKBACK)
 			if body.get("dead"):
@@ -292,18 +361,71 @@ func _do_slam() -> void:
 	_apply_lifesteal(kills)
 
 
+func _do_frostnova() -> void:
+	_camera.add_trauma(0.3)
+	Sfx.play("slam")
+	_spawn_skill_ring(FROST_RADIUS, Color(0.6, 0.85, 1.0, 0.9))
+	for body in _bodies_in_radius(FROST_RADIUS):
+		if body.has_method("apply_slow"):
+			body.apply_slow(FROST_FACTOR, FROST_DURATION)
+
+
+func _do_blutopfer() -> void:
+	if not sacrifice_hp(BLUTOPFER_COST):
+		return  # too low on HP -- the skill fizzles rather than kill you
+	_camera.add_trauma(0.45)
+	_spawn_skill_ring(BLUTOPFER_RADIUS, Color(0.75, 0.15, 0.2, 0.9))
+	var kills := 0
+	for body in _bodies_in_radius(BLUTOPFER_RADIUS):
+		if body.has_method("take_damage") and not body.get("dead"):
+			body.take_damage(BLUTOPFER_DAMAGE, global_position)
+			if body.get("dead"):
+				kills += 1
+	if kills > 0:
+		hp = mini(hp + kills, max_hp)  # instant lifesteal off this nova's kills
+
+
+func _do_seelenkette() -> void:
+	_camera.add_trauma(0.25)
+	Sfx.play("dash")
+	_spawn_skill_ring(SEELENKETTE_RADIUS, Color(0.6, 0.4, 0.9, 0.7))
+	var facing := Vector2.RIGHT.rotated(_pivot.rotation)
+	var cone := deg_to_rad(SEELENKETTE_CONE_DEG)
+	for body in _bodies_in_radius(SEELENKETTE_RADIUS):
+		if not body.has_method("apply_pull"):
+			continue
+		var to_body: Vector2 = body.global_position - global_position
+		if to_body.length() < 1.0:
+			continue
+		if absf(facing.angle_to(to_body)) <= cone:
+			body.apply_pull(global_position, SEELENKETTE_PULL)
+
+
+func _bodies_in_radius(radius: float) -> Array:
+	var shape := CircleShape2D.new()
+	shape.radius = radius
+	var params := PhysicsShapeQueryParameters2D.new()
+	params.shape = shape
+	params.transform = Transform2D(0.0, global_position)
+	params.collision_mask = 4
+	var out: Array = []
+	for hit in get_world_2d().direct_space_state.intersect_shape(params, 16):
+		out.append(hit.collider)
+	return out
+
+
 func _apply_lifesteal(kills: int) -> void:
 	if kills > 0 and has_relic("lifesteal") and not dead:
 		hp = mini(hp + kills, max_hp)
 
 
-func _spawn_slam_ring() -> void:
+func _spawn_skill_ring(radius: float, color: Color) -> void:
 	var ring := Line2D.new()
 	ring.width = 6.0
-	ring.default_color = Color(1, 0.9, 0.6, 0.9)
+	ring.default_color = color
 	var points := PackedVector2Array()
 	for i in 33:
-		points.append(Vector2.from_angle(TAU * i / 32.0) * SLAM_RADIUS)
+		points.append(Vector2.from_angle(TAU * i / 32.0) * radius)
 	ring.points = points
 	add_child(ring)
 	var t := ring.create_tween().set_parallel()
@@ -343,7 +465,7 @@ func _enemy_at_point(point: Vector2) -> Node2D:
 func _tick_movement() -> void:
 	if attack_target:
 		_pivot.rotation = (attack_target.global_position - global_position).angle()
-		if global_position.distance_to(attack_target.global_position) <= ATTACK_RANGE:
+		if global_position.distance_to(attack_target.global_position) <= attack_range:
 			velocity = Vector2.ZERO
 			state = State.IDLE
 			if _cooldown_left == 0.0:
@@ -366,24 +488,24 @@ func _begin_attack() -> void:
 	state = State.ATTACK
 	_attack_time = 0.0
 	_struck = false
-	_cooldown_left = ATTACK_COOLDOWN
+	_cooldown_left = attack_cooldown
 	velocity = Vector2.ZERO
 	# The swing is the "attack_<dir>" sprite clip, played by _update_animation().
 
 
 func _tick_attack(delta: float) -> void:
 	_attack_time += delta
-	if not _struck and _attack_time >= ATTACK_WINDUP:
+	if not _struck and _attack_time >= attack_windup:
 		_struck = true
 		_strike()
-	if _attack_time >= ATTACK_WINDUP + ATTACK_RECOVER:
+	if _attack_time >= attack_windup + attack_recover:
 		state = State.IDLE
 
 
 func _strike() -> void:
 	var landed := false
 	var kills := 0
-	var knockback := HEAVY_KNOCKBACK if has_relic("heavy_hits") else 1.0
+	var knockback := weapon_knockback * (HEAVY_KNOCKBACK if has_relic("heavy_hits") else 1.0)
 	for body in _hitbox.get_overlapping_bodies():
 		if body.has_method("take_damage") and not body.get("dead"):
 			body.take_damage(attack_damage, global_position, knockback)
@@ -416,7 +538,7 @@ func take_damage(amount: int, _source_position: Vector2, _knockback_scale := 1.0
 		_play_invuln_blink()
 		# Non-interrupting flinch: shows the hit landing without stopping control.
 		# Skipped mid-swing so the player's own attack animation still reads.
-		if state != State.ATTACK and state != State.SLAM \
+		if state != State.ATTACK and state != State.SKILL \
 				and _visual.sprite_frames.has_animation("hurt_" + _dir_name()):
 			_hurt_left = HURT_ANIM_TIME
 			_visual.play("hurt_" + _dir_name())
@@ -492,7 +614,7 @@ func _die() -> void:
 	_camera.add_trauma(DEATH_TRAUMA)
 	Sfx.play("death_player")
 	# Play the fall-back death clip in the last facing, then fade out inside
-	# GameManager's 0.9s RESTART_DELAY (before the scene changes).
+	# DeathScreen's SHOW_DELAY (before the recap appears and the scene changes).
 	_hurt_left = 0.0
 	_visual.modulate.a = 1.0
 	_visual.play("death_" + _dir_name())

@@ -16,6 +16,8 @@ const BOSS_SCENE := preload("res://scenes/enemies/boss.tscn")
 const VICTORY_PORTAL_SCENE := preload("res://scenes/levels/victory_portal.tscn")
 const CHEST_SCENE := preload("res://scenes/pickups/chest.tscn")
 const RELIC_PICKUP_SCENE := preload("res://scenes/pickups/relic_pickup.tscn")
+const WEAPON_PICKUP_SCENE := preload("res://scenes/pickups/weapon_pickup.tscn")
+const SKILL_PICKUP_SCENE := preload("res://scenes/pickups/skill_pickup.tscn")
 const EXPLODER_SCENE := preload("res://scenes/enemies/exploder.tscn")
 const TANK_SCENE := preload("res://scenes/enemies/shield_tank.tscn")
 const SUMMONER_SCENE := preload("res://scenes/enemies/summoner.tscn")
@@ -60,22 +62,22 @@ const PREFABS := [
 		".##...##.",
 		".#C...K#.",
 		".........",
-		".#.....#.",
-		".##...##.",
+		".........",
+		".........",
 		".........",
 	]},
 	{"name": "Blutschrein", "rows": [
 		".......",
 		".#...#.",
 		"...B...",
-		".#...#.",
+		".......",
 		".......",
 	]},
 	{"name": "Säulenhalle", "rows": [
 		".........",
-		".#.#.#.#.",
+		"..#...#..",
 		".........",
-		".#.#.#.#.",
+		".........",
 		".........",
 	]},
 ]
@@ -103,6 +105,11 @@ var _rooms: Array[Rect2i] = []
 var _floor := {}  # Set: Vector2i -> true
 var _prefab_spawns: Array = []    # [{type, cell, cursed?}] from stamped prefabs
 var _prefab_room_index := -1
+
+# Minimap/full-map fog-of-war: cells revealed as the player walks near them
+# (public -- read by hud.gd's minimap and FullMap; see get_map_data()).
+const REVEAL_RADIUS := 2   # cells around the player revealed per tick
+var visited := {}          # Set: Vector2i -> true, floor cells only
 
 @onready var _region: NavigationRegion2D = $NavigationRegion2D
 @onready var _tiles: TileMapLayer = $Tiles
@@ -146,7 +153,9 @@ func _stamp_prefab() -> void:
 	var pw := (rows[0] as String).length()
 	var candidates: Array[int] = []
 	for i in range(1, _rooms.size() - 1):
-		if _rooms[i].size.x >= pw and _rooms[i].size.y >= ph:
+		# +2 margin: a template wall only 1 cell from the room's own outer
+		# wall becomes a 1-wide squeeze with nothing to fall back on.
+		if _rooms[i].size.x >= pw + 2 and _rooms[i].size.y >= ph + 2:
 			candidates.append(i)
 	if candidates.is_empty():
 		return
@@ -188,6 +197,7 @@ func _spawn_boss_encounter() -> void:
 	var player := PLAYER_SCENE.instantiate()
 	player.position = _cell_center(Vector2i(room.position.x + 3, room.get_center().y))
 	add_child(player)
+	_clamp_camera(player)
 	var boss := BOSS_SCENE.instantiate()
 	var tier := GameManager.floor_num / BOSS_EVERY
 	boss.max_hp += 15 * (tier - 1)   # floor 10, 15, ... bring him back stronger
@@ -208,15 +218,30 @@ func _on_boss_defeated() -> void:
 	var stairs := STAIRS_SCENE.instantiate()
 	stairs.position = _cell_center(center + Vector2i(2, 0))
 	add_child(stairs)
-	# Boss always pays a relic (if the run doesn't own them all yet).
+	# Boss always pays out -- relic, weapon or skill (even split); falls back
+	# to nothing only if the roll lands on relics and the run owns all seven.
 	var player := get_tree().get_first_node_in_group("player")
-	var owned: Array = player.relics if player else []
-	var relic_id := GameManager.random_unowned_relic(owned)
-	if relic_id != "":
-		var pickup := RELIC_PICKUP_SCENE.instantiate()
-		pickup.relic_id = relic_id
-		pickup.position = _cell_center(center + Vector2i(0, 2))
-		add_child(pickup)
+	if player == null:
+		return
+	var drop_pos := _cell_center(center + Vector2i(0, 2))
+	match ["relic", "weapon", "skill"].pick_random():
+		"relic":
+			var relic_id := GameManager.random_unowned_relic(player.relics)
+			if relic_id != "":
+				var pickup := RELIC_PICKUP_SCENE.instantiate()
+				pickup.relic_id = relic_id
+				pickup.position = drop_pos
+				add_child(pickup)
+		"weapon":
+			var pickup := WEAPON_PICKUP_SCENE.instantiate()
+			pickup.weapon_id = GameManager.random_other_weapon(player.weapon_id)
+			pickup.position = drop_pos
+			add_child(pickup)
+		"skill":
+			var pickup := SKILL_PICKUP_SCENE.instantiate()
+			pickup.skill_id = GameManager.random_other_skill(player.skill_id)
+			pickup.position = drop_pos
+			add_child(pickup)
 
 
 func _generate_layout() -> void:
@@ -375,6 +400,7 @@ func _spawn_player_and_enemies() -> void:
 	var player := PLAYER_SCENE.instantiate()
 	player.position = _cell_center(_rooms[0].get_center())
 	add_child(player)
+	_clamp_camera(player)
 	var stairs := STAIRS_SCENE.instantiate()
 	stairs.position = _cell_center(_rooms[_rooms.size() - 1].get_center())
 	add_child(stairs)
@@ -430,10 +456,10 @@ func _spawn_player_and_enemies() -> void:
 				var shrine := BLOOD_SHRINE_SCENE.instantiate()
 				shrine.position = _cell_center(spawn["cell"])
 				add_child(shrine)
-	# Loot chests in side rooms (never the spawn or prefab room); cursed
-	# ambushes use the same floor scaling as regular spawns.
+	# Loot chests in side rooms (never the spawn, stairs, or prefab room);
+	# cursed ambushes use the same floor scaling as regular spawns.
 	var chests := 0
-	for i in range(1, _rooms.size()):
+	for i in range(1, _rooms.size() - 1):
 		if chests >= CHEST_MAX:
 			break
 		if i == _prefab_room_index or randf() > CHEST_ROOM_CHANCE:
@@ -456,6 +482,17 @@ func _cell_center(cell: Vector2i) -> Vector2:
 	return Vector2((cell.x + 0.5) * CELL, (cell.y + 0.5) * CELL)
 
 
+func _clamp_camera(player: Node2D) -> void:
+	# Stops the camera from panning past the map edge into the void; the
+	# unlit space *within* the map (past unreached rooms) is the intentional
+	# fog-of-war look and is left alone.
+	var camera: Camera2D = player.get_node("Camera2D")
+	camera.limit_left = 0
+	camera.limit_top = 0
+	camera.limit_right = MAP_W * CELL
+	camera.limit_bottom = MAP_H * CELL
+
+
 func _bake_navmesh() -> void:
 	var nav_poly := NavigationPolygon.new()
 	nav_poly.add_outline(PackedVector2Array([
@@ -469,3 +506,20 @@ func _bake_navmesh() -> void:
 	nav_poly.agent_radius = AGENT_RADIUS
 	_region.navigation_polygon = nav_poly
 	_region.bake_navigation_polygon(false)
+
+
+func _process(_delta: float) -> void:
+	var player := get_tree().get_first_node_in_group("player")
+	if player == null:
+		return
+	var cell := Vector2i(player.position / CELL)
+	for dy in range(-REVEAL_RADIUS, REVEAL_RADIUS + 1):
+		for dx in range(-REVEAL_RADIUS, REVEAL_RADIUS + 1):
+			var c := cell + Vector2i(dx, dy)
+			if _floor.has(c):
+				visited[c] = true
+
+
+func get_map_data() -> Dictionary:
+	## Read by hud.gd's minimap and the FullMap overlay.
+	return {"floor": _floor, "visited": visited, "cell": CELL, "map_w": MAP_W, "map_h": MAP_H}

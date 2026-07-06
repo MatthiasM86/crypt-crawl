@@ -7,3 +7,8 @@ extends Node2D
 
 func _ready() -> void:
 	$NavigationRegion2D.bake_navigation_polygon(false)
+	var camera: Camera2D = $Player/Camera2D
+	camera.limit_left = 0
+	camera.limit_top = 0
+	camera.limit_right = 1152
+	camera.limit_bottom = 648

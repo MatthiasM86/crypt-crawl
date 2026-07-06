@@ -13,7 +13,7 @@ shader = ExtResource("3_flash")
 shader_parameter/flash_amount = 0.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_body"]
-radius = 13.0
+radius = 17.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hitbox"]
 size = Vector2(44, 36)
@@ -32,6 +32,7 @@ animation = &"idle_south"
 offset = Vector2(0, -6)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, -5)
 shape = SubResource("CircleShape2D_body")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
@@ -59,6 +60,7 @@ texture = ExtResource("4_light")
 texture_scale = 2.0
 
 [node name="Camera2D" type="Camera2D" parent="."]
+zoom = Vector2(1.5, 1.5)
 position_smoothing_enabled = true
 position_smoothing_speed = 8.0
 script = ExtResource("2_camera")
