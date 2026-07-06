@@ -116,10 +116,12 @@ kostenlos per Hue-Shift wie bei den Schrein-Edelsteinen.
 4. **Gore/Blut-Decals** (plan.md Ausblick 2): 2–3 Blutspritzer 32×32 (opak auf
    Boden gelegt, per Zufallsrotation beim Gegner-Tod gespawnt) + Knochenhaufen
    als Raum-Deko. Braucht einen kleinen Code-Hook in `enemy._die()`.
-5. **Biom-Tilesets** für plan.md Ausblick 3 (Katakomben ab Ebene 6, Fleischgrube
-   ab 11): exakt dasselbe **256×64-Layout** wie das Krypta-Tileset, dann wählt
-   der Generator per `floor_num` nur eine andere Textur. Katakomben = braunere
-   Knochen-Nischen, Fleischgrube = rötlich-organisch.
+5. **Biom-Tilesets** (Biomwechsel ist umgesetzt; interim laufen Hue-Shift-Varianten
+   des Krypta-Atlas): echte PixelLab-Tilesets ersetzen
+   `assets/sprites/tileset_katakomben.png` und `tileset_fleischgrube.png` —
+   **gleicher Dateiname, gleiches 256×64-Layout**, dann ohne Code-Änderung drin.
+   Katakomben = braunere Knochen-Nischen/Schädelwände, Fleischgrube =
+   rötlich-organisch (Adern, Membranen).
 6. **Feuerfläche** (Brandsiegel-Relikt, aktuell prozedural gezeichnet): optional
    4-Frame-Loop 64×64 Bodenfeuer, transparent.
 7. **Sprites für künftige Gegnertypen** (Exploder, Schild-Tank …): gleiche

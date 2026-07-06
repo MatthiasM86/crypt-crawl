@@ -37,9 +37,7 @@ const WALL_EPS := 0.1             # px overlap between wall rects: exactly
                                   # coincident edges make the navmesh bake's
                                   # convex partition fail; overlaps are fine
 const ENEMIES_PER_ROOM_MAX := 2   # 1..this per room (player's room stays empty)
-const RANGED_CHANCE := 0.35       # per spawned enemy
-const EXPLODER_CHANCE := 0.2      # per spawned enemy, from floor 2 (learn curve)
-const ELITE_CHANCE := 0.12        # per spawned enemy, max 1/floor, from floor 2
+# Spawn mix + elite chance now live per-biome in GameManager.BIOMES.
 
 # --- Floor difficulty scaling (applied via enemy @export dials at spawn) ------
 const SCALE_HP_EVERY := 2         # +1 enemy max_hp every N floors
@@ -50,10 +48,8 @@ const SCALE_SPEED_CAP := 60.0     # melee stays slower than the 300px/s player
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 
-# --- Tile atlas (assets/sprites/tileset_placeholder.png, 32px grid) -----------
-# Swap the texture (same layout) once real pixel art exists; see
-# docs/asset-spec.md. Row 0 = floors (4 plain + 1 cracked), row 1 = walls.
-const TILESET_TEXTURE := preload("res://assets/sprites/tileset_placeholder.png")
+# --- Tile atlas coords (per-biome texture comes from GameManager.biome(),
+# all biome atlases share this 256x64 layout; see docs/asset-spec.md) ---------
 const FLOOR_PLAIN := Vector2i(0, 0)
 const FLOOR_VARIANTS: Array[Vector2i] = [Vector2i(1, 0), Vector2i(2, 0), Vector2i(3, 0)]
 const FLOOR_CRACKED := Vector2i(4, 0)
@@ -69,6 +65,7 @@ var _floor := {}  # Set: Vector2i -> true
 
 func _ready() -> void:
 	randomize()
+	$Darkness.color = GameManager.biome()["darkness"]
 	var boss_floor := GameManager.floor_num % BOSS_EVERY == 0
 	if boss_floor:
 		_generate_boss_arena()
@@ -207,7 +204,7 @@ func _build_tiles() -> void:
 	# real art later is just a texture/coord change. Visual only -- physics
 	# and navmesh still come from the collider rects in _build_geometry().
 	var atlas := TileSetAtlasSource.new()
-	atlas.texture = TILESET_TEXTURE
+	atlas.texture = load(GameManager.biome()["tileset"])
 	atlas.texture_region_size = Vector2i(CELL, CELL)
 	for coord in [FLOOR_PLAIN, FLOOR_CRACKED] + FLOOR_VARIANTS + WALL_VARIANTS:
 		atlas.create_tile(coord)
@@ -304,17 +301,21 @@ func _spawn_player_and_enemies() -> void:
 	var speed_bonus := minf(depth * SCALE_SPEED_PER_FLOOR, SCALE_SPEED_CAP)
 	var room_max := mini(ENEMIES_PER_ROOM_MAX + depth / SCALE_COUNT_EVERY, SCALE_COUNT_CAP)
 	var elite_placed := false
-	var exploder_chance := EXPLODER_CHANCE if GameManager.floor_num >= 2 else 0.0
+	var biome := GameManager.biome()
+	var weights: Dictionary = biome["weights"]
+	var elite_chance: float = biome["elite_chance"]
+	var exploder_w: float = weights["exploder"] if GameManager.floor_num >= 2 else 0.0
+	var weight_total: float = weights["melee"] + weights["ranged"] + exploder_w
 	for i in range(1, _rooms.size()):
 		var room := _rooms[i]
 		for j in randi_range(1, room_max):
-			var roll := randf()
+			var roll := randf() * weight_total
 			var scene := MELEE_SCENE
 			var is_exploder := false
-			if roll < exploder_chance:
+			if roll < exploder_w:
 				scene = EXPLODER_SCENE
 				is_exploder = true
-			elif roll < exploder_chance + RANGED_CHANCE:
+			elif roll < exploder_w + float(weights["ranged"]):
 				scene = RANGED_SCENE
 			var enemy := scene.instantiate()
 			enemy.position = _cell_center(Vector2i(
@@ -328,7 +329,7 @@ func _spawn_player_and_enemies() -> void:
 			# One elite per floor at most; exploders excluded (an elite bomb
 			# with +1 damage would be pure chaos).
 			if not elite_placed and not is_exploder and GameManager.floor_num >= 2 \
-					and randf() < ELITE_CHANCE:
+					and randf() < elite_chance:
 				enemy.elite = true
 				elite_placed = true
 			add_child(enemy)

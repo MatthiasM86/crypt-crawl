@@ -39,7 +39,8 @@ func _draw() -> void:
 			_player.skill_cooldown_left, _player.SLAM_COOLDOWN)
 	draw_string(ThemeDB.fallback_font, Vector2(66 + belt * 24, 54), "[1] [Spc] [RMB]",
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 13, Color(0.55, 0.55, 0.6))
-	draw_string(ThemeDB.fallback_font, Vector2(10, 84), "Ebene %d" % GameManager.floor_num,
+	draw_string(ThemeDB.fallback_font, Vector2(10, 84),
+			"Ebene %d — %s" % [GameManager.floor_num, GameManager.biome()["name"]],
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.8, 0.8, 0.85))
 	draw_string(ThemeDB.fallback_font, Vector2(10, 108), "Seelen: %d" % GameManager.souls,
 			HORIZONTAL_ALIGNMENT_LEFT, -1, 16, Color(0.55, 0.9, 1.0))

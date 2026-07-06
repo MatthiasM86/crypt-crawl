@@ -91,7 +91,10 @@ Fühlt es sich schwammig an → an Schritt 2 (Feedback/Game Feel) schrauben, **b
 2. **Pixel-Art & Atmosphäre:** düstere Tilesets, Gore-Details, Ambient-Sound
    → ✅ *weitgehend: PixelLab-Tileset + 8-Richtungs-Sprites (Spieler, Brute, Kultist, Boss, inkl. Tod/Treffer) + Props; Sound bisher synthetisierte Platzhalter (Sfx-Autoload); offen: Gore, echte Audio-Dateien*
 3. **Ebenen-Struktur:** alle 4–5 Ebenen Boss/Elite-Raum, Biomwechsel (Krypta → Katakomben → Fleischgrube)
-   → 🔶 *teilweise: Boss „Kryptwächter" alle 5 Ebenen mit Arena + Weiterspiel-Option, Elite-Gegner ab Ebene 2 (violett, 1.3×, garantierter Relikt-Drop); offen: Biomwechsel*
+   → ✅ *umgesetzt: Boss alle 5 Ebenen, Elites ab Ebene 2, Biome Krypta (1–5) →
+   Katakomben (6–10) → Fleischgrube (11+) mit eigenem Tileset (interim Hue-Shift),
+   Lichtstimmung, Gegner-Mix pro Biom und Biom-Name im HUD; offen: echte
+   PixelLab-Biom-Tilesets (asset-spec §4.5)*
 4. **Prefab-Räume** einstreuen (Schatzkammer, Schrein, Bossarena — wie Spelunky/Dead Cells)
    → ❌ *offen (Bossarena existiert, aber generiert, keine Prefabs)*
 5. **Risk/Reward:** verfluchte Truhen, optionale Schatzräume; Loot/Gegner nach Distanz zum Spawn skalieren

@@ -32,6 +32,27 @@ const RELIC_DEFS := {
 
 signal upgrades_changed
 
+## Depth biomes (docs/plan.md Ausblick 3): look, mood and spawn mix per band.
+## Interim tilesets are hue-shifts of the crypt atlas; real PixelLab tilesets
+## replace the same files (asset-spec §4.5). Exploders stay off on floor 1.
+const BIOMES := [
+	{"name": "Krypta", "from": 1,
+	 "tileset": "res://assets/sprites/tileset_placeholder.png",
+	 "darkness": Color(0.16, 0.16, 0.21),
+	 "weights": {"melee": 0.45, "ranged": 0.35, "exploder": 0.2},
+	 "elite_chance": 0.12},
+	{"name": "Katakomben", "from": 6,
+	 "tileset": "res://assets/sprites/tileset_katakomben.png",
+	 "darkness": Color(0.17, 0.15, 0.12),
+	 "weights": {"melee": 0.35, "ranged": 0.35, "exploder": 0.3},
+	 "elite_chance": 0.15},
+	{"name": "Fleischgrube", "from": 11,
+	 "tileset": "res://assets/sprites/tileset_fleischgrube.png",
+	 "darkness": Color(0.2, 0.12, 0.12),
+	 "weights": {"melee": 0.3, "ranged": 0.3, "exploder": 0.4},
+	 "elite_chance": 0.18},
+]
+
 var floor_num := 1
 var carry_hp := -1
 var carry_potions := 1
@@ -39,6 +60,14 @@ var carry_relics: Array = []
 var souls := 0
 var wins := 0
 var upgrades := {"vitality": 0, "might": 0, "reflexes": 0, "belt": 0}
+
+
+func biome() -> Dictionary:
+	var current: Dictionary = BIOMES[0]
+	for b in BIOMES:
+		if floor_num >= int(b["from"]):
+			current = b
+	return current
 
 
 func _ready() -> void:

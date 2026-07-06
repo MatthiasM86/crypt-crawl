@@ -18,16 +18,22 @@ violett, 1,3×, HP ×2+2, +1 Schaden, Seelen ×3, **garantierter Relikt-Drop**.
 Max. 1 pro Ebene, ab Ebene 2, Exploder ausgenommen. Logik in `enemy.gd`
 (`_ready`-Elite-Block + `_die`-Drop).
 
-## Spawn-Regeln (level_generator.gd)
+## Spawn-Regeln (GameManager.BIOMES + level_generator.gd)
 
-- Ebene 1: Brute ~65% / Kultist ~35% (`RANGED_CHANCE`), kein Exploder, keine Elites.
-- Ab Ebene 2: Exploder ~20% (`EXPLODER_CHANCE`), Elite-Chance 12%/Gegner (`ELITE_CHANCE`, max 1).
+Der Mix kommt pro **Biom** aus `GameManager.BIOMES` (Gewichte + Elite-Chance);
+neue Typen debütieren als neues Gewicht im passenden Biom:
+
+| Biom | Ebenen | Brute | Kultist | Exploder | Elite-Chance |
+|---|---|---|---|---|---|
+| Krypta | 1–5 | 0.45 | 0.35 | 0.2 (ab Ebene 2) | 12% |
+| Katakomben | 6–10 | 0.35 | 0.35 | 0.3 | 15% |
+| Fleischgrube | 11+ | 0.3 | 0.3 | 0.4 | 18% |
+
+- Ebene 1: Exploder-Gewicht 0 (Lernkurve), keine Elites (ab Ebene 2, max 1/Ebene).
 - Skalierung pro Tiefe: +1 max_hp alle 2 Ebenen, +8 Tempo/Ebene (Cap +60),
   +1 Gegner/Raum alle 3 Ebenen (Cap 4), +1 Seele alle 3 Ebenen.
-- Boss-Ebenen (5, 10, …): nur der Boss, keine normalen Spawns.
-- **Geplant** (sobald Typ 4–5 existieren): echte Tiefen-Spawn-Tabelle
-  (`Tiefe → Gewichte`) statt Einzel-Chancen, gekoppelt an Biomwechsel
-  (plan.md Ausblick 3) — neue Typen debütieren dann pro Biom.
+- Boss-Ebenen (5, 10, …): nur der Boss, keine normalen Spawns; Arena nutzt
+  Tileset/Dunkelheit des jeweiligen Bioms.
 
 ## Rezept: neuen Gegnertyp anlegen
 
