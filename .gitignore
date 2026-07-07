@@ -2,12 +2,14 @@
 # Never commit this — it's regenerated automatically on first project open.
 .godot/
 
-# Export artifacts / secrets (no export presets exist yet, but keep these
-# ignored once exporting is set up). export_presets.cfg itself is NOT
-# ignored — that file just declares export targets and is normally safe,
-# and useful, to commit.
+# Export artifacts / secrets. export_presets.cfg itself is NOT ignored —
+# that file just declares export targets and is normally safe, and useful,
+# to commit. The export/ output directory holds built binaries/zips
+# (the .exe alone exceeds GitHub's 100 MB file size limit) — regenerate
+# via the Godot export dialog instead of committing.
 export.cfg
 export_credentials.cfg
+export/
 
 # Auto-generated translation imports.
 *.translation
