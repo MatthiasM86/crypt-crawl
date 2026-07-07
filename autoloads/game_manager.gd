@@ -9,12 +9,22 @@ const HUB_SCENE := "res://scenes/hub/hub.tscn"
 const RUN_SCENE := "res://scenes/levels/generated_level.tscn"
 
 ## Permanent upgrades: player._ready() applies levels to its stat vars,
-## shrine.gd renders labels/costs from these defs.
+## shrine.gd renders labels/costs from these defs. Levels past the costs
+## array are "endless" mini-tiers (plan.md point 1 Seelen-Ökonomie): smaller
+## increment, cost = base_cost * growth^n, optional max_levels cap. The
+## endless increment is deliberately WEAKER than the base one (see the
+## per-stat split in player._apply_meta_upgrades) so infinite never escalates:
+## endless Wucht only feeds skill damage, never weapon damage.
 const UPGRADE_DEFS := {
-	"vitality": {"label": "Vitalität", "effect": "+2 Start-HP", "costs": [30, 60, 90, 120, 150]},
-	"might": {"label": "Wucht", "effect": "+1 Schaden", "costs": [100, 250]},
-	"reflexes": {"label": "Reflexe", "effect": "-0,1s Dash-CD", "costs": [40, 80, 120]},
-	"belt": {"label": "Gürtel", "effect": "+1 Trank-Slot", "costs": [50, 150]},
+	"vitality": {"label": "Vitalität", "effect": "+2 Start-HP",
+		"costs": [30, 60, 90, 120, 150, 200, 260, 330],
+		"endless": {"effect": "+1 Start-HP", "base_cost": 400, "growth": 1.5}},
+	"might": {"label": "Wucht", "effect": "+1 Schaden", "costs": [100, 250],
+		"endless": {"effect": "+1 Skill-Schaden", "base_cost": 300, "growth": 1.6}},
+	"reflexes": {"label": "Reflexe", "effect": "-0,1s Dash-CD", "costs": [40, 80, 120],
+		# -0.02s per level; 12 levels reach the 0.26s feel floor, then MAX.
+		"endless": {"effect": "-0,02s Dash-CD", "base_cost": 150, "growth": 1.5, "max_levels": 12}},
+	"belt": {"label": "Gürtel", "effect": "+1 Trank-Slot", "costs": [50, 150, 250]},
 }
 
 ## Run-bound relics (docs/plan.md Ausblick 6): one clear effect each, no
@@ -62,25 +72,44 @@ const SKILL_DEFS := {
 
 signal upgrades_changed
 
+## The run's win condition (docs/plan.md "Rahmen & Run-Ziel"): reaching this
+## floor and killing its boss ("Die Quelle") wins the run. Descending past it
+## is the optional endless mode.
+const FINAL_FLOOR := 50
+
 ## Depth biomes (docs/plan.md Ausblick 3): look, mood and spawn mix per band.
-## Interim tilesets are hue-shifts of the crypt atlas; real PixelLab tilesets
-## replace the same files (asset-spec §4.5). Exploders stay off on floor 1.
+## Five bands x 10 floors so the 50-floor descent stays varied and each band
+## reads as a deeper stage of the flesh-plague. Interim tilesets are hue-shifts
+## of the crypt atlas (the two deepest bands reuse the Fleischgrube atlas +
+## their own darkness tint until dedicated PixelLab tilesets land, asset-spec
+## §4.5). Exploders stay off on floor 1. Spawn mix leans harder (tank/summoner)
+## the deeper you go.
 const BIOMES := [
 	{"name": "Krypta", "from": 1,
 	 "tileset": "res://assets/sprites/tileset_placeholder.png",
 	 "darkness": Color(0.16, 0.16, 0.21),
 	 "weights": {"melee": 0.45, "ranged": 0.35, "exploder": 0.2, "tank": 0.0, "summoner": 0.0},
 	 "elite_chance": 0.12},
-	{"name": "Katakomben", "from": 6,
+	{"name": "Katakomben", "from": 11,
 	 "tileset": "res://assets/sprites/tileset_katakomben.png",
 	 "darkness": Color(0.17, 0.15, 0.12),
 	 "weights": {"melee": 0.25, "ranged": 0.3, "exploder": 0.3, "tank": 0.15, "summoner": 0.0},
 	 "elite_chance": 0.15},
-	{"name": "Fleischgrube", "from": 11,
+	{"name": "Fleischgrube", "from": 21,
 	 "tileset": "res://assets/sprites/tileset_fleischgrube.png",
 	 "darkness": Color(0.2, 0.12, 0.12),
 	 "weights": {"melee": 0.2, "ranged": 0.25, "exploder": 0.35, "tank": 0.1, "summoner": 0.1},
 	 "elite_chance": 0.18},
+	{"name": "Fäulnisschlund", "from": 31,
+	 "tileset": "res://assets/sprites/tileset_fleischgrube.png",
+	 "darkness": Color(0.16, 0.1, 0.13),
+	 "weights": {"melee": 0.15, "ranged": 0.2, "exploder": 0.3, "tank": 0.2, "summoner": 0.15},
+	 "elite_chance": 0.2},
+	{"name": "Herz der Seuche", "from": 41,
+	 "tileset": "res://assets/sprites/tileset_fleischgrube.png",
+	 "darkness": Color(0.22, 0.08, 0.1),
+	 "weights": {"melee": 0.1, "ranged": 0.2, "exploder": 0.3, "tank": 0.2, "summoner": 0.2},
+	 "elite_chance": 0.22},
 ]
 
 var floor_num := 1
@@ -89,6 +118,7 @@ var carry_potions := 1
 var carry_relics: Array = []
 var carry_weapon: String = DEFAULT_WEAPON
 var carry_skill: String = DEFAULT_SKILL
+var carry_boons := {}  # run-bound soul-shrine boons (player.export_boons())
 var souls := 0
 var run_souls := 0  # earned this run only; feeds the death-screen recap
 var wins := 0
@@ -103,6 +133,11 @@ func biome() -> Dictionary:
 	return current
 
 
+func is_final_floor() -> bool:
+	## The floor whose boss ("Die Quelle") is the run's win condition.
+	return floor_num == FINAL_FLOOR
+
+
 func _ready() -> void:
 	_load()
 
@@ -113,6 +148,25 @@ func add_souls(amount: int) -> void:
 		amount = ceili(amount * 1.5)
 	souls += amount
 	run_souls += amount
+
+
+func spend_souls(amount: int) -> bool:
+	## In-run purchases (soul shrine boons): paid from the REAL soul pool --
+	## run power now vs. meta progress later is the whole trade.
+	if souls < amount:
+		return false
+	souls -= amount
+	run_souls = maxi(run_souls - amount, 0)  # recap shows net gain
+	_save()
+	return true
+
+
+func snap_to_walkable(node: Node2D, pos: Vector2) -> Vector2:
+	## Clamps a spawn/drop position onto the baked navmesh -- the agent-radius
+	## inset keeps the result >= 24 px from every wall, so summoned minions
+	## and loot can never land inside wall geometry (they'd be stuck/lost).
+	return NavigationServer2D.map_get_closest_point(
+			node.get_world_2d().navigation_map, pos)
 
 
 func random_unowned_relic(owned: Array) -> String:
@@ -138,11 +192,32 @@ func upgrade_level(id: String) -> int:
 	return upgrades[id]
 
 
+func upgrade_base_level(id: String) -> int:
+	## Levels bought from the finite costs array (full-strength increments).
+	return mini(upgrades[id], (UPGRADE_DEFS[id]["costs"] as Array).size())
+
+
+func upgrade_endless_level(id: String) -> int:
+	## Levels bought past the array (weaker endless increments).
+	return maxi(0, upgrades[id] - (UPGRADE_DEFS[id]["costs"] as Array).size())
+
+
 func upgrade_cost(id: String) -> int:
-	## Cost of the next level, or -1 when maxed out.
-	var costs: Array = UPGRADE_DEFS[id]["costs"]
+	## Cost of the next level, or -1 when maxed out. Past the costs array an
+	## optional "endless" block continues at base_cost * growth^n, rounded to
+	## tens so the shrine label stays readable.
+	var def: Dictionary = UPGRADE_DEFS[id]
+	var costs: Array = def["costs"]
 	var level: int = upgrades[id]
-	return -1 if level >= costs.size() else costs[level]
+	if level < costs.size():
+		return costs[level]
+	if not def.has("endless"):
+		return -1
+	var endless: Dictionary = def["endless"]
+	var n := level - costs.size()
+	if endless.has("max_levels") and n >= int(endless["max_levels"]):
+		return -1
+	return int(round(float(endless["base_cost"]) * pow(float(endless["growth"]), n) / 10.0)) * 10
 
 
 func buy_upgrade(id: String) -> bool:
@@ -163,19 +238,21 @@ func start_run() -> void:
 	carry_relics = []
 	carry_weapon = DEFAULT_WEAPON
 	carry_skill = DEFAULT_SKILL
+	carry_boons = {}
 	run_souls = 0
 	_save()
 	get_tree().change_scene_to_file.call_deferred(RUN_SCENE)
 
 
 func next_floor(current_hp: int, current_potions: int, current_relics: Array,
-		current_weapon: String, current_skill: String) -> void:
+		current_weapon: String, current_skill: String, current_boons := {}) -> void:
 	floor_num += 1
 	carry_hp = current_hp
 	carry_potions = current_potions
 	carry_relics = current_relics
 	carry_weapon = current_weapon
 	carry_skill = current_skill
+	carry_boons = current_boons
 	_save()
 	# Deferred: callers include Area2D physics callbacks, where changing the
 	# scene mid-flush is an error.
@@ -197,6 +274,7 @@ func return_to_hub() -> void:
 	carry_relics = []
 	carry_weapon = DEFAULT_WEAPON
 	carry_skill = DEFAULT_SKILL
+	carry_boons = {}
 	_save()
 	get_tree().change_scene_to_file.call_deferred(HUB_SCENE)
 
@@ -210,6 +288,7 @@ func player_died() -> void:
 	carry_relics = []
 	carry_weapon = DEFAULT_WEAPON
 	carry_skill = DEFAULT_SKILL
+	carry_boons = {}
 	_save()
 	DeathScreen.show_recap(floor_reached, souls_earned)
 

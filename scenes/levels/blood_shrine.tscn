@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://scenes/levels/blood_shrine.gd" id="1_shrine"]
 [ext_resource type="GradientTexture2D" path="res://assets/textures/radial_light.tres" id="2_light"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/blood_altar.png" id="3_tex"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_area"]
 radius = 30.0
@@ -12,13 +13,9 @@ collision_mask = 2
 monitorable = false
 script = ExtResource("1_shrine")
 
-[node name="Altar" type="Polygon2D" parent="."]
-color = Color(0.24, 0.2, 0.24, 1)
-polygon = PackedVector2Array(-12, -2, 12, -2, 14, 14, -14, 14)
-
-[node name="Gem" type="Polygon2D" parent="."]
-color = Color(0.85, 0.15, 0.2, 1)
-polygon = PackedVector2Array(0, -14, 6, -6, 0, 2, -6, -6)
+[node name="Visual" type="Sprite2D" parent="."]
+texture_filter = 1
+texture = ExtResource("3_tex")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_area")

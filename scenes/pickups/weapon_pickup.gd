@@ -9,7 +9,7 @@ extends Area2D
 
 func _ready() -> void:
 	var def: Dictionary = GameManager.WEAPON_DEFS[weapon_id]
-	$Visual.color = def["color"]
+	$Visual.texture = load("res://assets/sprites/props/weapon_%s.png" % weapon_id)
 	$Glow.color = def["color"]
 	$Name.text = def["label"]
 	body_entered.connect(_on_body_entered)
@@ -25,4 +25,4 @@ func _start_bob() -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if not body.has_method("set_weapon") or body.weapon_id == weapon_id:
 		return
-	LoadoutChoice.offer("weapon", weapon_id, [body.weapon_id], body, self)
+	LoadoutChoice.offer("weapon", weapon_id, [body.weapon_id], 1, body, self)

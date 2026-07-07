@@ -25,7 +25,7 @@ var _opened := false
 func _ready() -> void:
 	if cursed:
 		$Glow.color = Color(0.75, 0.35, 1.0)
-		$Lid.color = Color(0.42, 0.24, 0.55)
+		$Visual.modulate = Color(0.8, 0.55, 1.0)  # violet-tinted cursed chest
 	body_entered.connect(_on_body_entered)
 
 
@@ -34,8 +34,14 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 	_opened = true
 	Sfx.play("chest")
-	modulate = Color(0.55, 0.5, 0.5)
-	$Glow.energy = 0.15
+	# 2-frame lid pop; "open" is non-looping so it holds the open frame and the
+	# chest node persists -> it stays open for the rest of the run.
+	$Visual.play("open")
+	var t := create_tween()
+	t.tween_property($Visual, "scale", Vector2(1.14, 1.14), 0.07)
+	t.tween_property($Visual, "scale", Vector2.ONE, 0.13) \
+			.set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	$Glow.energy = 0.18
 	# Deferred: spawning scenes with collision during the physics flush.
 	_spawn_contents.call_deferred(body)
 
@@ -47,7 +53,9 @@ func _spawn_contents(body: Node2D) -> void:
 			var enemy := MELEE_SCENE.instantiate()
 			enemy.max_hp += ambush_hp_bonus
 			enemy.move_speed += ambush_speed_bonus
-			enemy.position = position + Vector2(42, 0).rotated(TAU * i / AMBUSH_COUNT + 0.8)
+			# Snapped: chests can sit near walls; ambushers must not spawn in them.
+			enemy.position = GameManager.snap_to_walkable(self,
+					position + Vector2(42, 0).rotated(TAU * i / AMBUSH_COUNT + 0.8))
 			parent.add_child(enemy)
 	if randf() < LOOT_CHANCE and _spawn_loot(body, parent):
 		return
@@ -57,7 +65,7 @@ func _spawn_contents(body: Node2D) -> void:
 		wisp.position = position
 		parent.add_child(wisp)
 	var potion := POTION_SCENE.instantiate()
-	potion.position = position + Vector2(0, 34)
+	potion.position = GameManager.snap_to_walkable(self, position + Vector2(0, 34))
 	parent.add_child(potion)
 
 
@@ -72,16 +80,16 @@ func _spawn_loot(body: Node2D, parent: Node) -> bool:
 				return false
 			var pickup := RELIC_PICKUP_SCENE.instantiate()
 			pickup.relic_id = relic_id
-			pickup.position = position + Vector2(0, 34)
+			pickup.position = GameManager.snap_to_walkable(self, position + Vector2(0, 34))
 			parent.add_child(pickup)
 		"weapon":
 			var pickup := WEAPON_PICKUP_SCENE.instantiate()
 			pickup.weapon_id = GameManager.random_other_weapon(body.get("weapon_id"))
-			pickup.position = position + Vector2(0, 34)
+			pickup.position = GameManager.snap_to_walkable(self, position + Vector2(0, 34))
 			parent.add_child(pickup)
 		"skill":
 			var pickup := SKILL_PICKUP_SCENE.instantiate()
 			pickup.skill_id = GameManager.random_other_skill(body.get("skill_id"))
-			pickup.position = position + Vector2(0, 34)
+			pickup.position = GameManager.snap_to_walkable(self, position + Vector2(0, 34))
 			parent.add_child(pickup)
 	return true

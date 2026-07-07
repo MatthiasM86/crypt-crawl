@@ -13,12 +13,13 @@ shader = ExtResource("3_flash")
 shader_parameter/flash_amount = 0.0
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_body"]
-radius = 17.0
+radius = 14.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hitbox"]
 size = Vector2(44, 36)
 
 [node name="Player" type="CharacterBody2D" groups=["player"]]
+z_index = 1
 motion_mode = 1
 collision_layer = 2
 collision_mask = 5
@@ -32,7 +33,7 @@ animation = &"idle_south"
 offset = Vector2(0, -6)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-position = Vector2(0, -5)
+position = Vector2(0, -3)
 shape = SubResource("CircleShape2D_body")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="."]
@@ -54,8 +55,9 @@ shape = SubResource("RectangleShape2D_hitbox")
 color = Color(1, 0.87, 0.7, 1)
 energy = 1.3
 shadow_enabled = true
-shadow_filter = 1
-shadow_filter_smooth = 3.0
+shadow_color = Color(0, 0, 0, 0.65)
+shadow_filter = 2
+shadow_filter_smooth = 32.0
 texture = ExtResource("4_light")
 texture_scale = 2.0
 

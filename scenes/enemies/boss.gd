@@ -1,32 +1,19 @@
-extends "res://scenes/enemies/enemy.gd"
-## Boss "Kryptwächter" (every 5th floor): two telegraphed patterns.
-## Close range: expanding AoE slam ring (dash out!). Far range: a ring of
-## 8 projectiles. Enrages below half HP (faster attacks). Heavily
-## knockback-resistant so the player's slam can't juggle it. Inherits the
-## state machine, hit-flash, knockback and death from enemy.gd.
+extends "res://scenes/enemies/boss_base.gd"
+## Boss "Kryptwächter" (floor 5, then rotates back stronger): AoE slam ring when
+## the player is close (dash out!), a ring of 8 projectiles when far. Enrages
+## below half HP. Shared boss-ness (group, defeated, knockback resist) is in
+## boss_base.gd.
 
-signal defeated
-
-# --- Feel dials ---------------------------------------------------------------
-const AOE_TRIGGER := 150.0    # player closer than this at windup start -> AOE
+const AOE_TRIGGER := 150.0    # player closer than this at windup start -> AoE
 const AOE_RADIUS := 120.0
 const RING_PROJECTILES := 8
-const ENRAGE_FRACTION := 0.5
 const ENRAGE_SPEEDUP := 0.55  # cooldown multiplier while enraged
-const KNOCKBACK_RESIST := 0.25
-# --------------------------------------------------------------------------------
 
 const BOSS_PROJECTILE := preload("res://scenes/projectiles/projectile.tscn")
 
 enum Pattern { AOE, RING }
 
 var _pattern := Pattern.RING
-var _telegraph_ring: Line2D
-
-
-func _ready() -> void:
-	super()
-	add_to_group("boss")
 
 
 func _begin_attack() -> void:
@@ -50,7 +37,7 @@ func _perform_attack() -> void:
 			_do_aoe()
 		Pattern.RING:
 			_do_ring()
-	if hp <= int(max_hp * ENRAGE_FRACTION):
+	if _enraged():
 		_cooldown_left *= ENRAGE_SPEEDUP
 
 
@@ -75,35 +62,3 @@ func _do_ring() -> void:
 		projectile.damage = 1
 		projectile.position = global_position + dir * 30.0
 		get_parent().add_child(projectile)
-
-
-func _make_ring(radius: float, color: Color, width: float) -> Line2D:
-	var ring := Line2D.new()
-	ring.width = width
-	ring.default_color = color
-	var pts := PackedVector2Array()
-	for i in 33:
-		pts.append(Vector2.from_angle(TAU * i / 32.0) * radius)
-	ring.points = pts
-	add_child(ring)
-	return ring
-
-
-func _clear_telegraph_ring() -> void:
-	if _telegraph_ring and is_instance_valid(_telegraph_ring):
-		_telegraph_ring.queue_free()
-	_telegraph_ring = null
-
-
-func _cancel_attack() -> void:
-	_clear_telegraph_ring()
-	super()
-
-
-func take_damage(amount: int, source_position: Vector2, knockback_scale := 1.0) -> void:
-	super(amount, source_position, knockback_scale * KNOCKBACK_RESIST)
-
-
-func _die() -> void:
-	defeated.emit()
-	super()

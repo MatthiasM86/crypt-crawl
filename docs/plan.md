@@ -19,6 +19,44 @@
 
 ---
 
+## Rahmen & Run-Ziel (Juli 2026)
+
+Der PoC brauchte keine Story, aber sobald Runs freiwillig wiederholt werden
+sollen, braucht ein Run einen **Zielpunkt** — sonst fehlt der „geschafft!"-Moment,
+der den nächsten Lauf rechtfertigt. Bewusst schlank (Roguelike-Konvention:
+Rahmen in einem Satz, kein Plot; Lore später dosiert wie Hades — über Hub-NPCs,
+Schrein-Fragmente, Boss-Intros):
+
+- **Prämisse (ein Satz, Ton-Setzer):** *„Aus der Tiefe der Krypta frisst sich
+  eine Fleischseuche nach oben — steig hinab durch Krypta, Katakomben und
+  Fleischgrube und vernichte ihren Ursprung, bevor sie die Welt verschlingt."*
+  Lesart für die Welt: Die Biome sind Stufen fortschreitender Fäulnis (je tiefer,
+  desto verseuchter), die Bosse deren Wächter/Herolde (Seuchenbischof,
+  Fleischkoloss, Beschwörerkönig), der Endboss auf Ebene 50 die Quelle selbst.
+  Die bestehenden Benennungen tragen den Rahmen schon: Krypta → Katakomben →
+  Fleischgrube, Kryptwächter, Seelen-Währung, Blutschreine.
+- **Run-Ziel / Sieg-Bedingung:** **Ebene 50** erreichen und den dortigen Endboss
+  töten = „Run gewonnen". Sieg wird gebankt (analog Boss-Sieg), Rücksprung in den
+  Hub + Lauf-Statistik; danach optional Endlos-/New-Game+-Modus.
+
+**Konsequenzen von „Ebene 50" — umgesetzt (Juli 2026), siehe Ausblick 9:**
+- **Run-Länge:** 50 Ebenen bleiben ein langer Permadeath-Lauf (~1–3 min/Ebene →
+  grob 1–2,5 h). Bewusst als *aspirationales* Ziel (selten erreicht). Der
+  „Endlos weiter"-Ausgang macht 50 zum echten Abschluss statt zum Zwangsende.
+  Offen für den Spieltest: ob späte Ebenen sich zäh anfühlen (dann kürzen).
+- **Biome:** ✅ auf **5 Bänder à 10 Ebenen** gestreckt (`GameManager.BIOMES`):
+  Krypta 1–10 → Katakomben 11–20 → Fleischgrube 21–30 → Fäulnisschlund 31–40 →
+  Herz der Seuche 41+. Die zwei tiefsten interim auf Fleischgrube-Tileset +
+  eigener Dunkelheit (dedizierte Tilesets: asset-spec §4.13).
+- **Difficulty-Scaling:** ✅ Gegner-HP-Bonus bei **+12 gedeckelt** (`SCALE_HP_CAP`,
+  ~ab E25), Boss-Stufen-Ramp bei **+60** (`BOSS_HP_SCALE_CAP`); späte Härte über
+  Biom-Mix/Elite/Anzahl statt HP-Schwämme. Feintuning im Spieltest offen.
+- **Boss-Varianz:** Boss alle 5 Ebenen zyklt weiter (4 Biom-Bosse), **Ebene 50 =
+  dedizierter Endboss „Die Quelle"** (`quelle.tscn`, eigene 3 Muster + eigenes HP).
+  Feineres „Signature-Boss je Biom" bleibt spätere Kür.
+
+---
+
 ## Phase 1: Design-Entscheidungen festnageln (1–2 Tage)
 
 - [x] **Steuerung:** Linksklick = laufen/angreifen (Diablo-Standard), Rechtsklick = Skill (optional für PoC), Leertaste/Shift = Dash
@@ -91,13 +129,63 @@ Fühlt es sich schwammig an → an Schritt 2 (Feedback/Game Feel) schrauben, **b
    Entscheidung Juli 2026: neue Skills/Waffen werden NICHT hier permanent
    freigeschaltet, sondern laufen run-gebunden über Punkt 6 — die Schreine
    bleiben reine Stat-Upgrades*
+
+   **Seelen-Ökonomie-Plan (Juli 2026):** Playtest-Befund: alle 4 Schreine sind
+   nach wenigen Runs maxed (12 Stufen, 1.240 Seelen gesamt), danach sind Wisps
+   wertlos. Beschlossene Gegenmittel, in dieser Reihenfolge:
+   → ✅ *alle drei Schritte umgesetzt (Juli 2026). Abweichungen vom Plantext:
+   Vitalität-∞ startet bei 400 Seelen (nicht 200 — muss über dem neuen
+   Kurvenende von 330 liegen); der Seelenschrein spawnt garantiert 1×/Ebene
+   ab Ebene 3 direkt in einem Mittelraum (level_generator) statt über einen
+   Prefab-Marker — „1×/Ebene" wörtlich genommen. Neu dabei: `boon`-Sound-Key
+   (Synth-Interim, audio-spec §3) und Seelenschrein-Prop-Eintrag
+   (asset-spec §4.11).*
+   1. *Längere Kostenkurven* — `UPGRADE_DEFS`-`costs`-Arrays (game_manager.gd)
+      verlängern: Vitalität 5→8 Stufen (…200, 260, 330), Gürtel 2→3 (…250;
+      Deckel 6 Tränke), Reflexe bleibt 3 (0,5s Dash-CD ist untere Feel-Grenze
+      für normale Stufen), Wucht bleibt 2 (+1 Waffenschaden ist 33–100% einer
+      Waffe — mehr kippt die Balance gegen das Ebenen-Scaling).
+   2. *Endlos-Stufen nach dem Cap* — `UPGRADE_DEFS` bekommt optionalen
+      `endless`-Block `{increment-Beschreibung, base_cost, growth}`;
+      `upgrade_cost()` liefert nach dem Array-Ende `base_cost *
+      growth^(level - costs.size())` statt −1. Kleinere Inkremente als die
+      Grundstufen, damit endlos nicht eskaliert:
+      - Vitalität ∞: **+1** Start-HP (statt +2), 400 × 1,5ⁿ
+      - Reflexe ∞: **−0,02s** Dash-CD (statt −0,1s), 150 × 1,5ⁿ, harter Boden
+        0,25s (danach zeigt der Schrein MAX — faktisch ~12 Stufen)
+      - Wucht ∞: **+1 Skill-Schaden** (nur `slam_damage`/Skill-Kanal, NICHT
+        Waffenschaden), 300 × 1,6ⁿ
+      - Gürtel: keine ∞-Stufe (Trank-Slots skalieren nicht sinnvoll endlos)
+      Dazu: `player._apply_meta_upgrades()`-Formeln splitten (Grundstufen +
+      ∞-Anteil), shrine.gd zeigt „Stufe n (∞)" statt „n/max". Save-Format
+      (Level-Ints) bleibt kompatibel.
+   3. *Seelen im Run ausgeben (Boon-Stationen)* — neue Station im Level
+      (Prefab-Marker analog Blutschrein „B", 1×/Ebene ab Ebene 3): E-Interakt
+      öffnet kleine Wahl-UI (LoadoutChoice-Muster) mit 2–3 zufälligen Boons
+      NUR für diesen Run, bezahlt aus den echten Seelen (Opportunitätskosten
+      Run-Power vs. Meta-Fortschritt ist der Punkt). Startpool z. B.:
+      Trank auffüllen (25), +2 Max-HP diesen Run (40), −20% Skill-CD (50),
+      +1 Schaden diesen Run (60, selten). Ein Kauf, dann erlischt sie. Boons
+      tragen wie HP/Relikte über Treppen (carry), sterben mit dem Tod.
+      Pflicht dabei: Interim-Optik (getönter Blutschrein-Prop) + Eintrag
+      asset-spec §4, Interim-Sound + Eintrag audio-spec §3.
+
+   **Für später (bewusst geparkt):** *Freischalt-Schrein* — Seelen kaufen
+   Content statt Stats: neue Waffen/Skills/Relikte starten gesperrt und werden
+   im Hub freigekauft, erst dann erscheinen sie im Drop-Pool. Löst „schnell
+   maxed" UND „immer dieselben Funde" (Pool: 3 Waffen/4 Skills/7 Relikte)
+   ohne Power-Creep — revidiert aber teilweise die obige Juli-Entscheidung
+   („keine permanenten Freischaltungen") und braucht neuen Content als
+   Kaufware; deshalb erst angehen, wenn Punkt 6/7 mehr Waffen/Skills/Relikte
+   liefern.
 2. **Pixel-Art & Atmosphäre:** düstere Tilesets, Gore-Details, Ambient-Sound
    → ✅ *weitgehend: PixelLab-Tileset + 8-Richtungs-Sprites (Spieler, Brute, Kultist, Boss, inkl. Tod/Treffer) + Props; Sound bisher synthetisierte Platzhalter (Sfx-Autoload); offen: **hübsches HUD** (komplettes UI-Kit — Rahmen, Slots, Icons, Pixel-Font — spezifiziert in asset-spec.md §4.3, braucht PixelLab-Pass + hud.gd-Milestone), Gore, echte Audio-Dateien*
 3. **Ebenen-Struktur:** alle 4–5 Ebenen Boss/Elite-Raum, Biomwechsel (Krypta → Katakomben → Fleischgrube)
-   → ✅ *umgesetzt: Boss alle 5 Ebenen, Elites ab Ebene 2, Biome Krypta (1–5) →
-   Katakomben (6–10) → Fleischgrube (11+) mit eigenem Tileset (interim Hue-Shift),
-   Lichtstimmung, Gegner-Mix pro Biom und Biom-Name im HUD; offen: echte
-   PixelLab-Biom-Tilesets (asset-spec §4.5)*
+   → ✅ *umgesetzt: Boss alle 5 Ebenen, Elites ab Ebene 2, **5 Biome à 10 Ebenen**
+   (Run-Umbau Juli 2026): Krypta 1–10 → Katakomben 11–20 → Fleischgrube 21–30 →
+   Fäulnisschlund 31–40 → Herz der Seuche 41+, mit Tileset (interim Hue-Shift; die
+   zwei tiefsten interim auf Fleischgrube-Atlas), Lichtstimmung, Gegner-Mix pro
+   Biom und Biom-Name im HUD; offen: echte PixelLab-Biom-Tilesets (asset-spec §4.5/4.13)*
 4. **Prefab-Räume** einstreuen (Schatzkammer, Schrein, Bossarena — wie Spelunky/Dead Cells)
    → ✅ *umgesetzt: ASCII-Templates werden in passende Mittelräume gestempelt
    (60%/Ebene) — Schatzkammer (2 Truhen in Nischen), Blutschrein-Raum (3 HP →
@@ -144,3 +232,15 @@ Fühlt es sich schwammig an → an Schritt 2 (Feedback/Game Feel) schrauben, **b
    Skilltree, Controller*
 8. **Vertrieb:** itch.io (kostenlos, unkompliziert) → später Steam; Mobile-Port optional
    → ❌ *offen: noch kein Export-Preset / Build*
+9. **Sieg-Bedingung / Run-Ende** (siehe „Rahmen & Run-Ziel"): Endboss auf **Ebene 50**,
+   Sieg banken (GameManager) + Win-Screen + Hub-Rücksprung, danach Endlos/NG+.
+   Bedingt Biom-/Scaling-/Boss-Varianz bis Ebene 50 (Punkt 3) und eine gewählte
+   Prämisse.
+   → ✅ *umgesetzt (Juli 2026): `GameManager.FINAL_FLOOR = 50` + `is_final_floor()`;
+   dedizierter Endboss „Die Quelle" (`quelle.tscn`, 3 Muster: AoE/Projektil-Ring/
+   Brut, eigenes HP statt Stufen-Ramp); Kill → `_on_final_boss_defeated` bankt den
+   Sieg und öffnet den `WinScreen`-Autoload mit Wahl **Zum Hub** oder **Endlos
+   weiter** (Portal+Treppe+Loot bleiben stehen). Biome auf 5 Bänder à 10 gestreckt,
+   Gegner-HP-Scaling bei +12 gedeckelt, Boss-Ramp bei +60. Interim: getönter
+   Quelle-Sprite + 2 tiefe Biome auf Fleischgrube-Tileset (asset-spec §4.12/13).
+   Offen: dedizierte Quelle-/Biom-Assets, NG+-Loop, Balance-Feintuning im Spieltest*

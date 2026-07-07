@@ -12,4 +12,4 @@ func _activate(body: Node2D) -> void:
 	_used = true
 	Sfx.play("stairs")
 	GameManager.next_floor(body.hp, body.potion_charges, body.relics.duplicate(),
-			body.weapon_id, body.skill_id)
+			body.weapon_id, body.skill_id, body.export_boons())

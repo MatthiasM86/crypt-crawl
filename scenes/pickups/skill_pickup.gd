@@ -9,7 +9,7 @@ extends Area2D
 
 func _ready() -> void:
 	var def: Dictionary = GameManager.SKILL_DEFS[skill_id]
-	$Visual.color = def["color"]
+	$Visual.texture = load("res://assets/sprites/props/skill_%s.png" % skill_id)
 	$Glow.color = def["color"]
 	$Name.text = def["label"]
 	body_entered.connect(_on_body_entered)
@@ -25,4 +25,4 @@ func _start_bob() -> void:
 func _on_body_entered(body: Node2D) -> void:
 	if not body.has_method("set_skill") or body.skill_id == skill_id:
 		return
-	LoadoutChoice.offer("skill", skill_id, [body.skill_id], body, self)
+	LoadoutChoice.offer("skill", skill_id, [body.skill_id], 1, body, self)

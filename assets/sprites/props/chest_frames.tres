@@ -1,0 +1,26 @@
+[gd_resource type="SpriteFrames" load_steps=3 format=3]
+
+[ext_resource type="Texture2D" path="res://assets/sprites/props/chest.png" id="t0"]
+[ext_resource type="Texture2D" path="res://assets/sprites/props/chest_open.png" id="t1"]
+
+[resource]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t0")
+}],
+"loop": true,
+"name": &"closed",
+"speed": 5
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t0")
+}, {
+"duration": 1.0,
+"texture": ExtResource("t1")
+}],
+"loop": false,
+"name": &"open",
+"speed": 7
+}]

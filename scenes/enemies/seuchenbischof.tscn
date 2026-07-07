@@ -1,0 +1,35 @@
+[gd_scene format=3]
+
+[ext_resource type="PackedScene" path="res://scenes/enemies/enemy.tscn" id="1_base"]
+[ext_resource type="Script" path="res://scenes/enemies/seuchenbischof.gd" id="2_boss"]
+[ext_resource type="SpriteFrames" path="res://assets/sprites/enemies/seuchenbischof/seuchenbischof_frames.tres" id="3_frames"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_boss_body"]
+radius = 24.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_boss_click"]
+radius = 42.0
+
+[node name="Seuchenbischof" instance=ExtResource("1_base")]
+script = ExtResource("2_boss")
+boss_name = "Seuchenbischof"
+max_hp = 26
+move_speed = 110.0
+detect_radius = 600.0
+attack_range = 420.0
+attack_windup = 0.7
+attack_recover = 0.4
+attack_cooldown = 1.8
+attack_damage = 2
+soul_value = 45
+death_sound = "death_boss"
+
+[node name="Visual" parent="."]
+sprite_frames = ExtResource("3_frames")
+offset = Vector2(0, -8)
+
+[node name="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_boss_body")
+
+[node name="ClickShape" parent="ClickArea"]
+shape = SubResource("CircleShape2D_boss_click")

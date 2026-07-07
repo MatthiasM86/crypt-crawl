@@ -13,7 +13,8 @@ var _tick_left := 0.35
 
 
 func _ready() -> void:
-	z_index = -1  # burns under the characters
+	# Default z_index (0) sits above the floor tiles but below characters
+	# (Player/Enemy are z_index=1) -- -1 would render it under the floor too.
 	var light := PointLight2D.new()
 	light.texture = preload("res://assets/textures/radial_light.tres")
 	light.color = Color(1.0, 0.5, 0.15)

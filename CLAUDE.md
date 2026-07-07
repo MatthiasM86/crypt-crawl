@@ -27,12 +27,20 @@ on a Control with `mouse_filter = IGNORE`).
 Beyond the PoC, already built: floor-based difficulty scaling (enemy HP/speed/
 count via @export dials at spawn), meta-progression (soul wisps from kills,
 persistent save at user://save.cfg, hub scene with four upgrade shrines and a
-run portal; death returns to the hub), a boss ("Kryptwächter", boss.gd extends
+run portal; death returns to the hub; shrine curves continue past their costs
+array as "endless" mini-tiers with weaker increments — see UPGRADE_DEFS —
+and from floor 3 a soul shrine per floor sells run-bound boons for souls), a
+boss ("Kryptwächter", boss.gd extends
 enemy.gd) every 5th floor in a generated arena with two telegraphed patterns —
 victory is banked on the kill and spawns BOTH a hub portal and stairs deeper —
-synthesized audio (Sfx autoload builds all SFX + ambient drone in memory at
-startup; no audio files), and an ESC pause menu (PauseMenu autoload, code-built
-UI, pauses the tree; "Aufgeben" only in runs).
+real audio (Sfx autoload synthesizes all SFX + ambient drone in memory at
+startup, then swaps in any `assets/sfx/<name>.mp3` — every register sound is
+an ElevenLabs-generated file now except `boon` and the quiet `music` loop
+(both synth-only; the Music API needs a paid plan), incl. per-enemy-type
+death sounds via the `death_sound` @export dial on enemy.gd and per-key mix
+trims in `Sfx.KEY_OFFSET_DB`; see docs/audio-spec.md), and an ESC pause
+menu (PauseMenu
+autoload, code-built UI, pauses the tree; "Aufgeben" only in runs).
 Not yet: character sprites (waiting on assets per docs/asset-spec.md), more
 enemy types, item system, biomes/prefab rooms.
 
@@ -72,7 +80,7 @@ Caveats learned the hard way:
   covers less wall/sim time than N/60 seconds suggests.
 - Commit `*.uid` sidecar files; never commit `.godot/`.
 
-## Asset workflow (PixelLab pipeline)
+## Asset workflow (PixelLab + ElevenLabs pipelines)
 
 All real art comes from the PixelLab MCP pipeline in batched generation
 passes. **Rule: any feature that introduces or changes a visual** (new enemy
@@ -83,6 +91,15 @@ notes, and which scene/file the finished asset swaps into. That list is the
 single backlog the art passes work off; a visual that isn't on it will keep
 its placeholder forever. (Example: the exploder enemy launched as an
 orange-tinted brute + spec entry.)
+
+All real audio comes from the ElevenLabs MCP pipeline
+(`text_to_sound_effects`), same batched-passes shape. **Rule: any feature
+that introduces or changes a sound** (new enemy attack, pickup, skill, UI
+feedback) **ships with an interim sound** (synthesized in `autoloads/sfx.gd`)
+**and MUST add/update an entry in `docs/audio-spec.md` §3 "Offene
+ElevenLabs-Aufgaben"** — with the desired sound description and which
+`Sfx.play()` key it swaps into. That list is the single backlog the audio
+passes work off; a sound that isn't on it will keep its placeholder forever.
 
 ## Architecture
 
@@ -109,7 +126,29 @@ orange-tinted brute + spec entry.)
   tuning happens.
 - **Navigation flow** (same for hand-built and generated levels): NavigationRegion2D
   with an outline-only NavigationPolygon (`parsed_geometry_type = 1` = static
-  colliders, `parsed_collision_mask = 1`, `agent_radius = 16`); wall StaticBody2Ds
+  colliders, `parsed_collision_mask = 1`, `agent_radius = 24` — paths guarantee
+  ~20 px effective wall clearance (24 minus the 4 px `path_desired_distance`
+  waypoint cut), so every body that path-follows must keep its worst-case
+  collision extent below that: player is r14 at (0,-3) → 17 px. Don't grow
+  body shapes or shrink the inset without redoing this math, or corners wedge;
+  don't raise the inset past 24 or 2-cell corridors seal. Corollary: any
+  walkable opening must be ≥ 2 cells wide — the generator's `_widen_pinches()`
+  grid pass enforces this plus no diagonal-only contacts (1-wide gaps LOOK
+  walkable but the inset seals them: walking refuses, dash slips through);
+  keep that invariant for hand-built rooms and prefabs whose gaps are meant
+  to be passable. Grid math still can't fully predict the bake (mitered
+  corner offsets seal ~45 px diagonal squeezes between wall corners), so the
+  FINAL authority is `_seal_nav_pockets()`: after baking, every floor cell is
+  path-checked on the real nav map; sealed pockets are walled up, layouts
+  with a sealed room center rerolled. Nav queries need ~10 physics frames
+  after a bake before they answer for the CURRENT mesh — earlier queries
+  silently answer against the previous/empty mesh (`_await_nav_sync()`);
+  and when rebuilding walls in-frame, `free()` the old Walls node
+  immediately — a queue_freed node still gets parsed by the bake. Anything
+  that spawns bodies or leaves pickups at a runtime-computed position
+  (summons, chest ambushes, death drops) must clamp it through
+  `GameManager.snap_to_walkable()` or it can land inside wall geometry);
+  wall StaticBody2Ds
   are children of the region; the level's `_ready()` calls
   `bake_navigation_polygon(false)` (synchronous). The generator fills every
   non-floor grid cell with row-merged wall rects inflated by `WALL_EPS = 0.1` px —

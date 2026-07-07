@@ -10,7 +10,7 @@
 outlines = Array[PackedVector2Array]([PackedVector2Array(32, 32, 1120, 32, 1120, 616, 32, 616)])
 parsed_geometry_type = 1
 parsed_collision_mask = 1
-agent_radius = 16.0
+agent_radius = 24.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall_h"]
 size = Vector2(1152, 32)

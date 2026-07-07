@@ -19,7 +19,10 @@ func _ready() -> void:
 	_build_ui()
 
 
-func offer(kind: String, new_id: String, current_ids: Array, player: Node, pickup: Node) -> void:
+func offer(kind: String, new_id: String, current_ids: Array, capacity: int,
+		player: Node, pickup: Node) -> void:
+	## Always pauses for a beat, even with a free slot -- picking something up
+	## mid-fight shouldn't silently change your build out from under you.
 	_kind = kind
 	_new_id = new_id
 	_player = player
@@ -39,28 +42,58 @@ func offer(kind: String, new_id: String, current_ids: Array, player: Node, picku
 	desc.add_theme_font_size_override("font_size", 14)
 	desc.modulate.a = 0.85
 	_box.add_child(desc)
-	for old_id in current_ids:
-		var old_def: Dictionary = defs[old_id]
-		_box.add_child(_make_button(
-				"Ersetzen: %s  →  %s" % [old_def["label"], new_def["label"]],
-				_choose.bind(old_id)))
-	_box.add_child(_make_button("Ablehnen (liegen lassen)", _choose.bind("")))
+	# Exactly one way to say yes: a free slot means "Anlegen", a full loadout
+	# means one "Ersetzen" per carried item. Each swap button spells out what
+	# you'd give up -- the header above already shows what you'd get.
+	if current_ids.size() < capacity:
+		_box.add_child(_make_button("Anlegen: %s" % new_def["label"], _take))
+	else:
+		for old_id in current_ids:
+			var old_def: Dictionary = defs[old_id]
+			_box.add_child(_make_button(
+					"Ersetzen: %s — %s" % [old_def["label"], old_def["desc"]],
+					_replace.bind(old_id)))
+	_box.add_child(_make_button("Ablehnen (liegen lassen)", _decline))
 	get_tree().paused = true
 	visible = true
 
 
-func _choose(old_id: String) -> void:
+func _take() -> void:
+	_resolve()
+	if is_instance_valid(_player):
+		match _kind:
+			"relic":
+				_player.add_relic(_new_id)
+			"weapon":
+				_player.set_weapon(_new_id)
+			"skill":
+				_player.set_skill(_new_id)
+	_consume_pickup()
+
+
+func _replace(old_id: String) -> void:
+	_resolve()
+	if is_instance_valid(_player):
+		match _kind:
+			"relic":
+				_player.replace_relic(old_id, _new_id)
+			"weapon":
+				_player.set_weapon(_new_id)
+			"skill":
+				_player.set_skill(_new_id)
+	_consume_pickup()
+
+
+func _decline() -> void:
+	_resolve()  # pickup stays lying, nothing to apply
+
+
+func _resolve() -> void:
 	get_tree().paused = false
 	visible = false
-	if old_id == "" or not is_instance_valid(_player):
-		return  # declined, or player gone -- pickup stays put either way
-	match _kind:
-		"relic":
-			_player.replace_relic(old_id, _new_id)
-		"weapon":
-			_player.set_weapon(_new_id)
-		"skill":
-			_player.set_skill(_new_id)
+
+
+func _consume_pickup() -> void:
 	if is_instance_valid(_pickup):
 		_pickup.queue_free()
 

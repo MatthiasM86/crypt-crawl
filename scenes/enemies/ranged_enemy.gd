@@ -34,6 +34,12 @@ func _show_attack_tell() -> void:
 
 
 func _perform_attack() -> void:
+	# Re-check LOS: _in_attack_position()/the point-blank shot in
+	# _chase_velocity() only verified it back when the windup *started* --
+	# if the player broke line of sight during the windup (e.g. ducked
+	# behind a wall), the shot fizzles instead of firing at a hidden target.
+	if not _has_los():
+		return
 	Sfx.play("shoot")
 	var dir := global_position.direction_to(_player.global_position)
 	var projectile := PROJECTILE_SCENE.instantiate()

@@ -12,9 +12,9 @@ collision_mask = 2
 monitorable = false
 script = ExtResource("1_relic")
 
-[node name="Visual" type="Polygon2D" parent="."]
-color = Color(1, 1, 1, 1)
-polygon = PackedVector2Array(0, -9, 7, 0, 0, 9, -7, 0)
+[node name="Visual" type="Sprite2D" parent="."]
+texture_filter = 1
+scale = Vector2(0.6, 0.6)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_grab")

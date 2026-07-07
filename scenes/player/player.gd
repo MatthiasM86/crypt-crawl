@@ -77,6 +77,10 @@ var potion_max := POTION_MAX
 var move_speed := MOVE_SPEED
 var max_dash_charges := 1
 var dash_charges := 1
+# Run-bound boons from soul shrines (carry over stairs, die with the run).
+var boon_max_hp := 0
+var boon_damage := 0
+var boon_skill_cd := 1.0         # multiplicative cooldown factor, stacks
 var dash_cooldown_left := 0.0    # public: HUD reads these
 var skill_cooldown_left := 0.0
 var hud_message := ""            # transient announcement (relic/weapon/skill pickups)
@@ -95,6 +99,7 @@ var _invuln_left := 0.0
 var _hurt_left := 0.0
 var _flash_tween: Tween
 var _blink_tween: Tween
+var _windup_tween: Tween
 
 @onready var _nav: NavigationAgent2D = $NavigationAgent2D
 @onready var _pivot: Node2D = $AttackPivot
@@ -107,6 +112,9 @@ func _ready() -> void:
 	relics = GameManager.carry_relics.duplicate()  # before stats: relics feed them
 	weapon_id = GameManager.carry_weapon
 	skill_id = GameManager.carry_skill
+	boon_max_hp = int(GameManager.carry_boons.get("max_hp", 0))
+	boon_damage = int(GameManager.carry_boons.get("damage", 0))
+	boon_skill_cd = float(GameManager.carry_boons.get("skill_cd", 1.0))
 	_apply_meta_upgrades()
 	dash_charges = max_dash_charges
 	# Re-apply live when a hub shrine sells an upgrade (the hub player is
@@ -124,10 +132,15 @@ func _ready() -> void:
 
 
 func _apply_meta_upgrades() -> void:
+	# Base shrine levels give the full increment; endless levels the weaker one
+	# (see UPGRADE_DEFS): vitality +2/+1, reflexes -0.1s/-0.02s (0.25s floor),
+	# might +1 weapon+skill damage per BASE level but skill-only past the cap.
 	var old_max := max_hp
-	max_hp = MAX_HP + 2 * GameManager.upgrades["vitality"]
+	max_hp = MAX_HP + 2 * GameManager.upgrade_base_level("vitality") \
+			+ GameManager.upgrade_endless_level("vitality") + boon_max_hp
 	slam_damage = SLAM_DAMAGE + GameManager.upgrades["might"]
-	dash_cooldown = DASH_COOLDOWN - 0.1 * GameManager.upgrades["reflexes"]
+	dash_cooldown = maxf(DASH_COOLDOWN - 0.1 * GameManager.upgrade_base_level("reflexes")
+			- 0.02 * GameManager.upgrade_endless_level("reflexes"), 0.25)
 	potion_max = POTION_MAX + GameManager.upgrades["belt"]
 	# Relic-driven stats live here too so one recompute covers both sources.
 	move_speed = MOVE_SPEED + (SWIFT_BONUS if has_relic("swift") else 0.0)
@@ -139,19 +152,26 @@ func _apply_meta_upgrades() -> void:
 
 func _apply_weapon() -> void:
 	# Full moveset per weapon: hitbox size/position, range, timing and
-	# knockback all differ (docs/plan.md Ausblick 6). Visuals still reuse the
-	# one attack animation clip -- interim, see asset-spec.md backlog.
+	# knockback all differ (docs/plan.md Ausblick 6). Each weapon has its own
+	# attack clips with the weapon visible in hand (attack_<weapon_id>_<dir>;
+	# Kurzschwert ist der attack_<dir>-Basissatz).
 	var def: Dictionary = GameManager.WEAPON_DEFS[weapon_id]
-	attack_damage = def["damage"] + GameManager.upgrades["might"]
+	attack_damage = def["damage"] + GameManager.upgrade_base_level("might") + boon_damage
 	attack_range = def["range"]
 	attack_windup = def["windup"]
 	attack_recover = def["recover"]
 	attack_cooldown = def["cooldown"]
 	weapon_knockback = def["knockback"]
+	# Deferred: callers include Area2D physics callbacks (pickup body_entered),
+	# where reassigning a live CollisionShape2D's shape mid-flush is an error.
+	_apply_hitbox_shape.call_deferred(def["hitbox_size"], def["hitbox_pos"])
+
+
+func _apply_hitbox_shape(hitbox_size: Vector2, hitbox_pos: Vector2) -> void:
 	var shape := RectangleShape2D.new()
-	shape.size = def["hitbox_size"]
+	shape.size = hitbox_size
 	$AttackPivot/Hitbox/HitboxShape.shape = shape
-	$AttackPivot/Hitbox/HitboxShape.position = def["hitbox_pos"]
+	$AttackPivot/Hitbox/HitboxShape.position = hitbox_pos
 
 
 func has_relic(id: String) -> bool:
@@ -207,6 +227,30 @@ func add_potion() -> bool:
 		return false
 	potion_charges += 1
 	return true
+
+
+func add_boon(kind: String, value: float, label: String) -> void:
+	## Soul-shrine purchase (run-bound). Stats recompute through the one
+	## _apply_meta_upgrades pipeline; the max_hp diff-fill there also grants
+	## the fresh HP squares.
+	match kind:
+		"max_hp":
+			boon_max_hp += int(value)
+		"damage":
+			boon_damage += int(value)
+		"skill_cd":
+			boon_skill_cd *= value
+		"potion":
+			potion_charges = potion_max
+	_apply_meta_upgrades()
+	hud_message = "Boon: %s" % label
+	hud_message_left = HUD_MESSAGE_TIME
+	Sfx.play("boon")
+
+
+func export_boons() -> Dictionary:
+	## Stairs carry these to the next floor (GameManager.carry_boons).
+	return {"max_hp": boon_max_hp, "damage": boon_damage, "skill_cd": boon_skill_cd}
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -266,13 +310,19 @@ func _update_animation() -> void:
 	# (non-looping in the SpriteFrames) and is left alone once it has started.
 	if _hurt_left > 0.0:
 		return  # hold the non-interrupting hurt flinch (physics/control still run)
-	var base := "idle"
+	var d := _dir_name()
+	var want := "idle_" + d
 	match state:
 		State.MOVE, State.DASH:
-			base = "walk"
-		State.ATTACK, State.SKILL:
-			base = "attack"
-	var want := base + "_" + _dir_name()
+			want = "walk_" + d
+		State.ATTACK:
+			# Per-weapon swing (spiess = thrust, kriegshammer = overhead smash);
+			# kurzschwert has no dedicated clip and falls back to the base chop.
+			want = "attack_%s_%s" % [weapon_id, d]
+			if not _visual.sprite_frames.has_animation(want):
+				want = "attack_" + d
+		State.SKILL:
+			want = "attack_" + d
 	if _visual.animation != want:
 		_visual.play(want)
 
@@ -287,6 +337,8 @@ func _try_dash() -> void:
 	if dir.length() < 4.0:
 		dir = Vector2.RIGHT.rotated(_pivot.rotation)
 	_dash_dir = dir.normalized()
+	if state == State.SKILL:
+		_reset_skill_windup_visual()  # canceled windup: nothing else un-grows us
 	state = State.DASH
 	_dash_time_left = DASH_TIME
 	dash_charges -= 1
@@ -313,13 +365,13 @@ func _tick_dash(delta: float) -> void:
 func _try_skill() -> void:
 	if dead or skill_cooldown_left > 0.0 or state == State.DASH or state == State.SKILL:
 		return
-	skill_cooldown_left = GameManager.SKILL_DEFS[skill_id]["cooldown"]
+	skill_cooldown_left = GameManager.SKILL_DEFS[skill_id]["cooldown"] * boon_skill_cd
 	state = State.SKILL
 	_skill_time = 0.0
 	_skill_struck = false
 	velocity = Vector2.ZERO
-	var t := create_tween()
-	t.tween_property(_visual, "scale", Vector2(1.3, 1.3), SKILL_WINDUP)
+	_windup_tween = create_tween()
+	_windup_tween.tween_property(_visual, "scale", Vector2(1.3, 1.3), SKILL_WINDUP)
 
 
 func _tick_skill(delta: float) -> void:
@@ -331,8 +383,17 @@ func _tick_skill(delta: float) -> void:
 		state = State.IDLE
 
 
-func _perform_skill() -> void:
+func _reset_skill_windup_visual() -> void:
+	# The windup tween must die BEFORE the scale reset: it steps in idle time
+	# after physics, so a live tween re-applies ~1.3 right over the reset and
+	# the player stays grown permanently.
+	if _windup_tween:
+		_windup_tween.kill()
 	_visual.scale = Vector2.ONE
+
+
+func _perform_skill() -> void:
+	_reset_skill_windup_visual()
 	match skill_id:
 		"rundumschlag":
 			_do_rundumschlag()
@@ -606,6 +667,7 @@ func _play_invuln_blink() -> void:
 func _die() -> void:
 	dead = true
 	velocity = Vector2.ZERO
+	_reset_skill_windup_visual()  # dying mid-windup: physics stops, nothing else resets it
 	set_process_unhandled_input(false)
 	# Can't free/disable shapes mid-physics-callback.
 	$CollisionShape2D.set_deferred("disabled", true)

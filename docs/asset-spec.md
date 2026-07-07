@@ -96,6 +96,53 @@ müssen sich bei 32px klar unterscheiden.
 
 ## 4. Offene PixelLab-Aufgaben (Stand Juli 2026)
 
+> **Status (erledigt, Sprite-Pass Juli 2026):** Punkte 1, 2, 3, 4, 5, 7, 8, 9, 10
+> sind umgesetzt und verdrahtet — **nur Punkt 6 (Feuerfläche) bleibt bewusst
+> prozedural** (funktioniert, laut Spec optional). Konkret:
+> - **1 Truhe / 9 Blutschrein-Altar:** `create_map_object` 32×32 → `chest.png` /
+>   `blood_altar.png`, Polygon2D→Sprite2D; „verflucht"/„erschöpft" jetzt per
+>   Runtime-`modulate` (statt eigener Hue-Shift-PNG).
+> - **2 Relikt-Icons / 10 Waffen-Icons / Skill-Icons:** 15 Icons à 32×32
+>   (`create_map_object`, view=side) in `assets/sprites/props/` als
+>   `relic_<id>.png` / `skill_<id>.png` / `weapon_<id>.png` (+ `skill_dash.png`,
+>   `heart.png`). Pickups (Polygon2D→Sprite2D, Runtime-`load`) + HUD (preload-Dicts).
+> - **10 Waffen-Schwünge:** ✅ komplett (Juli 2026, zweiter Pass). Erster Pass
+>   war motion-only (immer dieselbe Axt in der Hand); jetzt pro Waffe ein
+>   PixelLab-**Character-State** des Crypt Knight mit sichtbarer Waffe
+>   (Kurzschwert-State `cfd661d3`, Spieß `c4871694` grün glühende Klinge,
+>   Kriegshammer `ac890abe` oranger Doppelkopf) + v3-Attack je State:
+>   `attack_<dir>` = Schwert-Slash, `attack_spiess_<dir>` = Stoß,
+>   `attack_kriegshammer_<dir>` = Überkopfschlag. Frames in-place ersetzt
+>   (gleiche Pfade/5f/48×48), `player_frames.tres` unverändert;
+>   `player.gd _update_animation` wählt per `weapon_id`.
+> - **4 Gore:** `gore_splatter_a/b.png` + `bone_pile.png`; Blut-Decal-Hook in
+>   `enemy.gd _spawn_gore()` (bei `_die()`), Knochenhaufen streut der Generator.
+> - **5 Biom-Tilesets:** ✅ im zweiten Anlauf (Juli 2026). Erster Pass lief mit
+>   `tile_view="high top-down"` → Kacheln mit Tiefenkante + Transparenz-Padding
+>   (nur ~36–78 % opak) → schwarze Streifen ab Ebene 6; zurückgerollt. Rezept
+>   wie beim Krypta-Atlas: `create_tiles_pro` mit **`tile_view="top-down"`**
+>   (flach!), square_topdown 32 px, segmentation; 16 Varianten, daraus 5 Boden
+>   + 3 Wand aufs 256×64-Raster montiert, jede Zelle auf opake Grundfarbe
+>   komponiert und Alpha == 255 programmatisch verifiziert (Skript
+>   `assemble_atlas.py`, Session-Scratchpad).
+> - **7 Gegner-Sprites:** Exploder/Schild-Tank/Beschwörer als 8-Richtungs-Chars
+>   (idle/walk/attack/death/hurt), `<name>_frames.tres`, Interim-Tints entfernt,
+>   Visual-`scale`+`offset` auf Brute-Größe normiert.
+> - **8 Projekt-Icon:** `assets/icon.png` (128×128), `config/icon` gesetzt.
+> - **3 Hübsches HUD:** PixelLab-Font (`create_font` → `assets/fonts/hud_font.ttf`,
+>   projektweit via `assets/ui/hud_theme.tres`) + Zierrahmen (`create_ui_asset` →
+>   `assets/sprites/ui/hud_frame.png`, 9-slice-Helfer `_nine` in `hud.gd` /
+>   `full_map_view.gd`). `hud.gd` zeichnet jetzt gerahmte HP-Leiste, Slot-Rahmen,
+>   Boss-Leiste, Ebenen-Plakette, Minimap-Rahmen.
+> - **Offen:** 6 Feuerfläche (4-Frame-Loop) — Rezept: `create_1_direction_object`
+>   (64) → `animate_object` (v3, „flackernde Flammen") → SpriteFrames, dann
+>   `fire_patch.gd` `_draw` gegen `AnimatedSprite2D` tauschen (Licht/Ticks bleiben).
+> - **Offen (in Arbeit): 3 Boss-Sprites** (Fleischkoloss/Beschwörerkönig/
+>   Seuchenbischof) — gleiche 8-Richtungs-Pipeline wie Kryptwächter, aber nur
+>   idle/walk/attack/death (kein hurt). Interim = getönte Kryptwächter-Frames
+>   (`self_modulate` je `<boss>.tscn`). Swap: `<name>_frames.tres` +
+>   `Visual.sprite_frames` überschreiben, Tint weg, `scale`/`offset` justieren.
+
 Was noch Platzhalter ist bzw. gebraucht wird, nach Priorität. Technik-Hinweise:
 statische Props via `create_map_object` (min. 32×32), Tiles via `create_tiles_pro`
 (NICHT `create_topdown_tileset` — das ist ein Wang-Autotiler), Umfärbungen
@@ -138,12 +185,14 @@ kostenlos per Hue-Shift wie bei den Schrein-Edelsteinen.
 4. **Gore/Blut-Decals** (plan.md Ausblick 2): 2–3 Blutspritzer 32×32 (opak auf
    Boden gelegt, per Zufallsrotation beim Gegner-Tod gespawnt) + Knochenhaufen
    als Raum-Deko. Braucht einen kleinen Code-Hook in `enemy._die()`.
-5. **Biom-Tilesets** (Biomwechsel ist umgesetzt; interim laufen Hue-Shift-Varianten
-   des Krypta-Atlas): echte PixelLab-Tilesets ersetzen
-   `assets/sprites/tileset_katakomben.png` und `tileset_fleischgrube.png` —
-   **gleicher Dateiname, gleiches 256×64-Layout**, dann ohne Code-Änderung drin.
-   Katakomben = braunere Knochen-Nischen/Schädelwände, Fleischgrube =
-   rötlich-organisch (Adern, Membranen).
+5. **Biom-Tilesets** ✅ erledigt (Juli 2026, zweiter Anlauf — Details im
+   Erledigt-Block oben): Katakomben = braune Knochen-/Schädelwände,
+   Fleischgrube = rötlich-organisch (Venen, Rippen, Schorf-Risse).
+   **Abnahmekriterium für alle künftigen Tileset-Pässe:** jede belegte
+   32×32-Zelle randfüllend und voll opak (kein Transparenz-Padding — im Spiel
+   werden daraus schwarze Streifen); `create_tiles_pro` zwingend mit
+   `tile_view="top-down"` für dieses flache Atlas-Format, Roh-Tiles selbst
+   aufs Raster montieren und Alpha programmatisch prüfen.
 6. **Feuerfläche** (Brandsiegel-Relikt, aktuell prozedural gezeichnet): optional
    4-Frame-Loop 64×64 Bodenfeuer, transparent.
 7. **Sprites für gebaute Gegnertypen** (gleiche 8-Richtungs-Pipeline wie
@@ -160,17 +209,35 @@ kostenlos per Hue-Shift wie bei den Schrein-Edelsteinen.
 9. **Blutschrein-Altar** (`scenes/levels/blood_shrine.tscn` ist Polygon2D):
    32×32 dunkler Steinaltar mit rotem Kristall, von oben; „erschöpft"-Variante
    = entsättigter Hue-Shift (0 Gens). Stil wie die Hub-Schreine.
-10. **Waffen-System** (docs/plan.md Ausblick 6, Entscheidung Juli 2026, Code
-    steht bereits): `scenes/pickups/weapon_pickup.tscn` und `skill_pickup.tscn`
-    sind noch farbige Polygon2D-Platzhalter (Klinge bzw. Quadrat). Braucht:
-    - **3 Waffen-Icons** 16×16 für Boden-Pickup/HUD: Kurzschwert, Spieß,
-      Kriegshammer (Farbcodes in `GameManager.WEAPON_DEFS`).
-    - **Eigene Schwung-Animation pro Waffe** (aktuell teilen sich alle drei
-      dieselbe `attack_<dir>`-Klinge-Animation aus dem Spieler-Sprite-Sheet —
-      mechanisch schon unterschiedlich per Hitbox/Timing/Reichweite, visuell
-      noch nicht): Spieß = Stoß statt Schwung, Kriegshammer = breiterer,
-      langsamerer Überkopfschlag. Gleiche 8-Richtungs-Pipeline wie der
-      bestehende Spieler-Sprite-Satz.
+10. **Waffen-System**: ✅ beides erledigt — Icons im Sprite-Pass 2, die
+    Schwung-Animationen mit sichtbarer Waffe im Waffen-State-Pass (Juli 2026,
+    Details in der Status-Notiz oben). Offen bleibt hier nur Kür: eigene
+    Idle-/Walk-Sets pro Waffe, damit die Waffe auch außerhalb des Angriffs
+    in der Hand sichtbar ist (aktuell tragen Idle/Walk immer die Axt);
+    Rezept = gleiche Character-States (`cfd661d3`/`c4871694`/`ac890abe`) mit
+    Template-Animationen `breathing-idle` + `walking-6-frames`, dann
+    `idle_<weapon>_<dir>`/`walk_<weapon>_<dir>`-Fallback-Wiring in
+    `player.gd _update_animation` analog zu den Attack-Clips.
+11. **Seelenschrein-Altar** (`scenes/levels/soul_shrine.tscn`, interim
+    umgefärbter Blutschrein aus Polygon2D): 32×32 dunkler Steinaltar mit
+    **cyanem Seelen-Kristall**, von oben; „erschöpft"-Variante = entsättigter
+    Hue-Shift (0 Gens). Stil identisch zum Blutschrein-Altar (#9) — ideal
+    als Paar in einem Pass generieren, gleiche Silhouette, anderer Kristall.
+12. **Endboss „Die Quelle"-Sprite** (`scenes/enemies/quelle.tscn`, interim =
+    rötlich getönte Seuchenbischof-Frames + 1,5× scale): der Ursprung der
+    Fleischseuche und das Sieg-Ziel des Runs — sollte groß, pulsierend-organisch
+    und „gebärend" wirken (Fleischknoten/Augen/Tentakel). Gleiche 8-Richtungs-
+    Pipeline wie die anderen Bosse (idle/walk/attack/death, kein hurt). Swap:
+    `quelle_frames.tres` + `Visual.sprite_frames` überschreiben, Tint weg,
+    `scale`/`offset` justieren. Optional eigenes „Brut"-Telegraph-Sprite.
+13. **2 tiefe Biom-Tilesets** (Biom-Umbau 5×10, plan.md §3): `Fäulnisschlund`
+    (Ebenen 31–40) und `Herz der Seuche` (41–50) nutzen interim das
+    Fleischgrube-Atlas + eigene `darkness`-Tönung (`GameManager.BIOMES`).
+    Dediziert: Fäulnisschlund = fauliges, madiges Fleisch (grünlich-braun);
+    Herz der Seuche = pulsierendes Herzkammer-Rot, das Zentrum der Seuche.
+    Gleiches 256×64-Format/Abnahmekriterium wie #5; Ziel-Dateien z.B.
+    `tileset_faeulnisschlund.png` / `tileset_herz.png`, dann die `tileset`-Pfade
+    der beiden Bänder in `GameManager.BIOMES` umbiegen.
 
 ## Einbau-Reihenfolge
 

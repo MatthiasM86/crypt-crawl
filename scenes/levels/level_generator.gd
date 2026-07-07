@@ -12,9 +12,16 @@ const PLAYER_SCENE := preload("res://scenes/player/player.tscn")
 const MELEE_SCENE := preload("res://scenes/enemies/melee_enemy.tscn")
 const RANGED_SCENE := preload("res://scenes/enemies/ranged_enemy.tscn")
 const STAIRS_SCENE := preload("res://scenes/levels/stairs.tscn")
-const BOSS_SCENE := preload("res://scenes/enemies/boss.tscn")
+const BOSS_SCENES := [
+	preload("res://scenes/enemies/boss.tscn"),              # tier 1 (floor 5): Kryptwächter
+	preload("res://scenes/enemies/fleischkoloss.tscn"),     # tier 2 (floor 10): rusher
+	preload("res://scenes/enemies/beschwoererkoenig.tscn"), # tier 3 (floor 15): summoner
+	preload("res://scenes/enemies/seuchenbischof.tscn"),    # tier 4 (floor 20): zoner
+]                                                          # then the cycle repeats, scaled up
+const QUELLE_SCENE := preload("res://scenes/enemies/quelle.tscn")  # final boss on FINAL_FLOOR
 const VICTORY_PORTAL_SCENE := preload("res://scenes/levels/victory_portal.tscn")
 const CHEST_SCENE := preload("res://scenes/pickups/chest.tscn")
+const BONE_PILE_TEX := preload("res://assets/sprites/props/bone_pile.png")
 const RELIC_PICKUP_SCENE := preload("res://scenes/pickups/relic_pickup.tscn")
 const WEAPON_PICKUP_SCENE := preload("res://scenes/pickups/weapon_pickup.tscn")
 const SKILL_PICKUP_SCENE := preload("res://scenes/pickups/skill_pickup.tscn")
@@ -43,8 +50,14 @@ const ROOM_TRIES := 24            # placement attempts
 const MAX_ROOMS := 10
 const ROOM_MIN := 5               # room side, cells
 const ROOM_MAX := 10
-const CORRIDOR_W := 2             # cells; 64 px - agent_radius inset leaves 32 px
-const AGENT_RADIUS := 16.0        # navmesh inset; matches test_room
+const CORRIDOR_W := 2             # cells; 64 px - agent_radius inset leaves 16 px
+const AGENT_RADIUS := 24.0        # navmesh inset. Must clear the player's real
+                                  # need (r14 body at y=-3 -> 17 px toward walls
+                                  # above) with margin: waypoint switching cuts
+                                  # corners by path_desired_distance (4 px), so
+                                  # effective clearance is ~20 px. Going higher
+                                  # seals 2-cell corridors (64 - 2*24 = 16 px
+                                  # left). Matches test_room + hub.
 const WALL_EPS := 0.1             # px overlap between wall rects: exactly
                                   # coincident edges make the navmesh bake's
                                   # convex partition fail; overlaps are fine
@@ -56,40 +69,46 @@ const ENEMIES_PER_ROOM_MAX := 2   # 1..this per room (player's room stays empty)
 # "C" chest, "K" cursed chest, "B" blood shrine. Interior-only: outer walls
 # come from the surrounding void like every room. -----------------------------
 var prefab_chance := 0.6          # per floor (var so probes can force it)
+# No outer "." ring on templates: "." stamps floor onto floor (a no-op), but
+# inflates the size requirement -- with the +2 placement margin a 9-wide
+# template needs an 11-wide room, which ROOM_MAX = 10 can never provide
+# (Schatzkammer/Säulenhalle silently never spawned until trimmed).
 const PREFABS := [
 	{"name": "Schatzkammer", "rows": [
-		".........",
-		".##...##.",
-		".#C...K#.",
-		".........",
-		".........",
-		".........",
-		".........",
+		"##...##",
+		"#C...K#",
+		".......",
+		".......",
+		".......",
 	]},
 	{"name": "Blutschrein", "rows": [
-		".......",
-		".#...#.",
-		"...B...",
-		".......",
-		".......",
+		"#...#",
+		"..B..",
+		".....",
 	]},
 	{"name": "Säulenhalle", "rows": [
-		".........",
-		"..#...#..",
-		".........",
-		".........",
-		".........",
+		".#...#.",
+		".......",
+		".......",
 	]},
 ]
 const BLOOD_SHRINE_SCENE := preload("res://scenes/levels/blood_shrine.tscn")
+const SOUL_SHRINE_SCENE := preload("res://scenes/levels/soul_shrine.tscn")
+const SOUL_SHRINE_FROM_FLOOR := 3  # Seelen-Ökonomie (plan.md Punkt 1): 1x/Ebene
 # ------------------------------------------------------------------------------
 
 # --- Floor difficulty scaling (applied via enemy @export dials at spawn) ------
-const SCALE_HP_EVERY := 2         # +1 enemy max_hp every N floors
+const SCALE_HP_EVERY := 2         # +1 enemy max_hp every N floors...
+const SCALE_HP_CAP := 12          # ...flattened here (reached ~floor 25). Late
+                                  # difficulty is meant to come from the biome
+                                  # mix / elites / count, not HP sponges -- the
+                                  # 50-floor descent stays killable (plan.md §4).
 const SCALE_COUNT_EVERY := 3      # +1 max enemies/room every N floors...
 const SCALE_COUNT_CAP := 4        # ...capped here
 const SCALE_SPEED_PER_FLOOR := 8.0
 const SCALE_SPEED_CAP := 60.0     # melee stays slower than the 300px/s player
+const BOSS_HP_SCALE_CAP := 60     # cap the +15/tier boss HP ramp (tiers 1-9);
+                                  # the FINAL_FLOOR boss (Quelle) sets its own HP
 # ------------------------------------------------------------------------------
 # ------------------------------------------------------------------------------
 
@@ -118,33 +137,107 @@ var visited := {}          # Set: Vector2i -> true, floor cells only
 func _ready() -> void:
 	randomize()
 	$Darkness.color = GameManager.biome()["darkness"]
-	var boss_floor := GameManager.floor_num % BOSS_EVERY == 0
-	if boss_floor:
+	if GameManager.floor_num % BOSS_EVERY == 0:
 		_generate_boss_arena()
-	else:
-		for attempt in 3:
-			_rooms.clear()
-			_floor.clear()
-			_generate_layout()
-			if _all_rooms_reachable():
-				break
-			if attempt == 2:
-				push_error("Level generation failed the reachability check 3x; using last layout")
-		_stamp_prefab()
-	_build_tiles()
-	_build_geometry()
-	if boss_floor:
+		_build_tiles()
+		_build_geometry()
+		_bake_navmesh()
 		_spawn_boss_encounter()
-	else:
-		_spawn_player_and_enemies()
-	_bake_navmesh()
+		return
+	# Generate -> stamp -> build -> bake -> VALIDATE ON THE REAL NAVMESH.
+	# The grid passes (_widen_pinches) catch almost everything cheaply, but
+	# the bake's agent-radius offsetting seals diagonal squeezes the grid
+	# math calls open (two inner wall corners ~45 px apart diagonally need
+	# 48 px; mitered corner offsets eat even more). The only trustworthy
+	# check is a path query per floor cell: small sealed pockets get walled
+	# up (map stays honest), a sealed room center rerolls the whole layout.
+	# Spawning happens only after the level passed.
+	for attempt in 4:
+		_reset_generation()
+		_generate_layout()
+		if not _all_rooms_reachable():
+			if attempt == 3:
+				push_error("Level generation failed the reachability check 4x; using last layout")
+			continue
+		_stamp_prefab()
+		_build_tiles()
+		_build_geometry()
+		_bake_navmesh()
+		if await _seal_nav_pockets():
+			break
+		if attempt == 3:
+			push_error("Level generation: no fully navigable layout in 4 attempts; using last")
+	_spawn_player_and_enemies()
+
+
+func _reset_generation() -> void:
+	_rooms.clear()
+	_floor.clear()
+	_prefab_spawns.clear()
+	_prefab_room_index = -1
+	_clear_built()
+
+
+func _clear_built() -> void:
+	# Tear down tiles + wall colliders/occluders so a rebuild starts clean.
+	# free() MUST be immediate (not queue_free): rebuild + bake run in the
+	# same frame, and a deferred-freed Walls node still sits in the tree
+	# then -- the bake would parse OLD and new walls together and produce a
+	# garbage mesh (this broke every reroll attempt). We only run outside
+	# physics callbacks (scene _ready / after awaiting physics_frame), so an
+	# immediate free is safe.
+	var walls := _region.get_node_or_null("Walls")
+	if walls:
+		walls.free()
+	_tiles.clear()
+
+
+func _seal_nav_pockets() -> bool:
+	## Final navigability authority (runs once per generated floor): waits for
+	## the nav map to sync, then path-checks every floor cell from the spawn
+	## room center. Cells the mesh cannot reach -- although they render as
+	## walkable floor -- get walled up and the geometry rebuilt (repeat, since
+	## new walls erode into neighbors). Returns false when a room center or a
+	## prefab loot marker sits in a sealed pocket, or the damage is too large:
+	## the caller rerolls the layout then.
+	for repair in 3:
+		await _await_nav_sync()
+		var map := _region.get_navigation_map()
+		var from := _cell_center(_rooms[0].get_center())
+		var sealed: Array[Vector2i] = []
+		for cell: Vector2i in _floor:
+			var to := _cell_center(cell)
+			var path := NavigationServer2D.map_get_path(map, from, to, true)
+			if path.size() == 0 or (path[path.size() - 1] - to).length() > CELL * 1.5:
+				sealed.append(cell)
+		if sealed.is_empty():
+			return true
+		if sealed.size() > _floor.size() / 5:
+			return false
+		for room in _rooms:
+			if sealed.has(room.get_center()):
+				return false
+		for spawn in _prefab_spawns:
+			if sealed.has(spawn["cell"]):
+				return false
+		push_warning("Level generation: walling up %d nav-sealed cells (repair %d)"
+				% [sealed.size(), repair + 1])
+		for cell in sealed:
+			_floor.erase(cell)
+		_clear_built()
+		_build_tiles()
+		_build_geometry()
+		_bake_navmesh()
+	return false
 
 
 func _stamp_prefab() -> void:
 	# Stamp one hand-built template into a fitting middle room (never the
-	# spawn or stairs room). "#" only erases floor that a corridor didn't
-	# already claim, so entrances survive; if the walls still break
-	# reachability, they get carved away again (markers stay).
+	# spawn or stairs room). "#" erases floor unconditionally -- including
+	# cells of corridors from UNRELATED room pairs that happen to cross this
+	# room -- so after stamping the narrow-passage invariants must be
+	# re-established (see the _widen_pinches call below); if the walls break
+	# reachability outright, they get carved away again (markers stay).
 	if randf() > prefab_chance or _rooms.size() < 3:
 		return
 	var prefab: Dictionary = PREFABS.pick_random()
@@ -162,12 +255,14 @@ func _stamp_prefab() -> void:
 	_prefab_room_index = candidates.pick_random()
 	var room := _rooms[_prefab_room_index]
 	var origin := room.position + Vector2i((room.size.x - pw) / 2, (room.size.y - ph) / 2)
+	var stamped := {}
 	for y in ph:
 		for x in pw:
 			var cell := origin + Vector2i(x, y)
 			match (rows[y] as String)[x]:
 				"#":
 					_floor.erase(cell)
+					stamped[cell] = true
 				"C":
 					_prefab_spawns.append({"type": "chest", "cell": cell, "cursed": false})
 				"K":
@@ -176,6 +271,16 @@ func _stamp_prefab() -> void:
 					_prefab_spawns.append({"type": "shrine", "cell": cell})
 	if not _all_rooms_reachable():
 		_carve_room(room)  # fallback: drop the walls, keep the loot spawns
+		return
+	# A template wall that cut into a crossing corridor's 2-wide band leaves
+	# a 1-wide or diagonal squeeze the flood fill can't see (it treats 1-wide
+	# as connected; the navmesh seals it). Re-widen around the stamped walls
+	# without eating them; if that can't fix everything, drop the walls like
+	# the reachability fallback does.
+	_widen_pinches(stamped)
+	if _has_narrow_passages():
+		_carve_room(room)
+		_widen_pinches()
 
 
 func _generate_boss_arena() -> void:
@@ -198,13 +303,31 @@ func _spawn_boss_encounter() -> void:
 	player.position = _cell_center(Vector2i(room.position.x + 3, room.get_center().y))
 	add_child(player)
 	_clamp_camera(player)
-	var boss := BOSS_SCENE.instantiate()
-	var tier := GameManager.floor_num / BOSS_EVERY
-	boss.max_hp += 15 * (tier - 1)   # floor 10, 15, ... bring him back stronger
-	boss.soul_value += 20 * (tier - 1)
+	var boss: Node2D
+	if GameManager.is_final_floor():
+		# The run's win condition (docs/plan.md "Rahmen & Run-Ziel"): a dedicated
+		# boss with its own tuned HP, not the scaled cycle.
+		boss = QUELLE_SCENE.instantiate()
+		boss.defeated.connect(_on_final_boss_defeated)
+	else:
+		var tier := GameManager.floor_num / BOSS_EVERY
+		# Rotate the boss type per tier (floor 5/10/15/20...), cycling and scaling up.
+		boss = BOSS_SCENES[(tier - 1) % BOSS_SCENES.size()].instantiate()
+		boss.max_hp += mini(15 * (tier - 1), BOSS_HP_SCALE_CAP)  # deeper tiers, but capped
+		boss.soul_value += 20 * (tier - 1)
+		boss.defeated.connect(_on_boss_defeated)
 	boss.position = _cell_center(Vector2i(room.end.x - 4, room.get_center().y))
-	boss.defeated.connect(_on_boss_defeated)
 	add_child(boss)
+
+
+func _on_final_boss_defeated() -> void:
+	# Killing "Die Quelle" wins the run. Reuse the normal boss-death payout
+	# (bank + victory portal + stairs + loot) so the "Endlos weiter" path keeps
+	# its loot and descent, then raise the victory screen whose two buttons
+	# mirror that physical portal (hub) vs. stairs (endless) choice. bank_win()
+	# runs first, so the screen's "Gesamt-Siege" already counts this win.
+	_on_boss_defeated()
+	WinScreen.show_win(GameManager.floor_num, GameManager.run_souls, GameManager.wins)
 
 
 func _on_boss_defeated() -> void:
@@ -258,6 +381,109 @@ func _generate_layout() -> void:
 			_carve_corridor(_rooms[_rooms.size() - 1].get_center(), room.get_center())
 		_carve_room(room)
 		_rooms.append(room)
+	_widen_pinches()
+
+
+func _widen_pinches(protected := {}) -> void:
+	# Two invariants against passages that LOOK walkable but bake to nothing
+	# (click-to-move refuses, dash sometimes slips through -- the worst kind
+	# of inconsistency):
+	# 1. No 1-wide passages: every floor cell must sit in at least one
+	#    all-floor 2x2 block. The navmesh inset (24 px per side) seals
+	#    anything narrower than 2 cells. Typical source: a corridor mouth
+	#    meeting a room corner offset by one cell (jutting single brick).
+	# 2. No diagonal-only contacts: a checkerboard 2x2 (two floor cells
+	#    sharing just a corner) passes check 1 on both sides but connects
+	#    with zero width. Typical source: two independently-carved regions
+	#    happening to touch corner-to-corner.
+	# Both fixes only ADD floor, so reachability never regresses; one loop
+	# runs them to convergence (each carve can expose the other pattern).
+	# Runs inside _generate_layout so prefab stamping (authored niche
+	# pockets) comes after and stays untouched.
+	var block_corners := [Vector2i(-1, -1), Vector2i(0, -1), Vector2i(-1, 0), Vector2i.ZERO]
+	var block_cells := [Vector2i.ZERO, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.ONE]
+	var changed := true
+	while changed:
+		changed = false
+		for cell: Vector2i in _floor.keys():
+			var best: Array = []
+			var open := false
+			for corner in block_corners:
+				var missing: Array = []
+				var valid := true
+				for off in block_cells:
+					var c: Vector2i = cell + corner + off
+					if _floor.has(c):
+						continue
+					# Keep the map-border wall ring and protected cells
+					# (stamped prefab walls) intact.
+					if c.x < 1 or c.y < 1 or c.x > MAP_W - 2 or c.y > MAP_H - 2 \
+							or protected.has(c):
+						valid = false
+						break
+					missing.append(c)
+				if not valid:
+					continue
+				if missing.is_empty():
+					open = true
+					break
+				if best.is_empty() or missing.size() < best.size():
+					best = missing
+			if open:
+				continue
+			for c in best:
+				_floor[c] = true
+				changed = true
+		for y in range(MAP_H - 1):
+			for x in range(MAP_W - 1):
+				var a := Vector2i(x, y)          # 2x2 block: a b
+				var b := Vector2i(x + 1, y)      #            c d
+				var c := Vector2i(x, y + 1)
+				var d := Vector2i(x + 1, y + 1)
+				if _floor.has(a) and _floor.has(d) \
+						and not _floor.has(b) and not _floor.has(c):
+					changed = _carve_first_legal(b, c, protected) or changed
+				elif _floor.has(b) and _floor.has(c) \
+						and not _floor.has(a) and not _floor.has(d):
+					changed = _carve_first_legal(a, d, protected) or changed
+
+
+func _carve_first_legal(p: Vector2i, q: Vector2i, protected: Dictionary) -> bool:
+	## Opens the first of two candidate wall cells that is neither in the
+	## map's 1-cell border ring nor protected (checkerboard fix above).
+	for c in [p, q]:
+		if c.x >= 1 and c.y >= 1 and c.x <= MAP_W - 2 and c.y <= MAP_H - 2 \
+				and not protected.has(c):
+			_floor[c] = true
+			return true
+	return false
+
+
+func _has_narrow_passages() -> bool:
+	## True if any _widen_pinches invariant is violated (pinched cell or
+	## checkerboard contact) -- used to decide the prefab-wall fallback.
+	for cell: Vector2i in _floor.keys():
+		var open := false
+		for corner in [Vector2i(-1, -1), Vector2i(0, -1), Vector2i(-1, 0), Vector2i.ZERO]:
+			var all := true
+			for off in [Vector2i.ZERO, Vector2i.RIGHT, Vector2i.DOWN, Vector2i.ONE]:
+				if not _floor.has(cell + corner + off):
+					all = false
+					break
+			if all:
+				open = true
+				break
+		if not open:
+			return true
+	for y in range(MAP_H - 1):
+		for x in range(MAP_W - 1):
+			var af := _floor.has(Vector2i(x, y))
+			var bf := _floor.has(Vector2i(x + 1, y))
+			var cf := _floor.has(Vector2i(x, y + 1))
+			var df := _floor.has(Vector2i(x + 1, y + 1))
+			if (af and df and not bf and not cf) or (bf and cf and not af and not df):
+				return true
+	return false
 
 
 func _overlaps_existing(room: Rect2i) -> bool:
@@ -405,7 +631,7 @@ func _spawn_player_and_enemies() -> void:
 	stairs.position = _cell_center(_rooms[_rooms.size() - 1].get_center())
 	add_child(stairs)
 	var depth := GameManager.floor_num - 1
-	var hp_bonus := depth / SCALE_HP_EVERY
+	var hp_bonus := mini(depth / SCALE_HP_EVERY, SCALE_HP_CAP)
 	var speed_bonus := minf(depth * SCALE_SPEED_PER_FLOOR, SCALE_SPEED_CAP)
 	var room_max := mini(ENEMIES_PER_ROOM_MAX + depth / SCALE_COUNT_EVERY, SCALE_COUNT_CAP)
 	var elite_placed := false
@@ -428,9 +654,7 @@ func _spawn_player_and_enemies() -> void:
 					picked = type
 					break
 			var enemy: Node2D = (SPAWN_SCENES[picked] as PackedScene).instantiate()
-			enemy.position = _cell_center(Vector2i(
-					randi_range(room.position.x + 1, room.end.x - 2),
-					randi_range(room.position.y + 1, room.end.y - 2)))
+			enemy.position = _cell_center(_random_floor_cell_in(room))
 			# Scaling via the @export dials, set before add_child so the
 			# enemy's _ready() picks them up (hp = max_hp there).
 			enemy.max_hp += hp_bonus
@@ -442,6 +666,21 @@ func _spawn_player_and_enemies() -> void:
 				enemy.elite = true
 				elite_placed = true
 			add_child(enemy)
+	# Scattered bone-pile deco (docs/asset-spec §4.4): a few piles on the ground.
+	var _tiles_idx: int = $Tiles.get_index()
+	for i in range(1, _rooms.size()):
+		if randf() > 0.35:
+			continue
+		var deco_room := _rooms[i]
+		var bones := Sprite2D.new()
+		bones.texture = BONE_PILE_TEX
+		bones.texture_filter = TEXTURE_FILTER_NEAREST
+		bones.rotation = randf() * TAU
+		bones.position = _cell_center(Vector2i(
+				randi_range(deco_room.position.x + 1, deco_room.end.x - 2),
+				randi_range(deco_room.position.y + 1, deco_room.end.y - 2)))
+		add_child(bones)
+		move_child(bones, _tiles_idx + 1)
 	# Prefab markers first: their chests/shrines are hand-placed.
 	for spawn in _prefab_spawns:
 		match spawn["type"]:
@@ -471,15 +710,43 @@ func _spawn_player_and_enemies() -> void:
 		chest.cursed = randf() < CHEST_CURSED_CHANCE
 		chest.ambush_hp_bonus = hp_bonus
 		chest.ambush_speed_bonus = speed_bonus
-		chest.position = _cell_center(Vector2i(
-				randi_range(room.position.x + 2, room.end.x - 3),
-				randi_range(room.position.y + 2, room.end.y - 3)))
+		chest.position = _cell_center(_random_floor_cell_in(room, 2))
 		add_child(chest)
 		chests += 1
+	# Soul shrine: guaranteed once per floor from SOUL_SHRINE_FROM_FLOOR on,
+	# in a middle room (never spawn/stairs/prefab room) -- overflow souls buy
+	# run-bound boons there.
+	if GameManager.floor_num >= SOUL_SHRINE_FROM_FLOOR:
+		var candidates: Array = []
+		for i in range(1, _rooms.size() - 1):
+			if i != _prefab_room_index:
+				candidates.append(i)
+		if not candidates.is_empty():
+			var shrine_room: Rect2i = _rooms[candidates.pick_random()]
+			var soul_shrine := SOUL_SHRINE_SCENE.instantiate()
+			soul_shrine.position = _cell_center(_random_floor_cell_in(shrine_room))
+			add_child(soul_shrine)
 
 
 func _cell_center(cell: Vector2i) -> Vector2:
 	return Vector2((cell.x + 0.5) * CELL, (cell.y + 0.5) * CELL)
+
+
+func _random_floor_cell_in(room: Rect2i, inset := 1) -> Vector2i:
+	## Random FLOOR cell in the room interior. Rooms are no longer guaranteed
+	## solid floor: prefab walls and nav-repair walling can eat arbitrary
+	## cells, so placements (enemies, chests, shrines) must check.
+	for i in 16:
+		var cell := Vector2i(
+				randi_range(room.position.x + inset, room.end.x - 1 - inset),
+				randi_range(room.position.y + inset, room.end.y - 1 - inset))
+		if _floor.has(cell):
+			return cell
+	for y in range(room.position.y, room.end.y):
+		for x in range(room.position.x, room.end.x):
+			if _floor.has(Vector2i(x, y)):
+				return Vector2i(x, y)
+	return room.get_center()
 
 
 func _clamp_camera(player: Node2D) -> void:
@@ -506,6 +773,23 @@ func _bake_navmesh() -> void:
 	nav_poly.agent_radius = AGENT_RADIUS
 	_region.navigation_polygon = nav_poly
 	_region.bake_navigation_polygon(false)
+
+
+func _await_nav_sync() -> void:
+	## The map commits bakes on its own physics-step schedule; region polygon
+	## updates can land a sync AFTER the map's first iteration bump, so
+	## neither iteration ids nor an immediate probe are trustworthy right
+	## after the bake. Empirically 10 physics frames always suffice (any
+	## queued server command lands within 1-2 steps); the from->from probe
+	## afterwards is a guard with a hard cap, not the primary wait.
+	var map := _region.get_navigation_map()
+	for i in 10:
+		await get_tree().physics_frame
+	var from := _cell_center(_rooms[0].get_center())
+	for i in 50:
+		if NavigationServer2D.map_get_path(map, from, from, true).size() > 0:
+			return
+		await get_tree().physics_frame
 
 
 func _process(_delta: float) -> void:

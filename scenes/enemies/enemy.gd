@@ -19,6 +19,10 @@ const POTION_DROP_CHANCE := 0.22
 const PICKUP_SCENE := preload("res://scenes/pickups/potion_pickup.tscn")
 const SOUL_SCENE := preload("res://scenes/pickups/soul_wisp.tscn")
 const RELIC_SCENE := preload("res://scenes/pickups/relic_pickup.tscn")
+const GORE_DECALS: Array[Texture2D] = [
+	preload("res://assets/sprites/props/gore_splatter_a.png"),
+	preload("res://assets/sprites/props/gore_splatter_b.png"),
+]
 const ELITE_TINT := Color(0.9, 0.55, 1.0)  # violet: distinct from the yellow telegraph
 const FROST_TINT := Color(0.6, 0.85, 1.0)  # player's Frostnova skill
 # ------------------------------------------------------------------------------
@@ -33,6 +37,9 @@ const FROST_TINT := Color(0.6, 0.85, 1.0)  # player's Frostnova skill
 @export var attack_cooldown := 1.1
 @export var attack_damage := 1
 @export var soul_value := 2         # meta-currency dropped on death
+@export var death_sound := "death_enemy"  # Sfx key on _die(); variants override
+@export var turn_speed := 0.0       # rad/s facing cap; 0 = instant. Slow turners
+                                    # (shield tank) can be outflanked by dashing
 @export var ai_enabled := true      # false = passive training dummy
 @export var elite := false          # generator flag: bigger, meaner, drops a relic
 # ------------------------------------------------------------------------------
@@ -205,7 +212,12 @@ func _cancel_attack() -> void:
 
 
 func _face_player() -> void:
-	_pivot.rotation = (_player.global_position - global_position).angle()
+	var target := (_player.global_position - global_position).angle()
+	if turn_speed <= 0.0:
+		_pivot.rotation = target
+	else:
+		_pivot.rotation = rotate_toward(_pivot.rotation, target,
+				turn_speed * get_physics_process_delta_time())
 
 
 func _distance_to_player() -> float:
@@ -265,10 +277,13 @@ func _play_flash() -> void:
 func _die() -> void:
 	dead = true
 	_cancel_attack()
-	Sfx.play("death_enemy")
+	Sfx.play(death_sound)
+	_spawn_gore()
 	if randf() < POTION_DROP_CHANCE:
 		var drop := PICKUP_SCENE.instantiate()
-		drop.position = global_position  # before add_child: level sits at origin
+		# Snapped: a minion dying wedged at/inside a wall must not leave its
+		# loot unreachable (wisps fly to the player, pickups just lie there).
+		drop.position = GameManager.snap_to_walkable(self, global_position)
 		get_parent().add_child(drop)
 	var wisp := SOUL_SCENE.instantiate()
 	wisp.value = soul_value
@@ -282,7 +297,7 @@ func _die() -> void:
 		if relic_id != "":
 			var rp := RELIC_SCENE.instantiate()
 			rp.relic_id = relic_id
-			rp.position = global_position + Vector2(0, 24)
+			rp.position = GameManager.snap_to_walkable(self, global_position + Vector2(0, 24))
 			get_parent().add_child(rp)
 		else:
 			for i in 3:
@@ -301,3 +316,19 @@ func _die() -> void:
 	t.tween_interval(0.55)
 	t.tween_property(self, "modulate:a", 0.0, 0.3)
 	t.tween_callback(queue_free)
+
+
+func _spawn_gore() -> void:
+	# Persistent blood decal on the floor at the death spot (docs/asset-spec §4.4).
+	var decal := Sprite2D.new()
+	decal.texture = GORE_DECALS.pick_random()
+	decal.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	decal.rotation = randf() * TAU
+	decal.global_position = global_position
+	decal.modulate.a = 0.9
+	var lvl := get_parent()
+	lvl.add_child(decal)
+	# Draw above the floor tilemap but below actors (tree order = draw order).
+	var tiles: Node = lvl.get_node_or_null("Tiles")
+	if tiles:
+		lvl.move_child(decal, tiles.get_index() + 1)

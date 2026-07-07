@@ -14,6 +14,7 @@ attack_windup = 0.5
 attack_recover = 0.25
 attack_cooldown = 1.6
 soul_value = 3
+death_sound = "death_cultist"
 
 [node name="Visual" parent="."]
 sprite_frames = ExtResource("3_frames")

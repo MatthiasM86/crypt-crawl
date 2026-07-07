@@ -24,7 +24,10 @@ func _perform_attack() -> void:
 		minion.max_hp = SUMMON_HP
 		minion.soul_value = SUMMON_SOULS
 		minion.get_node("Visual").self_modulate = SUMMON_TINT
-		minion.position = global_position + Vector2(36, 0).rotated(TAU * i / SUMMON_COUNT + randf() * 0.8)
+		# Snapped onto the navmesh: a summoner casting next to a wall must not
+		# materialize minions inside the wall geometry.
+		minion.position = GameManager.snap_to_walkable(self,
+				global_position + Vector2(36, 0).rotated(TAU * i / SUMMON_COUNT + randf() * 0.8))
 		get_parent().add_child(minion)
 		_summons.append(minion)
 

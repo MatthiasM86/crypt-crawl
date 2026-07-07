@@ -11,6 +11,7 @@ config_version=5
 [application]
 
 config/name="Crypt Crawl"
+config/icon="res://assets/icon.png"
 run/main_scene="res://scenes/hub/hub.tscn"
 config/features=PackedStringArray("4.3")
 
@@ -20,6 +21,7 @@ GameManager="*res://autoloads/game_manager.gd"
 Sfx="*res://autoloads/sfx.gd"
 PauseMenu="*res://autoloads/pause_menu.gd"
 DeathScreen="*res://autoloads/death_screen.gd"
+WinScreen="*res://autoloads/win_screen.gd"
 LoadoutChoice="*res://autoloads/loadout_choice.gd"
 FullMap="*res://autoloads/full_map.gd"
 
@@ -29,6 +31,10 @@ window/size/viewport_width=1152
 window/size/viewport_height=648
 window/stretch/mode="canvas_items"
 window/stretch/aspect="keep"
+
+[gui]
+
+theme/custom="res://assets/ui/hud_theme.tres"
 
 [input]
 

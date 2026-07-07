@@ -46,11 +46,18 @@ func _unhandled_input(event: InputEvent) -> void:
 
 
 func _refresh() -> void:
+	# Past the finite curve the shrine sells endless mini-tiers: the label
+	# switches to the (weaker) endless increment and "Stufe n (∞)".
 	var def: Dictionary = GameManager.UPGRADE_DEFS[upgrade_id]
 	var max_level: int = def["costs"].size()
+	var level := GameManager.upgrade_level(upgrade_id)
 	var cost := GameManager.upgrade_cost(upgrade_id)
-	var text := "%s\n%s\nStufe %d/%d" % [
-			def["label"], def["effect"], GameManager.upgrade_level(upgrade_id), max_level]
+	var effect: String = def["effect"]
+	var stufe := "Stufe %d/%d" % [level, max_level]
+	if level >= max_level and def.has("endless"):
+		effect = def["endless"]["effect"]
+		stufe = "Stufe %d (∞)" % level
+	var text := "%s\n%s\n%s" % [def["label"], effect, stufe]
 	if cost < 0:
 		text += "\nMAX"
 	else:

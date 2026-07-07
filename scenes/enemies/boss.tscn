@@ -12,6 +12,7 @@ radius = 42.0
 
 [node name="Boss" instance=ExtResource("1_base")]
 script = ExtResource("2_boss")
+boss_name = "Kryptwächter"
 max_hp = 25
 move_speed = 125.0
 detect_radius = 600.0
@@ -21,6 +22,7 @@ attack_recover = 0.4
 attack_cooldown = 1.8
 attack_damage = 2
 soul_value = 40
+death_sound = "death_boss"
 
 [node name="Visual" parent="."]
 sprite_frames = ExtResource("3_frames")

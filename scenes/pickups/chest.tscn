@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" path="res://scenes/pickups/chest.gd" id="1_chest"]
 [ext_resource type="GradientTexture2D" path="res://assets/textures/radial_light.tres" id="2_light"]
+[ext_resource type="SpriteFrames" path="res://assets/sprites/props/chest_frames.tres" id="3_frames"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_open"]
 radius = 20.0
@@ -12,17 +13,10 @@ collision_mask = 2
 monitorable = false
 script = ExtResource("1_chest")
 
-[node name="Body" type="Polygon2D" parent="."]
-color = Color(0.42, 0.28, 0.16, 1)
-polygon = PackedVector2Array(-14, -4, 14, -4, 14, 10, -14, 10)
-
-[node name="Lid" type="Polygon2D" parent="."]
-color = Color(0.55, 0.38, 0.2, 1)
-polygon = PackedVector2Array(-14, -12, 14, -12, 14, -2, -14, -2)
-
-[node name="Band" type="Polygon2D" parent="."]
-color = Color(0.85, 0.7, 0.3, 1)
-polygon = PackedVector2Array(-2, -12, 2, -12, 2, 10, -2, 10)
+[node name="Visual" type="AnimatedSprite2D" parent="."]
+texture_filter = 1
+sprite_frames = ExtResource("3_frames")
+animation = &"closed"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_open")

@@ -1,14 +1,14 @@
 extends Area2D
-## Run-bound relic lying on the ground (from chests or the boss). Auto-pickup
-## on touch if the player has a free slot (player.RELIC_MAX); otherwise
-## LoadoutChoice offers a swap -- decline and it stays lying.
+## Run-bound relic lying on the ground (from chests or the boss). Touching it
+## always pauses via LoadoutChoice -- "take it" if there's a free slot
+## (player.RELIC_MAX), otherwise a swap; decline and it stays lying.
 
 @export var relic_id := "lifesteal"
 
 
 func _ready() -> void:
 	var def: Dictionary = GameManager.RELIC_DEFS[relic_id]
-	$Visual.color = def["color"]
+	$Visual.texture = load("res://assets/sprites/props/relic_%s.png" % relic_id)
 	$Glow.color = def["color"]
 	$Name.text = def["label"]
 	body_entered.connect(_on_body_entered)
@@ -22,11 +22,6 @@ func _start_bob() -> void:
 
 
 func _on_body_entered(body: Node2D) -> void:
-	if not body.has_method("add_relic"):
+	if not body.has_method("add_relic") or body.relics.has(relic_id):
 		return
-	if body.add_relic(relic_id):
-		queue_free()
-	else:
-		# add_relic() only fails on a full belt here -- chest/boss drops
-		# already exclude relics the run owns, so this can't be a duplicate.
-		LoadoutChoice.offer("relic", relic_id, body.relics, body, self)
+	LoadoutChoice.offer("relic", relic_id, body.relics, body.RELIC_MAX, body, self)
