@@ -209,15 +209,29 @@ kostenlos per Hue-Shift wie bei den Schrein-Edelsteinen.
 9. **Blutschrein-Altar** (`scenes/levels/blood_shrine.tscn` ist Polygon2D):
    32×32 dunkler Steinaltar mit rotem Kristall, von oben; „erschöpft"-Variante
    = entsättigter Hue-Shift (0 Gens). Stil wie die Hub-Schreine.
-10. **Waffen-System**: ✅ beides erledigt — Icons im Sprite-Pass 2, die
-    Schwung-Animationen mit sichtbarer Waffe im Waffen-State-Pass (Juli 2026,
-    Details in der Status-Notiz oben). Offen bleibt hier nur Kür: eigene
-    Idle-/Walk-Sets pro Waffe, damit die Waffe auch außerhalb des Angriffs
-    in der Hand sichtbar ist (aktuell tragen Idle/Walk immer die Axt);
-    Rezept = gleiche Character-States (`cfd661d3`/`c4871694`/`ac890abe`) mit
-    Template-Animationen `breathing-idle` + `walking-6-frames`, dann
-    `idle_<weapon>_<dir>`/`walk_<weapon>_<dir>`-Fallback-Wiring in
-    `player.gd _update_animation` analog zu den Attack-Clips.
+10. **Waffen-System**: ✅ komplett erledigt — Icons (Sprite-Pass 2), Schwung-
+    Animationen mit sichtbarer Waffe (Waffen-State-Pass) UND jetzt die
+    **Idle/Walk-Sets pro Waffe** (2026-07-07): auf den Character-States
+    `cfd661d3`/`c4871694`/`ac890abe` je `breathing-idle` (4f) + `walking-6-frames`
+    (6f) generiert; Kurzschwert überschreibt in-place die Basis `idle/`+`walk/`
+    (Basis = Kurzschwert, wie `attack_<dir>`), Spieß/Kriegshammer als neue Ordner
+    `idle_spiess`/`walk_spiess`/`idle_kriegshammer`/`walk_kriegshammer` +
+    `player_frames.tres`-Clips (jetzt 88 Clips). `player.gd _update_animation`
+    wählt über den Helfer `_weapon_clip(base, dir)` → `<base>_<weapon>_<dir>`
+    mit Fallback auf `<base>_<dir>` (Kurzschwert fällt immer auf die Basis
+    zurück — identisch zum Attack-Muster). Damit trägt der Held die angelegte
+    Waffe auch beim Stehen/Laufen (vorher immer die Axt). Verifiziert per
+    Screenshot (Schwert/Spieß/Hammer im Idle). Auch die **Hurt/Death-Sets pro
+    Waffe** sind nachgezogen (2026-07-07, zweite Runde): Basis `hurt/`+`death/`
+    in-place = Kurzschwert, dazu `hurt_spiess`/`death_spiess`/
+    `hurt_kriegshammer`/`death_kriegshammer` (120 Clips gesamt);
+    `player.gd` spielt Flinch und Todesfall über `_weapon_clip("hurt"/"death",
+    dir)`. Achtung Rezept: die Templates `taking-punch`/`falling-back-death`
+    **halluzinieren die gehaltene Waffe** auf Waffen-States (Streithammer/Axt/
+    Sichel statt Schwert bzw. Hammer) — Schwert-hurt/-death und Hammer-hurt
+    mussten als v3 mit expliziter Waffenbeschreibung neu generiert werden;
+    nur die Spieß-Sets überlebten die Templates. Damit ist die alte Axt
+    vollständig aus allen Spieler-Animationen verschwunden.
 11. **Seelenschrein-Altar** (`scenes/levels/soul_shrine.tscn`, interim
     umgefärbter Blutschrein aus Polygon2D): 32×32 dunkler Steinaltar mit
     **cyanem Seelen-Kristall**, von oben; „erschöpft"-Variante = entsättigter
@@ -238,6 +252,35 @@ kostenlos per Hue-Shift wie bei den Schrein-Edelsteinen.
     Gleiches 256×64-Format/Abnahmekriterium wie #5; Ziel-Dateien z.B.
     `tileset_faeulnisschlund.png` / `tileset_herz.png`, dann die `tileset`-Pfade
     der beiden Bänder in `GameManager.BIOMES` umbiegen.
+14. **Waffen-Paperdoll-Ebene** (Kür / Code-Milestone, optional — lohnt erst,
+    wenn Waffen ein echtes Loot-System mit 8+ Typen werden). Ersetzt den
+    aktuellen Ansatz „ein kompletter Animations-Satz pro Waffe" durch eine
+    angeheftete Waffen-Ebene und macht die Waffe dadurch **frame-genau stabil**
+    (behebt den Rest-Drift, bei dem PixelLab die kleine Klinge pro Frame neu
+    malt — aktuell per v3-Reroll pro Richtung gedämpft, siehe #10). Danach
+    kostet jede **neue** Waffe nur noch ein Sprite statt einer kompletten
+    Charakter-Generierung. Bestandteile:
+    - **Waffenloser Basis-Ritter:** `create_character_state` („empty open hands,
+      no weapon") auf dem Crypt Knight, darauf idle/walk/attack/hurt/death neu
+      generieren — einmalig der komplette Moveset mit freier Hand.
+    - **Waffen-Sprites je Waffe**, vermutlich **pro Blickrichtung eigenes**
+      (Top-Down-Klinge sieht nach NO anders aus als nach SW); die Icon-Sprites
+      `weapon_<id>.png` taugen dafür nicht direkt (Icon-gerahmt).
+    - **Hand-Anker-Tabelle:** je Richtung × Frame × State ein 2D-Offset
+      (+ Rotation), grob 8×~6×5 ≈ **240 Punkte**, von Hand nach Augenmaß.
+      Achtung: PixelLab hat intern ein Skelett, **exportiert die Gelenk-
+      Koordinaten aber NICHT** über die MCP-Tools (nur flache PNGs) — die Anker
+      müssen selbst hergeleitet/geklickt werden. Das ist der eigentliche Aufwand.
+    - **Engine-Umbau** in `scenes/player/player.tscn` + `player.gd`: zweiter
+      Sprite-Node „WeaponVisual", der pro Frame Basis-Clip + Frame-Index +
+      Facing liest, aus der Ankertabelle Offset/Rotation zieht und Textur nach
+      `weapon_id` setzt; **Z-Order pro Richtung** (Waffe hinter dem Körper bei
+      Blick nach Norden/weg, davor bei Süden). Ersetzt die jetzige
+      Clip-Auswahl-Logik `_weapon_clip()`.
+    - **Zwischenschritt zum Abschätzen:** erst EINE Richtung als Paperdoll
+      bauen, um zu sehen, ob das Anker-Tuning erträglich ist, bevor man alle
+      240 Punkte macht. Herleitung + Trade-offs im Detail: siehe die
+      Waffen-Drift-Notizen im PixelLab-Pipeline-Memory (2026-07-07).
 
 ## Einbau-Reihenfolge
 

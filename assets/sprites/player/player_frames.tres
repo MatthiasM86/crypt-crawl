@@ -1,4 +1,4 @@
-[gd_resource type="SpriteFrames" load_steps=305 format=3]
+[gd_resource type="SpriteFrames" load_steps=673 format=3]
 
 [ext_resource type="Texture2D" path="res://assets/sprites/player/attack/east/frame_000.png" id="t0"]
 [ext_resource type="Texture2D" path="res://assets/sprites/player/attack/east/frame_001.png" id="t1"]
@@ -176,134 +176,502 @@
 [ext_resource type="Texture2D" path="res://assets/sprites/player/death/north-east/frame_004.png" id="t173"]
 [ext_resource type="Texture2D" path="res://assets/sprites/player/death/north-east/frame_005.png" id="t174"]
 [ext_resource type="Texture2D" path="res://assets/sprites/player/death/north-east/frame_006.png" id="t175"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/east/frame_000.png" id="t176"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/east/frame_001.png" id="t177"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/east/frame_002.png" id="t178"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/east/frame_003.png" id="t179"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/east/frame_004.png" id="t180"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/east/frame_005.png" id="t181"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south-east/frame_000.png" id="t182"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south-east/frame_001.png" id="t183"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south-east/frame_002.png" id="t184"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south-east/frame_003.png" id="t185"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south-east/frame_004.png" id="t186"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south-east/frame_005.png" id="t187"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south/frame_000.png" id="t188"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south/frame_001.png" id="t189"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south/frame_002.png" id="t190"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south/frame_003.png" id="t191"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south/frame_004.png" id="t192"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south/frame_005.png" id="t193"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south-west/frame_000.png" id="t194"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south-west/frame_001.png" id="t195"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south-west/frame_002.png" id="t196"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south-west/frame_003.png" id="t197"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south-west/frame_004.png" id="t198"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south-west/frame_005.png" id="t199"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/west/frame_000.png" id="t200"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/west/frame_001.png" id="t201"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/west/frame_002.png" id="t202"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/west/frame_003.png" id="t203"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/west/frame_004.png" id="t204"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/west/frame_005.png" id="t205"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north-west/frame_000.png" id="t206"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north-west/frame_001.png" id="t207"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north-west/frame_002.png" id="t208"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north-west/frame_003.png" id="t209"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north-west/frame_004.png" id="t210"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north-west/frame_005.png" id="t211"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north/frame_000.png" id="t212"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north/frame_001.png" id="t213"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north/frame_002.png" id="t214"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north/frame_003.png" id="t215"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north/frame_004.png" id="t216"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north/frame_005.png" id="t217"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north-east/frame_000.png" id="t218"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north-east/frame_001.png" id="t219"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north-east/frame_002.png" id="t220"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north-east/frame_003.png" id="t221"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north-east/frame_004.png" id="t222"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north-east/frame_005.png" id="t223"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/east/frame_000.png" id="t224"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/east/frame_001.png" id="t225"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/east/frame_002.png" id="t226"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/east/frame_003.png" id="t227"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/south-east/frame_000.png" id="t228"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/south-east/frame_001.png" id="t229"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/south-east/frame_002.png" id="t230"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/south-east/frame_003.png" id="t231"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/south/frame_000.png" id="t232"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/south/frame_001.png" id="t233"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/south/frame_002.png" id="t234"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/south/frame_003.png" id="t235"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/south-west/frame_000.png" id="t236"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/south-west/frame_001.png" id="t237"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/south-west/frame_002.png" id="t238"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/south-west/frame_003.png" id="t239"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/west/frame_000.png" id="t240"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/west/frame_001.png" id="t241"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/west/frame_002.png" id="t242"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/west/frame_003.png" id="t243"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/north-west/frame_000.png" id="t244"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/north-west/frame_001.png" id="t245"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/north-west/frame_002.png" id="t246"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/north-west/frame_003.png" id="t247"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/north/frame_000.png" id="t248"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/north/frame_001.png" id="t249"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/north/frame_002.png" id="t250"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/north/frame_003.png" id="t251"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/north-east/frame_000.png" id="t252"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/north-east/frame_001.png" id="t253"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/north-east/frame_002.png" id="t254"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/north-east/frame_003.png" id="t255"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/east/frame_000.png" id="t256"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/east/frame_001.png" id="t257"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/east/frame_002.png" id="t258"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/east/frame_003.png" id="t259"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/east/frame_004.png" id="t260"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/east/frame_005.png" id="t261"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south-east/frame_000.png" id="t262"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south-east/frame_001.png" id="t263"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south-east/frame_002.png" id="t264"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south-east/frame_003.png" id="t265"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south-east/frame_004.png" id="t266"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south-east/frame_005.png" id="t267"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south/frame_000.png" id="t268"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south/frame_001.png" id="t269"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south/frame_002.png" id="t270"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south/frame_003.png" id="t271"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south/frame_004.png" id="t272"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south/frame_005.png" id="t273"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south-west/frame_000.png" id="t274"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south-west/frame_001.png" id="t275"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south-west/frame_002.png" id="t276"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south-west/frame_003.png" id="t277"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south-west/frame_004.png" id="t278"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south-west/frame_005.png" id="t279"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/west/frame_000.png" id="t280"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/west/frame_001.png" id="t281"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/west/frame_002.png" id="t282"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/west/frame_003.png" id="t283"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/west/frame_004.png" id="t284"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/west/frame_005.png" id="t285"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north-west/frame_000.png" id="t286"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north-west/frame_001.png" id="t287"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north-west/frame_002.png" id="t288"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north-west/frame_003.png" id="t289"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north-west/frame_004.png" id="t290"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north-west/frame_005.png" id="t291"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north/frame_000.png" id="t292"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north/frame_001.png" id="t293"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north/frame_002.png" id="t294"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north/frame_003.png" id="t295"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north/frame_004.png" id="t296"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north/frame_005.png" id="t297"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north-east/frame_000.png" id="t298"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north-east/frame_001.png" id="t299"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north-east/frame_002.png" id="t300"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north-east/frame_003.png" id="t301"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north-east/frame_004.png" id="t302"]
-[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north-east/frame_005.png" id="t303"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/east/frame_000.png" id="t176"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/east/frame_001.png" id="t177"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/east/frame_002.png" id="t178"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/east/frame_003.png" id="t179"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/east/frame_004.png" id="t180"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/east/frame_005.png" id="t181"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/east/frame_006.png" id="t182"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/south-east/frame_000.png" id="t183"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/south-east/frame_001.png" id="t184"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/south-east/frame_002.png" id="t185"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/south-east/frame_003.png" id="t186"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/south-east/frame_004.png" id="t187"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/south-east/frame_005.png" id="t188"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/south-east/frame_006.png" id="t189"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/south/frame_000.png" id="t190"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/south/frame_001.png" id="t191"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/south/frame_002.png" id="t192"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/south/frame_003.png" id="t193"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/south/frame_004.png" id="t194"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/south/frame_005.png" id="t195"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/south/frame_006.png" id="t196"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/south-west/frame_000.png" id="t197"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/south-west/frame_001.png" id="t198"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/south-west/frame_002.png" id="t199"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/south-west/frame_003.png" id="t200"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/south-west/frame_004.png" id="t201"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/south-west/frame_005.png" id="t202"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/south-west/frame_006.png" id="t203"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/west/frame_000.png" id="t204"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/west/frame_001.png" id="t205"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/west/frame_002.png" id="t206"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/west/frame_003.png" id="t207"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/west/frame_004.png" id="t208"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/west/frame_005.png" id="t209"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/west/frame_006.png" id="t210"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/north-west/frame_000.png" id="t211"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/north-west/frame_001.png" id="t212"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/north-west/frame_002.png" id="t213"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/north-west/frame_003.png" id="t214"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/north-west/frame_004.png" id="t215"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/north-west/frame_005.png" id="t216"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/north-west/frame_006.png" id="t217"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/north/frame_000.png" id="t218"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/north/frame_001.png" id="t219"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/north/frame_002.png" id="t220"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/north/frame_003.png" id="t221"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/north/frame_004.png" id="t222"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/north/frame_005.png" id="t223"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/north/frame_006.png" id="t224"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/north-east/frame_000.png" id="t225"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/north-east/frame_001.png" id="t226"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/north-east/frame_002.png" id="t227"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/north-east/frame_003.png" id="t228"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/north-east/frame_004.png" id="t229"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/north-east/frame_005.png" id="t230"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_kriegshammer/north-east/frame_006.png" id="t231"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/east/frame_000.png" id="t232"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/east/frame_001.png" id="t233"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/east/frame_002.png" id="t234"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/east/frame_003.png" id="t235"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/east/frame_004.png" id="t236"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/east/frame_005.png" id="t237"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/east/frame_006.png" id="t238"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/south-east/frame_000.png" id="t239"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/south-east/frame_001.png" id="t240"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/south-east/frame_002.png" id="t241"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/south-east/frame_003.png" id="t242"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/south-east/frame_004.png" id="t243"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/south-east/frame_005.png" id="t244"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/south-east/frame_006.png" id="t245"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/south/frame_000.png" id="t246"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/south/frame_001.png" id="t247"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/south/frame_002.png" id="t248"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/south/frame_003.png" id="t249"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/south/frame_004.png" id="t250"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/south/frame_005.png" id="t251"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/south/frame_006.png" id="t252"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/south-west/frame_000.png" id="t253"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/south-west/frame_001.png" id="t254"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/south-west/frame_002.png" id="t255"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/south-west/frame_003.png" id="t256"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/south-west/frame_004.png" id="t257"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/south-west/frame_005.png" id="t258"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/south-west/frame_006.png" id="t259"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/west/frame_000.png" id="t260"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/west/frame_001.png" id="t261"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/west/frame_002.png" id="t262"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/west/frame_003.png" id="t263"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/west/frame_004.png" id="t264"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/west/frame_005.png" id="t265"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/west/frame_006.png" id="t266"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/north-west/frame_000.png" id="t267"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/north-west/frame_001.png" id="t268"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/north-west/frame_002.png" id="t269"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/north-west/frame_003.png" id="t270"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/north-west/frame_004.png" id="t271"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/north-west/frame_005.png" id="t272"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/north-west/frame_006.png" id="t273"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/north/frame_000.png" id="t274"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/north/frame_001.png" id="t275"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/north/frame_002.png" id="t276"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/north/frame_003.png" id="t277"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/north/frame_004.png" id="t278"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/north/frame_005.png" id="t279"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/north/frame_006.png" id="t280"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/north-east/frame_000.png" id="t281"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/north-east/frame_001.png" id="t282"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/north-east/frame_002.png" id="t283"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/north-east/frame_003.png" id="t284"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/north-east/frame_004.png" id="t285"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/north-east/frame_005.png" id="t286"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/death_spiess/north-east/frame_006.png" id="t287"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/east/frame_000.png" id="t288"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/east/frame_001.png" id="t289"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/east/frame_002.png" id="t290"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/east/frame_003.png" id="t291"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/east/frame_004.png" id="t292"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/east/frame_005.png" id="t293"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south-east/frame_000.png" id="t294"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south-east/frame_001.png" id="t295"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south-east/frame_002.png" id="t296"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south-east/frame_003.png" id="t297"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south-east/frame_004.png" id="t298"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south-east/frame_005.png" id="t299"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south/frame_000.png" id="t300"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south/frame_001.png" id="t301"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south/frame_002.png" id="t302"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south/frame_003.png" id="t303"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south/frame_004.png" id="t304"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south/frame_005.png" id="t305"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south-west/frame_000.png" id="t306"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south-west/frame_001.png" id="t307"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south-west/frame_002.png" id="t308"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south-west/frame_003.png" id="t309"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south-west/frame_004.png" id="t310"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/south-west/frame_005.png" id="t311"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/west/frame_000.png" id="t312"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/west/frame_001.png" id="t313"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/west/frame_002.png" id="t314"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/west/frame_003.png" id="t315"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/west/frame_004.png" id="t316"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/west/frame_005.png" id="t317"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north-west/frame_000.png" id="t318"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north-west/frame_001.png" id="t319"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north-west/frame_002.png" id="t320"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north-west/frame_003.png" id="t321"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north-west/frame_004.png" id="t322"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north-west/frame_005.png" id="t323"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north/frame_000.png" id="t324"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north/frame_001.png" id="t325"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north/frame_002.png" id="t326"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north/frame_003.png" id="t327"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north/frame_004.png" id="t328"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north/frame_005.png" id="t329"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north-east/frame_000.png" id="t330"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north-east/frame_001.png" id="t331"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north-east/frame_002.png" id="t332"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north-east/frame_003.png" id="t333"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north-east/frame_004.png" id="t334"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt/north-east/frame_005.png" id="t335"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/east/frame_000.png" id="t336"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/east/frame_001.png" id="t337"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/east/frame_002.png" id="t338"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/east/frame_003.png" id="t339"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/east/frame_004.png" id="t340"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/east/frame_005.png" id="t341"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/south-east/frame_000.png" id="t342"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/south-east/frame_001.png" id="t343"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/south-east/frame_002.png" id="t344"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/south-east/frame_003.png" id="t345"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/south-east/frame_004.png" id="t346"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/south-east/frame_005.png" id="t347"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/south/frame_000.png" id="t348"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/south/frame_001.png" id="t349"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/south/frame_002.png" id="t350"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/south/frame_003.png" id="t351"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/south/frame_004.png" id="t352"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/south/frame_005.png" id="t353"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/south-west/frame_000.png" id="t354"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/south-west/frame_001.png" id="t355"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/south-west/frame_002.png" id="t356"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/south-west/frame_003.png" id="t357"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/south-west/frame_004.png" id="t358"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/south-west/frame_005.png" id="t359"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/west/frame_000.png" id="t360"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/west/frame_001.png" id="t361"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/west/frame_002.png" id="t362"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/west/frame_003.png" id="t363"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/west/frame_004.png" id="t364"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/west/frame_005.png" id="t365"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/north-west/frame_000.png" id="t366"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/north-west/frame_001.png" id="t367"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/north-west/frame_002.png" id="t368"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/north-west/frame_003.png" id="t369"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/north-west/frame_004.png" id="t370"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/north-west/frame_005.png" id="t371"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/north/frame_000.png" id="t372"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/north/frame_001.png" id="t373"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/north/frame_002.png" id="t374"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/north/frame_003.png" id="t375"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/north/frame_004.png" id="t376"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/north/frame_005.png" id="t377"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/north-east/frame_000.png" id="t378"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/north-east/frame_001.png" id="t379"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/north-east/frame_002.png" id="t380"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/north-east/frame_003.png" id="t381"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/north-east/frame_004.png" id="t382"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_kriegshammer/north-east/frame_005.png" id="t383"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/east/frame_000.png" id="t384"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/east/frame_001.png" id="t385"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/east/frame_002.png" id="t386"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/east/frame_003.png" id="t387"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/east/frame_004.png" id="t388"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/east/frame_005.png" id="t389"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/south-east/frame_000.png" id="t390"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/south-east/frame_001.png" id="t391"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/south-east/frame_002.png" id="t392"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/south-east/frame_003.png" id="t393"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/south-east/frame_004.png" id="t394"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/south-east/frame_005.png" id="t395"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/south/frame_000.png" id="t396"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/south/frame_001.png" id="t397"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/south/frame_002.png" id="t398"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/south/frame_003.png" id="t399"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/south/frame_004.png" id="t400"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/south/frame_005.png" id="t401"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/south-west/frame_000.png" id="t402"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/south-west/frame_001.png" id="t403"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/south-west/frame_002.png" id="t404"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/south-west/frame_003.png" id="t405"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/south-west/frame_004.png" id="t406"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/south-west/frame_005.png" id="t407"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/west/frame_000.png" id="t408"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/west/frame_001.png" id="t409"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/west/frame_002.png" id="t410"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/west/frame_003.png" id="t411"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/west/frame_004.png" id="t412"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/west/frame_005.png" id="t413"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/north-west/frame_000.png" id="t414"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/north-west/frame_001.png" id="t415"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/north-west/frame_002.png" id="t416"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/north-west/frame_003.png" id="t417"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/north-west/frame_004.png" id="t418"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/north-west/frame_005.png" id="t419"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/north/frame_000.png" id="t420"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/north/frame_001.png" id="t421"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/north/frame_002.png" id="t422"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/north/frame_003.png" id="t423"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/north/frame_004.png" id="t424"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/north/frame_005.png" id="t425"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/north-east/frame_000.png" id="t426"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/north-east/frame_001.png" id="t427"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/north-east/frame_002.png" id="t428"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/north-east/frame_003.png" id="t429"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/north-east/frame_004.png" id="t430"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/hurt_spiess/north-east/frame_005.png" id="t431"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/east/frame_000.png" id="t432"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/east/frame_001.png" id="t433"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/east/frame_002.png" id="t434"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/east/frame_003.png" id="t435"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/south-east/frame_000.png" id="t436"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/south-east/frame_001.png" id="t437"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/south-east/frame_002.png" id="t438"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/south-east/frame_003.png" id="t439"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/south/frame_000.png" id="t440"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/south/frame_001.png" id="t441"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/south/frame_002.png" id="t442"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/south/frame_003.png" id="t443"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/south-west/frame_000.png" id="t444"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/south-west/frame_001.png" id="t445"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/south-west/frame_002.png" id="t446"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/south-west/frame_003.png" id="t447"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/west/frame_000.png" id="t448"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/west/frame_001.png" id="t449"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/west/frame_002.png" id="t450"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/west/frame_003.png" id="t451"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/north-west/frame_000.png" id="t452"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/north-west/frame_001.png" id="t453"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/north-west/frame_002.png" id="t454"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/north-west/frame_003.png" id="t455"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/north/frame_000.png" id="t456"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/north/frame_001.png" id="t457"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/north/frame_002.png" id="t458"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/north/frame_003.png" id="t459"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/north-east/frame_000.png" id="t460"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/north-east/frame_001.png" id="t461"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/north-east/frame_002.png" id="t462"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle/north-east/frame_003.png" id="t463"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/east/frame_000.png" id="t464"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/east/frame_001.png" id="t465"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/east/frame_002.png" id="t466"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/east/frame_003.png" id="t467"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/south-east/frame_000.png" id="t468"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/south-east/frame_001.png" id="t469"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/south-east/frame_002.png" id="t470"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/south-east/frame_003.png" id="t471"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/south/frame_000.png" id="t472"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/south/frame_001.png" id="t473"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/south/frame_002.png" id="t474"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/south/frame_003.png" id="t475"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/south-west/frame_000.png" id="t476"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/south-west/frame_001.png" id="t477"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/south-west/frame_002.png" id="t478"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/south-west/frame_003.png" id="t479"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/west/frame_000.png" id="t480"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/west/frame_001.png" id="t481"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/west/frame_002.png" id="t482"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/west/frame_003.png" id="t483"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/north-west/frame_000.png" id="t484"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/north-west/frame_001.png" id="t485"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/north-west/frame_002.png" id="t486"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/north-west/frame_003.png" id="t487"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/north/frame_000.png" id="t488"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/north/frame_001.png" id="t489"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/north/frame_002.png" id="t490"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/north/frame_003.png" id="t491"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/north-east/frame_000.png" id="t492"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/north-east/frame_001.png" id="t493"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/north-east/frame_002.png" id="t494"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_kriegshammer/north-east/frame_003.png" id="t495"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/east/frame_000.png" id="t496"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/east/frame_001.png" id="t497"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/east/frame_002.png" id="t498"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/east/frame_003.png" id="t499"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/south-east/frame_000.png" id="t500"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/south-east/frame_001.png" id="t501"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/south-east/frame_002.png" id="t502"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/south-east/frame_003.png" id="t503"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/south/frame_000.png" id="t504"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/south/frame_001.png" id="t505"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/south/frame_002.png" id="t506"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/south/frame_003.png" id="t507"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/south-west/frame_000.png" id="t508"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/south-west/frame_001.png" id="t509"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/south-west/frame_002.png" id="t510"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/south-west/frame_003.png" id="t511"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/west/frame_000.png" id="t512"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/west/frame_001.png" id="t513"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/west/frame_002.png" id="t514"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/west/frame_003.png" id="t515"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/north-west/frame_000.png" id="t516"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/north-west/frame_001.png" id="t517"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/north-west/frame_002.png" id="t518"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/north-west/frame_003.png" id="t519"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/north/frame_000.png" id="t520"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/north/frame_001.png" id="t521"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/north/frame_002.png" id="t522"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/north/frame_003.png" id="t523"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/north-east/frame_000.png" id="t524"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/north-east/frame_001.png" id="t525"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/north-east/frame_002.png" id="t526"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/idle_spiess/north-east/frame_003.png" id="t527"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/east/frame_000.png" id="t528"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/east/frame_001.png" id="t529"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/east/frame_002.png" id="t530"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/east/frame_003.png" id="t531"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/east/frame_004.png" id="t532"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/east/frame_005.png" id="t533"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south-east/frame_000.png" id="t534"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south-east/frame_001.png" id="t535"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south-east/frame_002.png" id="t536"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south-east/frame_003.png" id="t537"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south-east/frame_004.png" id="t538"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south-east/frame_005.png" id="t539"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south/frame_000.png" id="t540"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south/frame_001.png" id="t541"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south/frame_002.png" id="t542"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south/frame_003.png" id="t543"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south/frame_004.png" id="t544"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south/frame_005.png" id="t545"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south-west/frame_000.png" id="t546"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south-west/frame_001.png" id="t547"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south-west/frame_002.png" id="t548"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south-west/frame_003.png" id="t549"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south-west/frame_004.png" id="t550"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/south-west/frame_005.png" id="t551"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/west/frame_000.png" id="t552"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/west/frame_001.png" id="t553"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/west/frame_002.png" id="t554"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/west/frame_003.png" id="t555"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/west/frame_004.png" id="t556"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/west/frame_005.png" id="t557"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north-west/frame_000.png" id="t558"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north-west/frame_001.png" id="t559"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north-west/frame_002.png" id="t560"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north-west/frame_003.png" id="t561"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north-west/frame_004.png" id="t562"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north-west/frame_005.png" id="t563"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north/frame_000.png" id="t564"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north/frame_001.png" id="t565"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north/frame_002.png" id="t566"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north/frame_003.png" id="t567"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north/frame_004.png" id="t568"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north/frame_005.png" id="t569"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north-east/frame_000.png" id="t570"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north-east/frame_001.png" id="t571"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north-east/frame_002.png" id="t572"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north-east/frame_003.png" id="t573"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north-east/frame_004.png" id="t574"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk/north-east/frame_005.png" id="t575"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/east/frame_000.png" id="t576"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/east/frame_001.png" id="t577"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/east/frame_002.png" id="t578"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/east/frame_003.png" id="t579"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/east/frame_004.png" id="t580"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/east/frame_005.png" id="t581"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/south-east/frame_000.png" id="t582"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/south-east/frame_001.png" id="t583"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/south-east/frame_002.png" id="t584"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/south-east/frame_003.png" id="t585"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/south-east/frame_004.png" id="t586"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/south-east/frame_005.png" id="t587"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/south/frame_000.png" id="t588"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/south/frame_001.png" id="t589"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/south/frame_002.png" id="t590"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/south/frame_003.png" id="t591"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/south/frame_004.png" id="t592"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/south/frame_005.png" id="t593"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/south-west/frame_000.png" id="t594"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/south-west/frame_001.png" id="t595"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/south-west/frame_002.png" id="t596"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/south-west/frame_003.png" id="t597"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/south-west/frame_004.png" id="t598"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/south-west/frame_005.png" id="t599"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/west/frame_000.png" id="t600"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/west/frame_001.png" id="t601"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/west/frame_002.png" id="t602"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/west/frame_003.png" id="t603"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/west/frame_004.png" id="t604"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/west/frame_005.png" id="t605"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/north-west/frame_000.png" id="t606"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/north-west/frame_001.png" id="t607"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/north-west/frame_002.png" id="t608"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/north-west/frame_003.png" id="t609"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/north-west/frame_004.png" id="t610"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/north-west/frame_005.png" id="t611"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/north/frame_000.png" id="t612"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/north/frame_001.png" id="t613"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/north/frame_002.png" id="t614"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/north/frame_003.png" id="t615"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/north/frame_004.png" id="t616"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/north/frame_005.png" id="t617"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/north-east/frame_000.png" id="t618"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/north-east/frame_001.png" id="t619"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/north-east/frame_002.png" id="t620"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/north-east/frame_003.png" id="t621"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/north-east/frame_004.png" id="t622"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_kriegshammer/north-east/frame_005.png" id="t623"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/east/frame_000.png" id="t624"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/east/frame_001.png" id="t625"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/east/frame_002.png" id="t626"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/east/frame_003.png" id="t627"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/east/frame_004.png" id="t628"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/east/frame_005.png" id="t629"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/south-east/frame_000.png" id="t630"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/south-east/frame_001.png" id="t631"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/south-east/frame_002.png" id="t632"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/south-east/frame_003.png" id="t633"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/south-east/frame_004.png" id="t634"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/south-east/frame_005.png" id="t635"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/south/frame_000.png" id="t636"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/south/frame_001.png" id="t637"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/south/frame_002.png" id="t638"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/south/frame_003.png" id="t639"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/south/frame_004.png" id="t640"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/south/frame_005.png" id="t641"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/south-west/frame_000.png" id="t642"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/south-west/frame_001.png" id="t643"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/south-west/frame_002.png" id="t644"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/south-west/frame_003.png" id="t645"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/south-west/frame_004.png" id="t646"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/south-west/frame_005.png" id="t647"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/west/frame_000.png" id="t648"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/west/frame_001.png" id="t649"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/west/frame_002.png" id="t650"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/west/frame_003.png" id="t651"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/west/frame_004.png" id="t652"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/west/frame_005.png" id="t653"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/north-west/frame_000.png" id="t654"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/north-west/frame_001.png" id="t655"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/north-west/frame_002.png" id="t656"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/north-west/frame_003.png" id="t657"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/north-west/frame_004.png" id="t658"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/north-west/frame_005.png" id="t659"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/north/frame_000.png" id="t660"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/north/frame_001.png" id="t661"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/north/frame_002.png" id="t662"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/north/frame_003.png" id="t663"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/north/frame_004.png" id="t664"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/north/frame_005.png" id="t665"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/north-east/frame_000.png" id="t666"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/north-east/frame_001.png" id="t667"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/north-east/frame_002.png" id="t668"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/north-east/frame_003.png" id="t669"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/north-east/frame_004.png" id="t670"]
+[ext_resource type="Texture2D" path="res://assets/sprites/player/walk_spiess/north-east/frame_005.png" id="t671"]
 
 [resource]
 animations = [{
@@ -1013,15 +1381,15 @@ animations = [{
 },{
 "duration": 1.0,
 "texture": ExtResource("t181")
-}],
-"loop": false,
-"name": &"hurt_east",
-"speed": 14
-}, {
-"frames": [{
+},{
 "duration": 1.0,
 "texture": ExtResource("t182")
-},{
+}],
+"loop": false,
+"name": &"death_kriegshammer_east",
+"speed": 10
+}, {
+"frames": [{
 "duration": 1.0,
 "texture": ExtResource("t183")
 },{
@@ -1036,18 +1404,18 @@ animations = [{
 },{
 "duration": 1.0,
 "texture": ExtResource("t187")
-}],
-"loop": false,
-"name": &"hurt_south-east",
-"speed": 14
-}, {
-"frames": [{
+},{
 "duration": 1.0,
 "texture": ExtResource("t188")
 },{
 "duration": 1.0,
 "texture": ExtResource("t189")
-},{
+}],
+"loop": false,
+"name": &"death_kriegshammer_south-east",
+"speed": 10
+}, {
+"frames": [{
 "duration": 1.0,
 "texture": ExtResource("t190")
 },{
@@ -1059,12 +1427,7 @@ animations = [{
 },{
 "duration": 1.0,
 "texture": ExtResource("t193")
-}],
-"loop": false,
-"name": &"hurt_south",
-"speed": 14
-}, {
-"frames": [{
+},{
 "duration": 1.0,
 "texture": ExtResource("t194")
 },{
@@ -1073,7 +1436,12 @@ animations = [{
 },{
 "duration": 1.0,
 "texture": ExtResource("t196")
-},{
+}],
+"loop": false,
+"name": &"death_kriegshammer_south",
+"speed": 10
+}, {
+"frames": [{
 "duration": 1.0,
 "texture": ExtResource("t197")
 },{
@@ -1082,12 +1450,7 @@ animations = [{
 },{
 "duration": 1.0,
 "texture": ExtResource("t199")
-}],
-"loop": false,
-"name": &"hurt_south-west",
-"speed": 14
-}, {
-"frames": [{
+},{
 "duration": 1.0,
 "texture": ExtResource("t200")
 },{
@@ -1099,18 +1462,18 @@ animations = [{
 },{
 "duration": 1.0,
 "texture": ExtResource("t203")
-},{
+}],
+"loop": false,
+"name": &"death_kriegshammer_south-west",
+"speed": 10
+}, {
+"frames": [{
 "duration": 1.0,
 "texture": ExtResource("t204")
 },{
 "duration": 1.0,
 "texture": ExtResource("t205")
-}],
-"loop": false,
-"name": &"hurt_west",
-"speed": 14
-}, {
-"frames": [{
+},{
 "duration": 1.0,
 "texture": ExtResource("t206")
 },{
@@ -1125,15 +1488,15 @@ animations = [{
 },{
 "duration": 1.0,
 "texture": ExtResource("t210")
-},{
-"duration": 1.0,
-"texture": ExtResource("t211")
 }],
 "loop": false,
-"name": &"hurt_north-west",
-"speed": 14
+"name": &"death_kriegshammer_west",
+"speed": 10
 }, {
 "frames": [{
+"duration": 1.0,
+"texture": ExtResource("t211")
+},{
 "duration": 1.0,
 "texture": ExtResource("t212")
 },{
@@ -1153,8 +1516,8 @@ animations = [{
 "texture": ExtResource("t217")
 }],
 "loop": false,
-"name": &"hurt_north",
-"speed": 14
+"name": &"death_kriegshammer_north-west",
+"speed": 10
 }, {
 "frames": [{
 "duration": 1.0,
@@ -1174,15 +1537,15 @@ animations = [{
 },{
 "duration": 1.0,
 "texture": ExtResource("t223")
-}],
-"loop": false,
-"name": &"hurt_north-east",
-"speed": 14
-}, {
-"frames": [{
+},{
 "duration": 1.0,
 "texture": ExtResource("t224")
-},{
+}],
+"loop": false,
+"name": &"death_kriegshammer_north",
+"speed": 10
+}, {
+"frames": [{
 "duration": 1.0,
 "texture": ExtResource("t225")
 },{
@@ -1191,12 +1554,7 @@ animations = [{
 },{
 "duration": 1.0,
 "texture": ExtResource("t227")
-}],
-"loop": true,
-"name": &"idle_east",
-"speed": 6
-}, {
-"frames": [{
+},{
 "duration": 1.0,
 "texture": ExtResource("t228")
 },{
@@ -1209,9 +1567,9 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("t231")
 }],
-"loop": true,
-"name": &"idle_south-east",
-"speed": 6
+"loop": false,
+"name": &"death_kriegshammer_north-east",
+"speed": 10
 }, {
 "frames": [{
 "duration": 1.0,
@@ -1225,12 +1583,7 @@ animations = [{
 },{
 "duration": 1.0,
 "texture": ExtResource("t235")
-}],
-"loop": true,
-"name": &"idle_south",
-"speed": 6
-}, {
-"frames": [{
+},{
 "duration": 1.0,
 "texture": ExtResource("t236")
 },{
@@ -1239,15 +1592,15 @@ animations = [{
 },{
 "duration": 1.0,
 "texture": ExtResource("t238")
-},{
-"duration": 1.0,
-"texture": ExtResource("t239")
 }],
-"loop": true,
-"name": &"idle_south-west",
-"speed": 6
+"loop": false,
+"name": &"death_spiess_east",
+"speed": 10
 }, {
 "frames": [{
+"duration": 1.0,
+"texture": ExtResource("t239")
+},{
 "duration": 1.0,
 "texture": ExtResource("t240")
 },{
@@ -1259,29 +1612,24 @@ animations = [{
 },{
 "duration": 1.0,
 "texture": ExtResource("t243")
-}],
-"loop": true,
-"name": &"idle_west",
-"speed": 6
-}, {
-"frames": [{
+},{
 "duration": 1.0,
 "texture": ExtResource("t244")
 },{
 "duration": 1.0,
 "texture": ExtResource("t245")
-},{
+}],
+"loop": false,
+"name": &"death_spiess_south-east",
+"speed": 10
+}, {
+"frames": [{
 "duration": 1.0,
 "texture": ExtResource("t246")
 },{
 "duration": 1.0,
 "texture": ExtResource("t247")
-}],
-"loop": true,
-"name": &"idle_north-west",
-"speed": 6
-}, {
-"frames": [{
+},{
 "duration": 1.0,
 "texture": ExtResource("t248")
 },{
@@ -1293,15 +1641,15 @@ animations = [{
 },{
 "duration": 1.0,
 "texture": ExtResource("t251")
-}],
-"loop": true,
-"name": &"idle_north",
-"speed": 6
-}, {
-"frames": [{
+},{
 "duration": 1.0,
 "texture": ExtResource("t252")
-},{
+}],
+"loop": false,
+"name": &"death_spiess_south",
+"speed": 10
+}, {
+"frames": [{
 "duration": 1.0,
 "texture": ExtResource("t253")
 },{
@@ -1310,12 +1658,7 @@ animations = [{
 },{
 "duration": 1.0,
 "texture": ExtResource("t255")
-}],
-"loop": true,
-"name": &"idle_north-east",
-"speed": 6
-}, {
-"frames": [{
+},{
 "duration": 1.0,
 "texture": ExtResource("t256")
 },{
@@ -1327,18 +1670,18 @@ animations = [{
 },{
 "duration": 1.0,
 "texture": ExtResource("t259")
-},{
+}],
+"loop": false,
+"name": &"death_spiess_south-west",
+"speed": 10
+}, {
+"frames": [{
 "duration": 1.0,
 "texture": ExtResource("t260")
 },{
 "duration": 1.0,
 "texture": ExtResource("t261")
-}],
-"loop": true,
-"name": &"walk_east",
-"speed": 10
-}, {
-"frames": [{
+},{
 "duration": 1.0,
 "texture": ExtResource("t262")
 },{
@@ -1353,15 +1696,15 @@ animations = [{
 },{
 "duration": 1.0,
 "texture": ExtResource("t266")
-},{
-"duration": 1.0,
-"texture": ExtResource("t267")
 }],
-"loop": true,
-"name": &"walk_south-east",
+"loop": false,
+"name": &"death_spiess_west",
 "speed": 10
 }, {
 "frames": [{
+"duration": 1.0,
+"texture": ExtResource("t267")
+},{
 "duration": 1.0,
 "texture": ExtResource("t268")
 },{
@@ -1380,8 +1723,8 @@ animations = [{
 "duration": 1.0,
 "texture": ExtResource("t273")
 }],
-"loop": true,
-"name": &"walk_south",
+"loop": false,
+"name": &"death_spiess_north-west",
 "speed": 10
 }, {
 "frames": [{
@@ -1402,15 +1745,15 @@ animations = [{
 },{
 "duration": 1.0,
 "texture": ExtResource("t279")
+},{
+"duration": 1.0,
+"texture": ExtResource("t280")
 }],
-"loop": true,
-"name": &"walk_south-west",
+"loop": false,
+"name": &"death_spiess_north",
 "speed": 10
 }, {
 "frames": [{
-"duration": 1.0,
-"texture": ExtResource("t280")
-},{
 "duration": 1.0,
 "texture": ExtResource("t281")
 },{
@@ -1425,18 +1768,18 @@ animations = [{
 },{
 "duration": 1.0,
 "texture": ExtResource("t285")
-}],
-"loop": true,
-"name": &"walk_west",
-"speed": 10
-}, {
-"frames": [{
+},{
 "duration": 1.0,
 "texture": ExtResource("t286")
 },{
 "duration": 1.0,
 "texture": ExtResource("t287")
-},{
+}],
+"loop": false,
+"name": &"death_spiess_north-east",
+"speed": 10
+}, {
+"frames": [{
 "duration": 1.0,
 "texture": ExtResource("t288")
 },{
@@ -1448,18 +1791,18 @@ animations = [{
 },{
 "duration": 1.0,
 "texture": ExtResource("t291")
-}],
-"loop": true,
-"name": &"walk_north-west",
-"speed": 10
-}, {
-"frames": [{
+},{
 "duration": 1.0,
 "texture": ExtResource("t292")
 },{
 "duration": 1.0,
 "texture": ExtResource("t293")
-},{
+}],
+"loop": false,
+"name": &"hurt_east",
+"speed": 14
+}, {
+"frames": [{
 "duration": 1.0,
 "texture": ExtResource("t294")
 },{
@@ -1471,18 +1814,18 @@ animations = [{
 },{
 "duration": 1.0,
 "texture": ExtResource("t297")
-}],
-"loop": true,
-"name": &"walk_north",
-"speed": 10
-}, {
-"frames": [{
+},{
 "duration": 1.0,
 "texture": ExtResource("t298")
 },{
 "duration": 1.0,
 "texture": ExtResource("t299")
-},{
+}],
+"loop": false,
+"name": &"hurt_south-east",
+"speed": 14
+}, {
+"frames": [{
 "duration": 1.0,
 "texture": ExtResource("t300")
 },{
@@ -1494,8 +1837,1457 @@ animations = [{
 },{
 "duration": 1.0,
 "texture": ExtResource("t303")
+},{
+"duration": 1.0,
+"texture": ExtResource("t304")
+},{
+"duration": 1.0,
+"texture": ExtResource("t305")
+}],
+"loop": false,
+"name": &"hurt_south",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t306")
+},{
+"duration": 1.0,
+"texture": ExtResource("t307")
+},{
+"duration": 1.0,
+"texture": ExtResource("t308")
+},{
+"duration": 1.0,
+"texture": ExtResource("t309")
+},{
+"duration": 1.0,
+"texture": ExtResource("t310")
+},{
+"duration": 1.0,
+"texture": ExtResource("t311")
+}],
+"loop": false,
+"name": &"hurt_south-west",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t312")
+},{
+"duration": 1.0,
+"texture": ExtResource("t313")
+},{
+"duration": 1.0,
+"texture": ExtResource("t314")
+},{
+"duration": 1.0,
+"texture": ExtResource("t315")
+},{
+"duration": 1.0,
+"texture": ExtResource("t316")
+},{
+"duration": 1.0,
+"texture": ExtResource("t317")
+}],
+"loop": false,
+"name": &"hurt_west",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t318")
+},{
+"duration": 1.0,
+"texture": ExtResource("t319")
+},{
+"duration": 1.0,
+"texture": ExtResource("t320")
+},{
+"duration": 1.0,
+"texture": ExtResource("t321")
+},{
+"duration": 1.0,
+"texture": ExtResource("t322")
+},{
+"duration": 1.0,
+"texture": ExtResource("t323")
+}],
+"loop": false,
+"name": &"hurt_north-west",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t324")
+},{
+"duration": 1.0,
+"texture": ExtResource("t325")
+},{
+"duration": 1.0,
+"texture": ExtResource("t326")
+},{
+"duration": 1.0,
+"texture": ExtResource("t327")
+},{
+"duration": 1.0,
+"texture": ExtResource("t328")
+},{
+"duration": 1.0,
+"texture": ExtResource("t329")
+}],
+"loop": false,
+"name": &"hurt_north",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t330")
+},{
+"duration": 1.0,
+"texture": ExtResource("t331")
+},{
+"duration": 1.0,
+"texture": ExtResource("t332")
+},{
+"duration": 1.0,
+"texture": ExtResource("t333")
+},{
+"duration": 1.0,
+"texture": ExtResource("t334")
+},{
+"duration": 1.0,
+"texture": ExtResource("t335")
+}],
+"loop": false,
+"name": &"hurt_north-east",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t336")
+},{
+"duration": 1.0,
+"texture": ExtResource("t337")
+},{
+"duration": 1.0,
+"texture": ExtResource("t338")
+},{
+"duration": 1.0,
+"texture": ExtResource("t339")
+},{
+"duration": 1.0,
+"texture": ExtResource("t340")
+},{
+"duration": 1.0,
+"texture": ExtResource("t341")
+}],
+"loop": false,
+"name": &"hurt_kriegshammer_east",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t342")
+},{
+"duration": 1.0,
+"texture": ExtResource("t343")
+},{
+"duration": 1.0,
+"texture": ExtResource("t344")
+},{
+"duration": 1.0,
+"texture": ExtResource("t345")
+},{
+"duration": 1.0,
+"texture": ExtResource("t346")
+},{
+"duration": 1.0,
+"texture": ExtResource("t347")
+}],
+"loop": false,
+"name": &"hurt_kriegshammer_south-east",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t348")
+},{
+"duration": 1.0,
+"texture": ExtResource("t349")
+},{
+"duration": 1.0,
+"texture": ExtResource("t350")
+},{
+"duration": 1.0,
+"texture": ExtResource("t351")
+},{
+"duration": 1.0,
+"texture": ExtResource("t352")
+},{
+"duration": 1.0,
+"texture": ExtResource("t353")
+}],
+"loop": false,
+"name": &"hurt_kriegshammer_south",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t354")
+},{
+"duration": 1.0,
+"texture": ExtResource("t355")
+},{
+"duration": 1.0,
+"texture": ExtResource("t356")
+},{
+"duration": 1.0,
+"texture": ExtResource("t357")
+},{
+"duration": 1.0,
+"texture": ExtResource("t358")
+},{
+"duration": 1.0,
+"texture": ExtResource("t359")
+}],
+"loop": false,
+"name": &"hurt_kriegshammer_south-west",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t360")
+},{
+"duration": 1.0,
+"texture": ExtResource("t361")
+},{
+"duration": 1.0,
+"texture": ExtResource("t362")
+},{
+"duration": 1.0,
+"texture": ExtResource("t363")
+},{
+"duration": 1.0,
+"texture": ExtResource("t364")
+},{
+"duration": 1.0,
+"texture": ExtResource("t365")
+}],
+"loop": false,
+"name": &"hurt_kriegshammer_west",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t366")
+},{
+"duration": 1.0,
+"texture": ExtResource("t367")
+},{
+"duration": 1.0,
+"texture": ExtResource("t368")
+},{
+"duration": 1.0,
+"texture": ExtResource("t369")
+},{
+"duration": 1.0,
+"texture": ExtResource("t370")
+},{
+"duration": 1.0,
+"texture": ExtResource("t371")
+}],
+"loop": false,
+"name": &"hurt_kriegshammer_north-west",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t372")
+},{
+"duration": 1.0,
+"texture": ExtResource("t373")
+},{
+"duration": 1.0,
+"texture": ExtResource("t374")
+},{
+"duration": 1.0,
+"texture": ExtResource("t375")
+},{
+"duration": 1.0,
+"texture": ExtResource("t376")
+},{
+"duration": 1.0,
+"texture": ExtResource("t377")
+}],
+"loop": false,
+"name": &"hurt_kriegshammer_north",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t378")
+},{
+"duration": 1.0,
+"texture": ExtResource("t379")
+},{
+"duration": 1.0,
+"texture": ExtResource("t380")
+},{
+"duration": 1.0,
+"texture": ExtResource("t381")
+},{
+"duration": 1.0,
+"texture": ExtResource("t382")
+},{
+"duration": 1.0,
+"texture": ExtResource("t383")
+}],
+"loop": false,
+"name": &"hurt_kriegshammer_north-east",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t384")
+},{
+"duration": 1.0,
+"texture": ExtResource("t385")
+},{
+"duration": 1.0,
+"texture": ExtResource("t386")
+},{
+"duration": 1.0,
+"texture": ExtResource("t387")
+},{
+"duration": 1.0,
+"texture": ExtResource("t388")
+},{
+"duration": 1.0,
+"texture": ExtResource("t389")
+}],
+"loop": false,
+"name": &"hurt_spiess_east",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t390")
+},{
+"duration": 1.0,
+"texture": ExtResource("t391")
+},{
+"duration": 1.0,
+"texture": ExtResource("t392")
+},{
+"duration": 1.0,
+"texture": ExtResource("t393")
+},{
+"duration": 1.0,
+"texture": ExtResource("t394")
+},{
+"duration": 1.0,
+"texture": ExtResource("t395")
+}],
+"loop": false,
+"name": &"hurt_spiess_south-east",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t396")
+},{
+"duration": 1.0,
+"texture": ExtResource("t397")
+},{
+"duration": 1.0,
+"texture": ExtResource("t398")
+},{
+"duration": 1.0,
+"texture": ExtResource("t399")
+},{
+"duration": 1.0,
+"texture": ExtResource("t400")
+},{
+"duration": 1.0,
+"texture": ExtResource("t401")
+}],
+"loop": false,
+"name": &"hurt_spiess_south",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t402")
+},{
+"duration": 1.0,
+"texture": ExtResource("t403")
+},{
+"duration": 1.0,
+"texture": ExtResource("t404")
+},{
+"duration": 1.0,
+"texture": ExtResource("t405")
+},{
+"duration": 1.0,
+"texture": ExtResource("t406")
+},{
+"duration": 1.0,
+"texture": ExtResource("t407")
+}],
+"loop": false,
+"name": &"hurt_spiess_south-west",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t408")
+},{
+"duration": 1.0,
+"texture": ExtResource("t409")
+},{
+"duration": 1.0,
+"texture": ExtResource("t410")
+},{
+"duration": 1.0,
+"texture": ExtResource("t411")
+},{
+"duration": 1.0,
+"texture": ExtResource("t412")
+},{
+"duration": 1.0,
+"texture": ExtResource("t413")
+}],
+"loop": false,
+"name": &"hurt_spiess_west",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t414")
+},{
+"duration": 1.0,
+"texture": ExtResource("t415")
+},{
+"duration": 1.0,
+"texture": ExtResource("t416")
+},{
+"duration": 1.0,
+"texture": ExtResource("t417")
+},{
+"duration": 1.0,
+"texture": ExtResource("t418")
+},{
+"duration": 1.0,
+"texture": ExtResource("t419")
+}],
+"loop": false,
+"name": &"hurt_spiess_north-west",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t420")
+},{
+"duration": 1.0,
+"texture": ExtResource("t421")
+},{
+"duration": 1.0,
+"texture": ExtResource("t422")
+},{
+"duration": 1.0,
+"texture": ExtResource("t423")
+},{
+"duration": 1.0,
+"texture": ExtResource("t424")
+},{
+"duration": 1.0,
+"texture": ExtResource("t425")
+}],
+"loop": false,
+"name": &"hurt_spiess_north",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t426")
+},{
+"duration": 1.0,
+"texture": ExtResource("t427")
+},{
+"duration": 1.0,
+"texture": ExtResource("t428")
+},{
+"duration": 1.0,
+"texture": ExtResource("t429")
+},{
+"duration": 1.0,
+"texture": ExtResource("t430")
+},{
+"duration": 1.0,
+"texture": ExtResource("t431")
+}],
+"loop": false,
+"name": &"hurt_spiess_north-east",
+"speed": 14
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t432")
+},{
+"duration": 1.0,
+"texture": ExtResource("t433")
+},{
+"duration": 1.0,
+"texture": ExtResource("t434")
+},{
+"duration": 1.0,
+"texture": ExtResource("t435")
+}],
+"loop": true,
+"name": &"idle_east",
+"speed": 6
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t436")
+},{
+"duration": 1.0,
+"texture": ExtResource("t437")
+},{
+"duration": 1.0,
+"texture": ExtResource("t438")
+},{
+"duration": 1.0,
+"texture": ExtResource("t439")
+}],
+"loop": true,
+"name": &"idle_south-east",
+"speed": 6
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t440")
+},{
+"duration": 1.0,
+"texture": ExtResource("t441")
+},{
+"duration": 1.0,
+"texture": ExtResource("t442")
+},{
+"duration": 1.0,
+"texture": ExtResource("t443")
+}],
+"loop": true,
+"name": &"idle_south",
+"speed": 6
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t444")
+},{
+"duration": 1.0,
+"texture": ExtResource("t445")
+},{
+"duration": 1.0,
+"texture": ExtResource("t446")
+},{
+"duration": 1.0,
+"texture": ExtResource("t447")
+}],
+"loop": true,
+"name": &"idle_south-west",
+"speed": 6
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t448")
+},{
+"duration": 1.0,
+"texture": ExtResource("t449")
+},{
+"duration": 1.0,
+"texture": ExtResource("t450")
+},{
+"duration": 1.0,
+"texture": ExtResource("t451")
+}],
+"loop": true,
+"name": &"idle_west",
+"speed": 6
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t452")
+},{
+"duration": 1.0,
+"texture": ExtResource("t453")
+},{
+"duration": 1.0,
+"texture": ExtResource("t454")
+},{
+"duration": 1.0,
+"texture": ExtResource("t455")
+}],
+"loop": true,
+"name": &"idle_north-west",
+"speed": 6
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t456")
+},{
+"duration": 1.0,
+"texture": ExtResource("t457")
+},{
+"duration": 1.0,
+"texture": ExtResource("t458")
+},{
+"duration": 1.0,
+"texture": ExtResource("t459")
+}],
+"loop": true,
+"name": &"idle_north",
+"speed": 6
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t460")
+},{
+"duration": 1.0,
+"texture": ExtResource("t461")
+},{
+"duration": 1.0,
+"texture": ExtResource("t462")
+},{
+"duration": 1.0,
+"texture": ExtResource("t463")
+}],
+"loop": true,
+"name": &"idle_north-east",
+"speed": 6
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t464")
+},{
+"duration": 1.0,
+"texture": ExtResource("t465")
+},{
+"duration": 1.0,
+"texture": ExtResource("t466")
+},{
+"duration": 1.0,
+"texture": ExtResource("t467")
+}],
+"loop": true,
+"name": &"idle_kriegshammer_east",
+"speed": 6
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t468")
+},{
+"duration": 1.0,
+"texture": ExtResource("t469")
+},{
+"duration": 1.0,
+"texture": ExtResource("t470")
+},{
+"duration": 1.0,
+"texture": ExtResource("t471")
+}],
+"loop": true,
+"name": &"idle_kriegshammer_south-east",
+"speed": 6
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t472")
+},{
+"duration": 1.0,
+"texture": ExtResource("t473")
+},{
+"duration": 1.0,
+"texture": ExtResource("t474")
+},{
+"duration": 1.0,
+"texture": ExtResource("t475")
+}],
+"loop": true,
+"name": &"idle_kriegshammer_south",
+"speed": 6
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t476")
+},{
+"duration": 1.0,
+"texture": ExtResource("t477")
+},{
+"duration": 1.0,
+"texture": ExtResource("t478")
+},{
+"duration": 1.0,
+"texture": ExtResource("t479")
+}],
+"loop": true,
+"name": &"idle_kriegshammer_south-west",
+"speed": 6
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t480")
+},{
+"duration": 1.0,
+"texture": ExtResource("t481")
+},{
+"duration": 1.0,
+"texture": ExtResource("t482")
+},{
+"duration": 1.0,
+"texture": ExtResource("t483")
+}],
+"loop": true,
+"name": &"idle_kriegshammer_west",
+"speed": 6
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t484")
+},{
+"duration": 1.0,
+"texture": ExtResource("t485")
+},{
+"duration": 1.0,
+"texture": ExtResource("t486")
+},{
+"duration": 1.0,
+"texture": ExtResource("t487")
+}],
+"loop": true,
+"name": &"idle_kriegshammer_north-west",
+"speed": 6
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t488")
+},{
+"duration": 1.0,
+"texture": ExtResource("t489")
+},{
+"duration": 1.0,
+"texture": ExtResource("t490")
+},{
+"duration": 1.0,
+"texture": ExtResource("t491")
+}],
+"loop": true,
+"name": &"idle_kriegshammer_north",
+"speed": 6
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t492")
+},{
+"duration": 1.0,
+"texture": ExtResource("t493")
+},{
+"duration": 1.0,
+"texture": ExtResource("t494")
+},{
+"duration": 1.0,
+"texture": ExtResource("t495")
+}],
+"loop": true,
+"name": &"idle_kriegshammer_north-east",
+"speed": 6
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t496")
+},{
+"duration": 1.0,
+"texture": ExtResource("t497")
+},{
+"duration": 1.0,
+"texture": ExtResource("t498")
+},{
+"duration": 1.0,
+"texture": ExtResource("t499")
+}],
+"loop": true,
+"name": &"idle_spiess_east",
+"speed": 6
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t500")
+},{
+"duration": 1.0,
+"texture": ExtResource("t501")
+},{
+"duration": 1.0,
+"texture": ExtResource("t502")
+},{
+"duration": 1.0,
+"texture": ExtResource("t503")
+}],
+"loop": true,
+"name": &"idle_spiess_south-east",
+"speed": 6
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t504")
+},{
+"duration": 1.0,
+"texture": ExtResource("t505")
+},{
+"duration": 1.0,
+"texture": ExtResource("t506")
+},{
+"duration": 1.0,
+"texture": ExtResource("t507")
+}],
+"loop": true,
+"name": &"idle_spiess_south",
+"speed": 6
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t508")
+},{
+"duration": 1.0,
+"texture": ExtResource("t509")
+},{
+"duration": 1.0,
+"texture": ExtResource("t510")
+},{
+"duration": 1.0,
+"texture": ExtResource("t511")
+}],
+"loop": true,
+"name": &"idle_spiess_south-west",
+"speed": 6
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t512")
+},{
+"duration": 1.0,
+"texture": ExtResource("t513")
+},{
+"duration": 1.0,
+"texture": ExtResource("t514")
+},{
+"duration": 1.0,
+"texture": ExtResource("t515")
+}],
+"loop": true,
+"name": &"idle_spiess_west",
+"speed": 6
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t516")
+},{
+"duration": 1.0,
+"texture": ExtResource("t517")
+},{
+"duration": 1.0,
+"texture": ExtResource("t518")
+},{
+"duration": 1.0,
+"texture": ExtResource("t519")
+}],
+"loop": true,
+"name": &"idle_spiess_north-west",
+"speed": 6
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t520")
+},{
+"duration": 1.0,
+"texture": ExtResource("t521")
+},{
+"duration": 1.0,
+"texture": ExtResource("t522")
+},{
+"duration": 1.0,
+"texture": ExtResource("t523")
+}],
+"loop": true,
+"name": &"idle_spiess_north",
+"speed": 6
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t524")
+},{
+"duration": 1.0,
+"texture": ExtResource("t525")
+},{
+"duration": 1.0,
+"texture": ExtResource("t526")
+},{
+"duration": 1.0,
+"texture": ExtResource("t527")
+}],
+"loop": true,
+"name": &"idle_spiess_north-east",
+"speed": 6
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t528")
+},{
+"duration": 1.0,
+"texture": ExtResource("t529")
+},{
+"duration": 1.0,
+"texture": ExtResource("t530")
+},{
+"duration": 1.0,
+"texture": ExtResource("t531")
+},{
+"duration": 1.0,
+"texture": ExtResource("t532")
+},{
+"duration": 1.0,
+"texture": ExtResource("t533")
+}],
+"loop": true,
+"name": &"walk_east",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t534")
+},{
+"duration": 1.0,
+"texture": ExtResource("t535")
+},{
+"duration": 1.0,
+"texture": ExtResource("t536")
+},{
+"duration": 1.0,
+"texture": ExtResource("t537")
+},{
+"duration": 1.0,
+"texture": ExtResource("t538")
+},{
+"duration": 1.0,
+"texture": ExtResource("t539")
+}],
+"loop": true,
+"name": &"walk_south-east",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t540")
+},{
+"duration": 1.0,
+"texture": ExtResource("t541")
+},{
+"duration": 1.0,
+"texture": ExtResource("t542")
+},{
+"duration": 1.0,
+"texture": ExtResource("t543")
+},{
+"duration": 1.0,
+"texture": ExtResource("t544")
+},{
+"duration": 1.0,
+"texture": ExtResource("t545")
+}],
+"loop": true,
+"name": &"walk_south",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t546")
+},{
+"duration": 1.0,
+"texture": ExtResource("t547")
+},{
+"duration": 1.0,
+"texture": ExtResource("t548")
+},{
+"duration": 1.0,
+"texture": ExtResource("t549")
+},{
+"duration": 1.0,
+"texture": ExtResource("t550")
+},{
+"duration": 1.0,
+"texture": ExtResource("t551")
+}],
+"loop": true,
+"name": &"walk_south-west",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t552")
+},{
+"duration": 1.0,
+"texture": ExtResource("t553")
+},{
+"duration": 1.0,
+"texture": ExtResource("t554")
+},{
+"duration": 1.0,
+"texture": ExtResource("t555")
+},{
+"duration": 1.0,
+"texture": ExtResource("t556")
+},{
+"duration": 1.0,
+"texture": ExtResource("t557")
+}],
+"loop": true,
+"name": &"walk_west",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t558")
+},{
+"duration": 1.0,
+"texture": ExtResource("t559")
+},{
+"duration": 1.0,
+"texture": ExtResource("t560")
+},{
+"duration": 1.0,
+"texture": ExtResource("t561")
+},{
+"duration": 1.0,
+"texture": ExtResource("t562")
+},{
+"duration": 1.0,
+"texture": ExtResource("t563")
+}],
+"loop": true,
+"name": &"walk_north-west",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t564")
+},{
+"duration": 1.0,
+"texture": ExtResource("t565")
+},{
+"duration": 1.0,
+"texture": ExtResource("t566")
+},{
+"duration": 1.0,
+"texture": ExtResource("t567")
+},{
+"duration": 1.0,
+"texture": ExtResource("t568")
+},{
+"duration": 1.0,
+"texture": ExtResource("t569")
+}],
+"loop": true,
+"name": &"walk_north",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t570")
+},{
+"duration": 1.0,
+"texture": ExtResource("t571")
+},{
+"duration": 1.0,
+"texture": ExtResource("t572")
+},{
+"duration": 1.0,
+"texture": ExtResource("t573")
+},{
+"duration": 1.0,
+"texture": ExtResource("t574")
+},{
+"duration": 1.0,
+"texture": ExtResource("t575")
 }],
 "loop": true,
 "name": &"walk_north-east",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t576")
+},{
+"duration": 1.0,
+"texture": ExtResource("t577")
+},{
+"duration": 1.0,
+"texture": ExtResource("t578")
+},{
+"duration": 1.0,
+"texture": ExtResource("t579")
+},{
+"duration": 1.0,
+"texture": ExtResource("t580")
+},{
+"duration": 1.0,
+"texture": ExtResource("t581")
+}],
+"loop": true,
+"name": &"walk_kriegshammer_east",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t582")
+},{
+"duration": 1.0,
+"texture": ExtResource("t583")
+},{
+"duration": 1.0,
+"texture": ExtResource("t584")
+},{
+"duration": 1.0,
+"texture": ExtResource("t585")
+},{
+"duration": 1.0,
+"texture": ExtResource("t586")
+},{
+"duration": 1.0,
+"texture": ExtResource("t587")
+}],
+"loop": true,
+"name": &"walk_kriegshammer_south-east",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t588")
+},{
+"duration": 1.0,
+"texture": ExtResource("t589")
+},{
+"duration": 1.0,
+"texture": ExtResource("t590")
+},{
+"duration": 1.0,
+"texture": ExtResource("t591")
+},{
+"duration": 1.0,
+"texture": ExtResource("t592")
+},{
+"duration": 1.0,
+"texture": ExtResource("t593")
+}],
+"loop": true,
+"name": &"walk_kriegshammer_south",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t594")
+},{
+"duration": 1.0,
+"texture": ExtResource("t595")
+},{
+"duration": 1.0,
+"texture": ExtResource("t596")
+},{
+"duration": 1.0,
+"texture": ExtResource("t597")
+},{
+"duration": 1.0,
+"texture": ExtResource("t598")
+},{
+"duration": 1.0,
+"texture": ExtResource("t599")
+}],
+"loop": true,
+"name": &"walk_kriegshammer_south-west",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t600")
+},{
+"duration": 1.0,
+"texture": ExtResource("t601")
+},{
+"duration": 1.0,
+"texture": ExtResource("t602")
+},{
+"duration": 1.0,
+"texture": ExtResource("t603")
+},{
+"duration": 1.0,
+"texture": ExtResource("t604")
+},{
+"duration": 1.0,
+"texture": ExtResource("t605")
+}],
+"loop": true,
+"name": &"walk_kriegshammer_west",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t606")
+},{
+"duration": 1.0,
+"texture": ExtResource("t607")
+},{
+"duration": 1.0,
+"texture": ExtResource("t608")
+},{
+"duration": 1.0,
+"texture": ExtResource("t609")
+},{
+"duration": 1.0,
+"texture": ExtResource("t610")
+},{
+"duration": 1.0,
+"texture": ExtResource("t611")
+}],
+"loop": true,
+"name": &"walk_kriegshammer_north-west",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t612")
+},{
+"duration": 1.0,
+"texture": ExtResource("t613")
+},{
+"duration": 1.0,
+"texture": ExtResource("t614")
+},{
+"duration": 1.0,
+"texture": ExtResource("t615")
+},{
+"duration": 1.0,
+"texture": ExtResource("t616")
+},{
+"duration": 1.0,
+"texture": ExtResource("t617")
+}],
+"loop": true,
+"name": &"walk_kriegshammer_north",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t618")
+},{
+"duration": 1.0,
+"texture": ExtResource("t619")
+},{
+"duration": 1.0,
+"texture": ExtResource("t620")
+},{
+"duration": 1.0,
+"texture": ExtResource("t621")
+},{
+"duration": 1.0,
+"texture": ExtResource("t622")
+},{
+"duration": 1.0,
+"texture": ExtResource("t623")
+}],
+"loop": true,
+"name": &"walk_kriegshammer_north-east",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t624")
+},{
+"duration": 1.0,
+"texture": ExtResource("t625")
+},{
+"duration": 1.0,
+"texture": ExtResource("t626")
+},{
+"duration": 1.0,
+"texture": ExtResource("t627")
+},{
+"duration": 1.0,
+"texture": ExtResource("t628")
+},{
+"duration": 1.0,
+"texture": ExtResource("t629")
+}],
+"loop": true,
+"name": &"walk_spiess_east",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t630")
+},{
+"duration": 1.0,
+"texture": ExtResource("t631")
+},{
+"duration": 1.0,
+"texture": ExtResource("t632")
+},{
+"duration": 1.0,
+"texture": ExtResource("t633")
+},{
+"duration": 1.0,
+"texture": ExtResource("t634")
+},{
+"duration": 1.0,
+"texture": ExtResource("t635")
+}],
+"loop": true,
+"name": &"walk_spiess_south-east",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t636")
+},{
+"duration": 1.0,
+"texture": ExtResource("t637")
+},{
+"duration": 1.0,
+"texture": ExtResource("t638")
+},{
+"duration": 1.0,
+"texture": ExtResource("t639")
+},{
+"duration": 1.0,
+"texture": ExtResource("t640")
+},{
+"duration": 1.0,
+"texture": ExtResource("t641")
+}],
+"loop": true,
+"name": &"walk_spiess_south",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t642")
+},{
+"duration": 1.0,
+"texture": ExtResource("t643")
+},{
+"duration": 1.0,
+"texture": ExtResource("t644")
+},{
+"duration": 1.0,
+"texture": ExtResource("t645")
+},{
+"duration": 1.0,
+"texture": ExtResource("t646")
+},{
+"duration": 1.0,
+"texture": ExtResource("t647")
+}],
+"loop": true,
+"name": &"walk_spiess_south-west",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t648")
+},{
+"duration": 1.0,
+"texture": ExtResource("t649")
+},{
+"duration": 1.0,
+"texture": ExtResource("t650")
+},{
+"duration": 1.0,
+"texture": ExtResource("t651")
+},{
+"duration": 1.0,
+"texture": ExtResource("t652")
+},{
+"duration": 1.0,
+"texture": ExtResource("t653")
+}],
+"loop": true,
+"name": &"walk_spiess_west",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t654")
+},{
+"duration": 1.0,
+"texture": ExtResource("t655")
+},{
+"duration": 1.0,
+"texture": ExtResource("t656")
+},{
+"duration": 1.0,
+"texture": ExtResource("t657")
+},{
+"duration": 1.0,
+"texture": ExtResource("t658")
+},{
+"duration": 1.0,
+"texture": ExtResource("t659")
+}],
+"loop": true,
+"name": &"walk_spiess_north-west",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t660")
+},{
+"duration": 1.0,
+"texture": ExtResource("t661")
+},{
+"duration": 1.0,
+"texture": ExtResource("t662")
+},{
+"duration": 1.0,
+"texture": ExtResource("t663")
+},{
+"duration": 1.0,
+"texture": ExtResource("t664")
+},{
+"duration": 1.0,
+"texture": ExtResource("t665")
+}],
+"loop": true,
+"name": &"walk_spiess_north",
+"speed": 10
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("t666")
+},{
+"duration": 1.0,
+"texture": ExtResource("t667")
+},{
+"duration": 1.0,
+"texture": ExtResource("t668")
+},{
+"duration": 1.0,
+"texture": ExtResource("t669")
+},{
+"duration": 1.0,
+"texture": ExtResource("t670")
+},{
+"duration": 1.0,
+"texture": ExtResource("t671")
+}],
+"loop": true,
+"name": &"walk_spiess_north-east",
 "speed": 10
 }]

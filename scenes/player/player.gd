@@ -311,20 +311,29 @@ func _update_animation() -> void:
 	if _hurt_left > 0.0:
 		return  # hold the non-interrupting hurt flinch (physics/control still run)
 	var d := _dir_name()
-	var want := "idle_" + d
+	var want := _weapon_clip("idle", d)
 	match state:
 		State.MOVE, State.DASH:
-			want = "walk_" + d
+			want = _weapon_clip("walk", d)
 		State.ATTACK:
-			# Per-weapon swing (spiess = thrust, kriegshammer = overhead smash);
-			# kurzschwert has no dedicated clip and falls back to the base chop.
-			want = "attack_%s_%s" % [weapon_id, d]
-			if not _visual.sprite_frames.has_animation(want):
-				want = "attack_" + d
+			# Per-weapon swing (spiess = thrust, kriegshammer = overhead smash).
+			want = _weapon_clip("attack", d)
 		State.SKILL:
 			want = "attack_" + d
 	if _visual.animation != want:
 		_visual.play(want)
+
+
+func _weapon_clip(base: String, d: String) -> String:
+	# Per-weapon clip with the equipped weapon visible in hand
+	# ("<base>_<weapon>_<dir>"), falling back to the base set ("<base>_<dir>")
+	# which carries the Kurzschwert (the default). Kurzschwert has no dedicated
+	# idle/walk/attack clip -> it always resolves to the base, exactly as the
+	# attack clips already did.
+	var want := "%s_%s_%s" % [base, weapon_id, d]
+	if _visual.sprite_frames.has_animation(want):
+		return want
+	return "%s_%s" % [base, d]
 
 
 func _try_dash() -> void:
@@ -602,7 +611,7 @@ func take_damage(amount: int, _source_position: Vector2, _knockback_scale := 1.0
 		if state != State.ATTACK and state != State.SKILL \
 				and _visual.sprite_frames.has_animation("hurt_" + _dir_name()):
 			_hurt_left = HURT_ANIM_TIME
-			_visual.play("hurt_" + _dir_name())
+			_visual.play(_weapon_clip("hurt", _dir_name()))
 
 
 func sacrifice_hp(amount: int) -> bool:
@@ -679,7 +688,7 @@ func _die() -> void:
 	# DeathScreen's SHOW_DELAY (before the recap appears and the scene changes).
 	_hurt_left = 0.0
 	_visual.modulate.a = 1.0
-	_visual.play("death_" + _dir_name())
+	_visual.play(_weapon_clip("death", _dir_name()))
 	var t := create_tween()
 	t.tween_interval(0.55)
 	t.tween_property(_visual, "modulate:a", 0.0, 0.3)
