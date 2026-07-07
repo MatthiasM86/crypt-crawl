@@ -16,7 +16,7 @@ var _summons: Array = []
 
 func _perform_attack() -> void:
 	_prune_summons()
-	Sfx.play("relic", -4.0)
+	Sfx.play("summon")
 	for i in SUMMON_COUNT:
 		if _summons.size() >= SUMMON_CAP:
 			return

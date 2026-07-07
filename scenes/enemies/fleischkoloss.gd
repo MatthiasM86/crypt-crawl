@@ -63,7 +63,7 @@ func _perform_attack() -> void:
 
 
 func _start_charge() -> void:
-	Sfx.play("slam", -3.0)
+	Sfx.play("charge")
 	_charging = true
 	_charge_left = CHARGE_TIME
 	_charge_hit = false

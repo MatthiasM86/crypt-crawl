@@ -23,7 +23,7 @@ attack_cooldown = 1.6
 attack_damage = 3
 turn_speed = 3.0
 soul_value = 45
-death_sound = "death_boss"
+death_sound = "death_koloss"
 
 [node name="Visual" parent="."]
 sprite_frames = ExtResource("3_frames")

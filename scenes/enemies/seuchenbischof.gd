@@ -47,7 +47,7 @@ func _perform_attack() -> void:
 
 func _do_patch() -> void:
 	_clear_markers()
-	Sfx.play("slam", -3.0)
+	Sfx.play("plague")
 	for pos: Vector2 in _patch_targets:
 		var f: Node2D = FIRE_PATCH.new()
 		f.position = pos

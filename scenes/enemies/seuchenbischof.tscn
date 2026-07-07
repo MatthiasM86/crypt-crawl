@@ -22,7 +22,7 @@ attack_recover = 0.4
 attack_cooldown = 1.8
 attack_damage = 2
 soul_value = 45
-death_sound = "death_boss"
+death_sound = "death_bishop"
 
 [node name="Visual" parent="."]
 sprite_frames = ExtResource("3_frames")

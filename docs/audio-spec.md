@@ -72,6 +72,16 @@ Beispiel (bereits verwendet, `hit`):
 
 ## 3. Offene ElevenLabs-Aufgaben (Stand Juli 2026)
 
+> **Boss-SFX-Pass (erledigt, Juli 2026):** 8 neue Keys generiert + eingebaut
+> (Synth-Fallbacks in `sfx.gd` + KEY_OFFSET_DB, echte `assets/sfx/<key>.mp3`):
+> Todes-Sounds `death_koloss` (Fleischkoloss), `death_lich` (Beschwörerkönig),
+> `death_bishop` (Seuchenbischof), `death_quelle` (Endboss „Die Quelle", 1,8s,
+> Mix −2 dB als Finale); Signatur-Cues `charge` (Koloss-Sturm), `summon`
+> (Beschwörerkönig **und** regulärer Beschwörer/`summoner.gd` — ersetzt `relic`),
+> `plague` (Bischof-Bodenfläche), `brood` (Quelle-Geburt — ersetzt `relic`).
+> Damit erledigt: Backlog „`summon` für den Beschwörer" + Endboss-`death_quelle`/
+> `brood`. Die Quelle nutzt für AoE/Ring weiter `slam`/`shoot` (bewusst).
+
 **Alle 15 Register-Sounds sind generiert und eingebaut** (Erstgenerierung
 Juli 2026, ~1 % des Free-Tier-Monatsbudgets). Offen bleiben nur
 Qualitäts-/Aufteilungs-Aufgaben:

@@ -57,7 +57,7 @@ func _perform_attack() -> void:
 
 
 func _do_summon() -> void:
-	Sfx.play("shoot", -2.0)
+	Sfx.play("summon")
 	for i in SUMMON_COUNT:
 		var m: Node2D = MINION_SCENE.instantiate()
 		m.position = global_position + Vector2(64, 0).rotated(TAU * i / SUMMON_COUNT + randf())

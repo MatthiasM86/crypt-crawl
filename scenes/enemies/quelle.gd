@@ -98,7 +98,7 @@ func _do_ring() -> void:
 
 
 func _do_brood() -> void:
-	Sfx.play("relic", -4.0)
+	Sfx.play("brood")
 	for i in BROOD_COUNT:
 		if _brood.size() >= BROOD_CAP:
 			return

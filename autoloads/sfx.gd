@@ -21,6 +21,10 @@ const KEY_OFFSET_DB := {
 	"death_summoner": -5.0,
 	"death_exploder": -5.0,
 	"death_boss": -3.0,
+	"death_koloss": -4.0,
+	"death_lich": -4.0,
+	"death_bishop": -4.0,
+	"death_quelle": -2.0,  # endboss finale stays the most present
 }
 
 var _streams := {}
@@ -143,6 +147,42 @@ func _build_streams() -> void:
 	_streams["chest"] = _synth(0.28, func(t: float, d: float) -> float:
 		var f := lerpf(90.0, 55.0, t / d)
 		return (sin(TAU * f * t) * 0.6 + rng.randf_range(-1, 1) * 0.3) * exp(-t * 10.0))
+	# --- Boss SFX (rotation bosses + endboss). Real assets/sfx/ files win; these
+	# synth fallbacks also register the keys so the mp3 swap-loop finds them. ---
+	# death_koloss: wet heavy flesh collapse (Fleischkoloss)
+	_streams["death_koloss"] = _synth(0.9, func(t: float, d: float) -> float:
+		var f := lerpf(120.0, 34.0, t / d)
+		return (sin(TAU * f * t) * 0.7 + rng.randf_range(-1, 1) * 0.4) * exp(-t * 7.0))
+	# death_lich: bone clatter + fading arcane wail (Beschwörerkönig)
+	_streams["death_lich"] = _synth(0.9, func(t: float, d: float) -> float:
+		var wail := sin(TAU * lerpf(900.0, 200.0, t / d) * t) * 0.4
+		var clatter := (sin(TAU * 1300.0 * t) * 0.2 + rng.randf_range(-1, 1) * 0.25) * exp(-t * 26.0)
+		return (wail + clatter) * exp(-t * 4.5))
+	# death_bishop: sickly gurgle + gas hiss (Seuchenbischof)
+	_streams["death_bishop"] = _synth(0.9, func(t: float, d: float) -> float:
+		var gurgle := sin(TAU * lerpf(160.0, 70.0, t / d) * t) * (0.6 + 0.4 * sin(TAU * 18.0 * t))
+		return (gurgle * 0.5 + rng.randf_range(-1, 1) * 0.3) * exp(-t * 6.0))
+	# death_quelle: colossal finale collapse + shriek (Die Quelle endboss)
+	_streams["death_quelle"] = _synth(1.4, func(t: float, d: float) -> float:
+		var low := sin(TAU * lerpf(160.0, 24.0, t / d) * t) * 0.8
+		var shriek := sin(TAU * lerpf(700.0, 120.0, t / d) * t) * 0.2
+		return (low + shriek + rng.randf_range(-1, 1) * 0.25) * exp(-t * 2.4))
+	# charge: rising bull-roar rumble (Fleischkoloss charge)
+	_streams["charge"] = _synth(0.5, func(t: float, d: float) -> float:
+		var f := lerpf(50.0, 120.0, t / d)
+		return (sin(TAU * f * t) * 0.6 + rng.randf_range(-1, 1) * 0.4) * sin(PI * t / d))
+	# summon: rising arcane conjure shimmer (Beschwörer + Beschwörerkönig)
+	_streams["summon"] = _synth(0.45, func(t: float, d: float) -> float:
+		var f := lerpf(300.0, 1000.0, t / d)
+		return sin(TAU * f * t) * (0.6 + 0.4 * sin(TAU * 28.0 * t)) * sin(PI * t / d) * 0.5)
+	# plague: toxic sludge splat + bubble hiss (Seuchenbischof patch drop)
+	_streams["plague"] = _synth(0.4, func(t: float, d: float) -> float:
+		var bubble := sin(TAU * lerpf(140.0, 90.0, t / d) * t) * (0.5 + 0.5 * sin(TAU * 22.0 * t))
+		return (rng.randf_range(-1, 1) * 0.5 + bubble * 0.3) * exp(-t * 8.0))
+	# brood: wet fleshy birth squelch (Die Quelle brood)
+	_streams["brood"] = _synth(0.4, func(t: float, d: float) -> float:
+		return (rng.randf_range(-1, 1) * 0.55 + sin(TAU * 100.0 * t) * 0.35) \
+				* (0.4 + 0.6 * sin(TAU * 14.0 * t)) * exp(-t * 8.0))
 	# ambient: loopable low crypt drone
 	var drone := _synth(6.0, func(t: float, d: float) -> float:
 		var lfo := 0.75 + 0.25 * sin(TAU * t / d)  # period == length -> seamless
